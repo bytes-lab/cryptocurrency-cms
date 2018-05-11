@@ -22,27 +22,23 @@ def main():
         info = requests.get(url_).json()['Data']['General']
 
         image_url = "https://www.cryptocompare.com"+val['ImageUrl'] if val.get('ImageUrl') else None
-        launch_date = datetime.datetime.strptime(info['StartDate'], '%d/%m/%Y') if info.get('StartDate') else None
+        launch_date = datetime.datetime.strptime(info['StartDate'], '%d/%m/%Y') if info.get('StartDate') and info.get('StartDate') != '01/01/0001' else None
 
         defaults = {
             'website_url': info.get('WebsiteUrl'),
-            'description': info.get('Description'),
             'image_url': image_url,
             'is_trading': val.get('IsTrading'),
             'sort_order': val.get('SortOrder') or -1,
-            'name': val.get('CoinName'),
-            'symbol': val.get('Symbol'),
+            'cryptocompare': val['Id'],            
             'launch_date': launch_date,
             'algorithm': info.get('Algorithm'),
-            'total_supply': info.get('TotalCoinSupply'),
             'twitter_handle': info.get('Twitter'),
-            'blocktime': info.get('BlockTime') or -1,
-            'prooftype': info.get('ProofType'),
-            'blockreward': info.get('BlockReward'),
-            'total_coins_mined': info.get('TotalCoinsMined') or None
+            'block_time': info.get('BlockTime') or -1,
+            'proof_type': info.get('ProofType'),
+            'block_reward': info.get('BlockReward')
         }
 
-        CryptocompareCoin.objects.update_or_create(cryptocompare=val['Id'], defaults=defaults)
+        MasterCoin.objects.update_or_create(symbol=val.get('Symbol'), defaults=defaults)
 
 
 if __name__ == "__main__":

@@ -3,8 +3,8 @@ from django.contrib import admin
 from general.models import *
 
 class MasterCoinAdmin(admin.ModelAdmin):
-    list_display = ['symbol', 'name', 'launch_date', 'algorithm', 'cryptocompare', 'is_trading', 'sort_order']
-    search_fields = ['symbol', 'name', 'algorithm']
+    list_display = ['symbol', 'launch_date', 'algorithm', 'cryptocompare', 'is_trading', 'sort_order']
+    search_fields = ['symbol', 'algorithm']
 
 
 class ExchangeAdmin(admin.ModelAdmin):
@@ -27,10 +27,5 @@ class ExchangePairAdmin(admin.ModelAdmin):
 
 
 admin.site.register(MasterCoin, MasterCoinAdmin)
-admin.site.register(CoinapiCoin, MasterCoinAdmin)
-admin.site.register(CryptocompareCoin, MasterCoinAdmin)
 admin.site.register(Exchange, ExchangeAdmin)
-admin.site.register(CryptocompareExchange, ExchangeAdmin)
-admin.site.register(CoinapiExchange, ExchangeAdmin)
 admin.site.register(ExchangePair, ExchangePairAdmin)
-admin.site.register(CoinapiPair, ExchangePairAdmin)
