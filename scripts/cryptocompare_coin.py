@@ -1,0 +1,49 @@
+import json
+import time
+import requests
+import datetime
+
+import os
+from os import sys, path
+import django
+
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qobit_cms.settings")
+django.setup()
+
+from general.models import *
+
+def main():
+    url = 'https://min-api.cryptocompare.com/data/all/coinlist'
+    coins = requests.get(url).json().get('Data', {})
+
+    for key, val in coins.items():
+        url_ = 'https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id={}'.format(val['Id'])
+        info = requests.get(url_).json()['Data']['General']
+
+        image_url = "https://www.cryptocompare.com"+val['ImageUrl'] if val.get('ImageUrl') else None
+        launch_date = datetime.datetime.strptime(info['StartDate'], '%d/%m/%Y') if info.get('StartDate') else None
+
+        defaults = {
+            'website_url': info.get('WebsiteUrl'),
+            'description': info.get('Description'),
+            'image_url': image_url,
+            'is_trading': val.get('IsTrading'),
+            'sort_order': val.get('SortOrder') or -1,
+            'name': val.get('CoinName'),
+            'symbol': val.get('Symbol'),
+            'launch_date': launch_date,
+            'algorithm': info.get('Algorithm'),
+            'total_supply': info.get('TotalCoinSupply'),
+            'twitter_handle': info.get('Twitter'),
+            'blocktime': info.get('BlockTime') or -1,
+            'prooftype': info.get('ProofType'),
+            'blockreward': info.get('BlockReward'),
+            'total_coins_mined': info.get('TotalCoinsMined') or None
+        }
+
+        CryptocompareCoin.objects.update_or_create(cryptocompare=val['Id'], defaults=defaults)
+
+
+if __name__ == "__main__":
+    main()

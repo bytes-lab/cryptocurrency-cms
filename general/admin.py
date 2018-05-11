@@ -2,5 +2,35 @@ from django.contrib import admin
 
 from general.models import *
 
-admin.site.register(MasterCoin)
-admin.site.register(Exchange)
+class MasterCoinAdmin(admin.ModelAdmin):
+    list_display = ['symbol', 'name', 'launch_date', 'algorithm', 'cryptocompare', 'is_trading', 'sort_order']
+    search_fields = ['symbol', 'name', 'algorithm']
+
+
+class ExchangeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'cryptocompare_support', 'coinapi_support']
+    search_fields = ['name']
+    list_filter = ['cryptocompare', 'coinapi']
+
+    def cryptocompare_support(self, obj):
+        return obj.cryptocompare > 0
+    cryptocompare_support.boolean = True
+
+    def coinapi_support(self, obj):
+        return obj.coinapi > 0
+    coinapi_support.boolean = True
+
+
+class ExchangePairAdmin(admin.ModelAdmin):
+    list_display = ['exchange', 'base_coin', 'quote_coin']
+    list_filter = ['exchange']
+
+
+admin.site.register(MasterCoin, MasterCoinAdmin)
+admin.site.register(CoinapiCoin, MasterCoinAdmin)
+admin.site.register(CryptocompareCoin, MasterCoinAdmin)
+admin.site.register(Exchange, ExchangeAdmin)
+admin.site.register(CryptocompareExchange, ExchangeAdmin)
+admin.site.register(CoinapiExchange, ExchangeAdmin)
+admin.site.register(ExchangePair, ExchangePairAdmin)
+admin.site.register(CoinapiPair, ExchangePairAdmin)
