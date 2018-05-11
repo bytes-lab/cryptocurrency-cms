@@ -45,7 +45,7 @@ class MasterCoin(models.Model):
 
 class Exchange(models.Model):
     uid = models.CharField(max_length=255, null=True, blank=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)                                     # normalized name
     cryptocompare = models.CharField(max_length=255, null=True, blank=True)     # name on cryptocompare
     coinapi = models.CharField(max_length=255, null=True, blank=True)
     coinmarketcap = models.CharField(max_length=255, null=True, blank=True)

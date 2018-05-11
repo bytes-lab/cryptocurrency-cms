@@ -29,3 +29,4 @@ class ExchangePairAdmin(admin.ModelAdmin):
 admin.site.register(MasterCoin, MasterCoinAdmin)
 admin.site.register(Exchange, ExchangeAdmin)
 admin.site.register(ExchangePair, ExchangePairAdmin)
+admin.site.register(DataProvider)

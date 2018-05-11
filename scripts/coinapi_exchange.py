@@ -21,21 +21,10 @@ def main():
 
     for exchange in info:
         defaults = {
-            "website_url": exchange.get('website'),
-            "company": exchange.get('name'),
-            "data_start": parse_date(exchange.get('data_start')),
-            "data_end": parse_date(exchange.get('data_start')),
-            "data_quote_start": parse_datetime(exchange.get('data_quote_start')),
-            "data_quote_end": parse_datetime(exchange.get('data_quote_end')),
-            "data_orderbook_start": parse_datetime(exchange.get('data_orderbook_start')),
-            "data_orderbook_end": parse_datetime(exchange.get('data_orderbook_end')),
-            "data_trade_start": parse_datetime(exchange.get('data_trade_start')),
-            "data_trade_end": parse_datetime(exchange.get('data_trade_end')),
-            "data_trade_count": exchange.get('data_trade_count') or None,
-            "data_symbols_count": exchange.get('data_symbols_count') or None,
-            "coinapi": 1
+            "coinapi": exchange['exchange_id'],
+            "website_url": exchange.get('website')
         }
-        exchange, is_new = CoinapiExchange.objects.update_or_create(name=exchange['exchange_id'], defaults=defaults)
+        exchange, is_new = Exchange.objects.update_or_create(name=exchange['exchange_id'], defaults=defaults)
 
 def parse_date(str_date):
     return datetime.datetime.strptime(str_date, '%Y-%m-%d') if str_date else None
