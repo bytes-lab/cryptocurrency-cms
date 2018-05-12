@@ -16,15 +16,16 @@ from django.conf import settings
 
 def main():
     headers = { 'X-CoinAPI-Key': settings.COINAPI_KEY }
-    url = 'https://rest.coinapi.io/v1/exchanges'
+    url = 'https://rest.coinapi.io/v1/assets'
     info = requests.get(url, headers=headers).json()
 
-    for exchange in info:
+    for coin in info:
         defaults = {
-            "coinapi": exchange['exchange_id'],
-            "website_url": exchange.get('website')
+            "coinapi": 1,
+            "type_is_crypto": coin.get('type_is_crypto')
         }
-        exchange, is_new = Exchange.objects.update_or_create(name=exchange['exchange_id'], defaults=defaults)
+
+        coin, is_new = MasterCoin.objects.update_or_create(symbol=coin['asset_id'], defaults=defaults)
 
 
 if __name__ == "__main__":

@@ -3,8 +3,17 @@ from django.contrib import admin
 from general.models import *
 
 class MasterCoinAdmin(admin.ModelAdmin):
-    list_display = ['symbol', 'launch_date', 'algorithm', 'cryptocompare', 'is_trading', 'sort_order']
+    list_display = ['symbol', 'launch_date', 'algorithm', 'is_trading', 'cryptocompare_support', 'coinapi_support']
     search_fields = ['symbol', 'algorithm']
+    list_filter = ['cryptocompare', 'coinapi']
+    
+    def cryptocompare_support(self, obj):
+        return obj.cryptocompare > 0
+    cryptocompare_support.boolean = True
+
+    def coinapi_support(self, obj):
+        return obj.coinapi > 0
+    coinapi_support.boolean = True
 
 
 class ExchangeAdmin(admin.ModelAdmin):
