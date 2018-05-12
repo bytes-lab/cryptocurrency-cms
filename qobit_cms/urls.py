@@ -32,6 +32,8 @@ urlpatterns = [
     url(r"^coins_$", coins_, name="coins_"),
     url(r"^exchanges$", exchanges, name="exchanges"),
     url(r"^exchanges_$", exchanges_, name="exchanges_"),
+    url(r"^supported_exchanges$", supported_exchanges, name="supported_exchanges"),
+    url(r"^supported_exchanges_$", supported_exchanges_, name="supported_exchanges_"),
     url(r"^exchanges/(?P<id>\d+)", exchange_detail, name="exchange_detail"),
     url(r"^exchanges_/(?P<id>\d+)", exchange_detail_, name="exchange_detail_"),
 ]

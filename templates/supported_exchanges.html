@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block page_body %}
+<section id="content">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="active">Home</li>
+            <li class="active">Exchange Detail</li>
+        </ol>
+        <div class="card">
+            <div class="card-header">
+                <h2>Supported Exchanges</h2>
+            </div>
+            
+            <div class="card-body card-padding">
+                <div class="table-responsive">
+                    <table id="data-table-supported-exchanges" class="table table-striped" data-ajax="true" data-url="/supported_exchanges_">
+                        <thead>
+                            <tr>
+                                <th data-column-id="exchange">Exchange</th>
+                                <th data-column-id="num_coins">Number of Coins</th>
+                                <th data-column-id="num_pairs">Number of Pairs</th>
+                                <th data-column-id="action" data-formatter="commands" data-sortable="false">Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>            
+            </div>
+        </div>
+        
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/qobit.js' %}"></script>
+    <script src="{% static 'js/common.js' %}"></script>
+{% endblock %}
