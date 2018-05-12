@@ -46,6 +46,12 @@ def exchanges(request):
     return render(request, 'exchanges.html', {})
 
 
+@login_required(login_url='/login')
+def exchange_detail(request, id):
+    exchange = Exchange.objects.get(id=id)
+    return render(request, 'exchange_detail.html', { "exchange": exchange })
+
+
 @csrf_exempt
 def coins_(request):
     form_param = json.loads(request.body or "{}")
@@ -104,5 +110,36 @@ def exchanges_(request):
         "current": page,
         "rowCount": limit,
         "rows": exchanges,
+        "total": total
+        }, safe=False)
+
+
+@csrf_exempt
+def exchange_detail_(request, id):
+    form_param = json.loads(request.body or "{}")
+    limit = int(form_param.get('rowCount'))
+    page = int(form_param.get('current'))
+
+    exchange = Exchange.objects.get(id=id)
+    qs = exchange.exchanges.all().order_by('base_coin')
+    total = qs.count()
+    result = []
+
+    lstart = (page - 1) * limit
+    lend = lstart + limit
+
+    for ii in qs[lstart:lend]:
+        ii_ = {
+            'id': ii.id,
+            'coin': ii.base_coin.symbol,
+            'pair': ii.base_coin.symbol + ' / ' + ii.quote_coin.symbol,
+            'supported': 'YES' if ii.supported else 'NO'
+        }
+        result.append(ii_)
+
+    return JsonResponse({
+        "current": page,
+        "rowCount": limit,
+        "rows": result,
         "total": total
         }, safe=False)
