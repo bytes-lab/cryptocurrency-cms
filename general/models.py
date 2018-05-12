@@ -38,6 +38,7 @@ class MasterCoin(models.Model):
     slack_channel = models.CharField(max_length=255, null=True, blank=True)
     reddit_url = models.CharField(max_length=255, null=True, blank=True)
     type_is_crypto = models.BooleanField(default=True)
+    supported = models.BooleanField(default=False)
 
     def __str__(self):
         return self.symbol
@@ -58,6 +59,7 @@ class Exchange(models.Model):
     reddit_url = models.CharField(max_length=255, null=True, blank=True)
     facebook_url = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(max_length=255, null=True, blank=True)
+    supported = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -76,6 +78,7 @@ class ExchangePair(models.Model):
     source = models.CharField(max_length=255, null=True, blank=True)
     raw_trade_source = models.ForeignKey(MasterCoin, null=True, blank=True, related_name="raw_trade_sources")
     orderbook_source = models.ForeignKey(MasterCoin, null=True, blank=True, related_name="orderbook_sources")
+    supported = models.BooleanField(default=False)
 
     def __str__(self):
         return '{}: {}-{}'.format(self.exchange.name, self.base_coin.symbol, self.quote_coin.symbol)

@@ -26,12 +26,12 @@ def add_coin(coin):
 
 def get_exchanges():
     exchanges = {}
-    for exchange in Exchnage.objects.all():
+    for exchange in Exchange.objects.all():
         exchanges[exchange.name] = exchange.id
     return exchanges
 
 def add_exchnage(exchange):
-    Exchnage.objects.create(name=exchange, coinapi=exchange)
+    Exchange.objects.create(name=exchange, coinapi=exchange)
     return get_exchanges()
 
 def main():
@@ -55,8 +55,7 @@ def main():
             coins = add_coin(quote)
 
         defaults = {
-            "coinapi_availability": True
-            "website_url": pair.get('website'),
+            "coinapi_availability": True,
             "data_start": parse_date(pair.get('data_start')),
             "data_end": parse_date(pair.get('data_end'))
         }
