@@ -6,7 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" href="{% static 'img/favicon.png' %}" type="image/png">
-        <title>bnchmrk App</title>
+        <title>Qobit CMS</title>
 
         <!-- Vendor CSS -->
         <link href="{% static 'vendors/bower_components/fullcalendar/dist/fullcalendar.min.css' %}" rel="stylesheet">
@@ -37,7 +37,7 @@
                 </li>
 
                 <li class="logo">
-                    <a href="/"><img src=""></a>
+                    <a href="/">Qobit CMS</a>
                 </li>
             </ul>
 
@@ -55,7 +55,7 @@
                 <div class="profile-menu">
                     <a href="">
                         <div class="profile-info">
-                            {{ user.first_name }} {{ user.last_name }}
+                            {{ user.first_name }} {{ user.last_name }} 
                             <i class="zmdi zmdi-caret-down"></i>
                         </div>
                     </a>
@@ -82,25 +82,23 @@
 
                 <ul class="main-menu stem-menu">
                     <li>
-                        <a href="/"><i class="zmdi zmdi-home"></i> Home</a>
+                        <a href="/"><i class="zmdi zmdi-home"></i> Dashboard</a>
                     </li>
+                    <li><a href="/accounts"><i class="zmdi zmdi-receipt"></i> Coins</a></li>
+                    <li><a href="/accounts"><i class="zmdi zmdi-receipt"></i> Exchanges</a></li>
                     {% if not request.user %}
                     <li><a href="/accounts"><i class="zmdi zmdi-receipt"></i> Accounts</a></li>
                     {% endif %}
                     <li class="sub-menu">
-                        <a href=""><i class="zmdi zmdi-equalizer"></i> Benchmarking</a>
+                        <a href=""><i class="zmdi zmdi-equalizer"></i> Data Providers</a>
 
                         <ul>
-                            <li><a href="/benchmarking/medicalrx">Medical/Rx</a></li>
-                            <li><a href="/benchmarking/dental">Dental</a></li>
-                            <li><a href="/benchmarking/vision">Vision</a></li>
-                            <li><a href="/benchmarking/life">Life</a></li>
-                            <li><a href="/benchmarking/std">STD</a></li>
-                            <li><a href="/benchmarking/ltd">LTD</a></li>
-                            <li><a href="/benchmarking/strategy">Strategic Planning</a></li>
+                            <li><a href="/benchmarking/medicalrx">Cryptocompare</a></li>
+                            <li><a href="/benchmarking/dental">CoinAPI</a></li>
+                            <li><a href="/benchmarking/vision">CEX</a></li>
                         </ul>
                     </li>
-                    <li><a href="/support"><i class="zmdi zmdi-pin-help"></i> Support</a></li>
+                    <li><a href="/support"><i class="zmdi zmdi-pin-help"></i> Coins in the World</a></li>
                 </ul>
             </aside>
             
@@ -109,7 +107,7 @@
         </section>
         
         <footer id="footer">
-            Copyright &copy; 2017 bnchmrk LLC
+            Copyright &copy; 2018 qobit LLC
             
             <ul class="f-menu">
                 <li><a href="/">Home</a></li>
@@ -133,49 +131,6 @@
                 <p>Please wait...</p>
             </div>
         </div>
-        
-        <!-- Older IE warning message -->
-        <!--[if lt IE 9]>
-            <div class="ie-warning">
-                <h1 class="c-white">Warning!!</h1>
-                <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
-                <div class="iew-container">
-                    <ul class="iew-download">
-                        <li>
-                            <a href="http://www.google.com/chrome/">
-                                <img src="img/browsers/chrome.png" alt="">
-                                <div>Chrome</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://www.mozilla.org/en-US/firefox/new/">
-                                <img src="img/browsers/firefox.png" alt="">
-                                <div>Firefox</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://www.opera.com">
-                                <img src="img/browsers/opera.png" alt="">
-                                <div>Opera</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://www.apple.com/safari/">
-                                <img src="img/browsers/safari.png" alt="">
-                                <div>Safari</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-                                <img src="img/browsers/ie.png" alt="">
-                                <div>IE (New)</div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <p>Sorry for the inconvenience!</p>
-            </div>   
-        <![endif]-->
         
         <!-- Javascript Libraries -->
         <script src="{% static 'vendors/bower_components/jquery/dist/jquery.min.js' %}"></script>
@@ -203,8 +158,6 @@
             <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
         <![endif]-->
         
-        <script src="{% static 'js/flot-charts/curved-line-chart.js' %}"></script>
-        <script src="{% static 'js/flot-charts/line-chart.js' %}"></script>
         <script src="{% static 'js/functions.js' %}"></script>               
     </body>
   </html>

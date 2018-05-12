@@ -29,4 +29,5 @@ urlpatterns = [
     url(r"^logout", user_logout, name="logout"),
 
     url(r"^$", home, name="home"),
+    url(r"^coins$", coins, name="coins"),
 ]

@@ -1,8 +1,17 @@
+import json
+
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse, JsonResponse
 from django.core.urlresolvers import reverse
+
+from django.views.decorators.csrf import csrf_exempt
+from django.forms.models import model_to_dict
+
+from general.models import *
+
 
 def user_login(request):
     if request.method == 'GET':
@@ -33,3 +42,34 @@ def home(request):
             'industries': [],
             'EMPLOYER_THRESHOLD_MESSAGE': ''
         })    
+
+
+@csrf_exempt
+def coins(request):
+    form_param = json.loads(request.body or "{}")
+    limit = int(form_param.get('rowCount'))
+    page = int(form_param.get('current'))
+
+    qs = MasterCoin.objects.all()
+    total = qs.count()
+    coins = []
+
+    lstart = (page - 1) * limit
+    lend = lstart + limit
+
+    for coin in qs[lstart:lend]:
+        coin_ = {
+            'id': coin.id,
+            'symbol': coin.symbol,
+            'cryptocompare': 'YES' if coin.cryptocompare > 0 else 'NO',
+            'coinapi': 'YES' if coin.coinapi > 0 else 'NO',
+            'supported': 'YES' if coin.supported else 'NO'
+        }
+        coins.append(coin_)
+
+    return JsonResponse({
+        "current": page,
+        "rowCount": limit,
+        "rows": coins,
+        "total": total
+        }, safe=False)

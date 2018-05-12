@@ -1122,7 +1122,7 @@ html.ismobile .page-loader {
 }
 
 [data-current-skin="blue"] {
-  background-color: #ffffff;
+  background-color: #2196f3;
 }
 
 [data-current-skin="blue"] .ss-icon {
@@ -1946,7 +1946,8 @@ hr.fc-divider {
 .bootgrid-footer .infoBar .infos {
   display: inline-block;
   float: left;
-  font-size: 10px;
+  font-size: 14px;
+  padding-top: 5px;
 }
 
 .select-cell .checkbox {

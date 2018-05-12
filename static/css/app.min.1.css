@@ -10411,7 +10411,7 @@ h6 small,
 }
 
 #header .logo a {
-  /*padding: 7px 10px;*/
+  padding: 7px 10px;
   padding-left: 7px;
 }
 
@@ -14250,11 +14250,11 @@ html:not(.ie9) .select.fg-line:before {
 .pagination > li > span {
   border-radius: 50% !important;
   padding: 1px 0 0 0;
-  width: 20px;
-  height: 20px;
-  line-height: 16px;
+  width: 30px;
+  height: 30px;
+  line-height: 25px;
   text-align: center;
-  font-size: 10px;
+  font-size: 15px;
   z-index: 1;
   position: relative;
   cursor: pointer;
@@ -14263,7 +14263,7 @@ html:not(.ie9) .select.fg-line:before {
 .pagination > li > a > .zmdi,
 .pagination > li > span > .zmdi {
   font-size: 20px;
-  line-height: 16px;
+  line-height: 25px;
 }
 
 .pagination > li.disabled {

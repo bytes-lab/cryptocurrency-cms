@@ -12,19 +12,19 @@
         </ol>
         <div class="card">
             <div class="card-header">
-                <h2>Welcome, {{ user.first_name }} {{ user.last_name }}</h2>
+                <h2>Coins</h2>
             </div>
             
             <div class="card-body card-padding">
                 <div class="table-responsive">
-                    <table id="data-table-print-history" class="table table-striped" data-ajax="true" data-url="/print_history">
+                    <table id="data-table-coins" class="table table-striped" data-ajax="true" data-url="/coins">
                         <thead>
                             <tr>
-                                <th data-column-id="benefit">Benefit</th>
-                                <!-- <th data-column-id="plan_name">Plan Name</th> -->
-                                <th data-column-id="plan_type">Plan Type</th>
-                                <th data-column-id="print_date">Print Date</th>
-                                <th data-column-id="action" data-formatter="commands" data-sortable="false">View Report</th>
+                                <th data-column-id="symbol">Symbol</th>
+                                <th data-column-id="cryptocompare">Cryptocompare</th>
+                                <th data-column-id="coinapi">CoinAPI</th>
+                                <th data-column-id="supported">Supported</th>
+                                <th data-column-id="action" data-formatter="commands" data-sortable="false">Action</th>
                             </tr>
                         </thead>
                     </table>
@@ -37,14 +37,6 @@
 {% endblock %}
 
 {% block extra_js %}
-    <script type="text/javascript">
-        var EMPLOYER_THRESHOLD_MESSAGE = "{{ EMPLOYER_THRESHOLD_MESSAGE }}";
-        // make active menuitem for this page
-        jQuery(function($) {
-            $('ul.stem-menu li').eq(0).addClass('active');
-        });
-    </script>
-
-    <script src="{% static 'js/bnchmrk.js' %}"></script>
+    <script src="{% static 'js/qobit.js' %}"></script>
     <script src="{% static 'js/common.js' %}"></script>
 {% endblock %}
