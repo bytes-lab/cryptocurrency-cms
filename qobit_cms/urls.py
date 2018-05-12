@@ -16,10 +16,17 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from general.views import *
+
 admin.site.site_header = "QOBIT CMS"
 
 urlpatterns = [
 	url(r'^jet/', include('jet.urls', 'jet')),
 	url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     url(r'^admin/', admin.site.urls),
+
+    url(r"^login", user_login, name="login"),
+    url(r"^logout", user_logout, name="logout"),
+
+    url(r"^$", home, name="home"),
 ]

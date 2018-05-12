@@ -1,0 +1,210 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="{% static 'img/favicon.png' %}" type="image/png">
+        <title>bnchmrk App</title>
+
+        <!-- Vendor CSS -->
+        <link href="{% static 'vendors/bower_components/fullcalendar/dist/fullcalendar.min.css' %}" rel="stylesheet">
+        <link href="{% static 'vendors/bower_components/animate.css/animate.min.css' %}" rel="stylesheet">
+        <link href="{% static 'vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.css' %}" rel="stylesheet">
+        <link href="{% static 'vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css' %}" rel="stylesheet">
+        <link href="{% static 'vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css' %}" rel="stylesheet">        
+        <link href="{% static 'vendors/bootgrid/jquery.bootgrid.min.css' %}" rel="stylesheet">
+        <link href="{% static 'vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css' %}" rel="stylesheet">
+                    
+        <!-- CSS -->
+        <link href="{% static 'css/app.min.1.css' %}" rel="stylesheet">
+        <link href="{% static 'css/app.min.2.css' %}" rel="stylesheet">
+        
+        {% block extra_css %}
+        {% endblock %}
+       
+    </head>
+    <body class="sw-toggled">
+        <header id="header" class="clearfix" data-current-skin="blue">
+            <ul class="header-inner">
+                <li id="menu-trigger" data-trigger="#sidebar">
+                    <div class="line-wrap">
+                        <div class="line top"></div>
+                        <div class="line center"></div>
+                        <div class="line bottom"></div>
+                    </div>
+                </li>
+
+                <li class="logo">
+                    <a href="/"><img src=""></a>
+                </li>
+            </ul>
+
+            <!-- Top Search Content -->
+            <div id="top-search-wrap">
+                <div class="tsw-inner">
+                    <i id="top-search-close" class="zmdi zmdi-arrow-left"></i>
+                    <input type="text">
+                </div>
+            </div>
+        </header>
+        
+        <section id="main" data-layout="layout-1">
+            <aside id="sidebar" class="sidebar c-overflow">
+                <div class="profile-menu">
+                    <a href="">
+                        <div class="profile-info">
+                            {{ user.first_name }} {{ user.last_name }}
+                            <i class="zmdi zmdi-caret-down"></i>
+                        </div>
+                    </a>
+
+                    <ul class="main-menu">
+<!--                         <li>
+                            <a href="profile-about.html"><i class="zmdi zmdi-account"></i> View Profile</a>
+                        </li>
+ -->                    
+                        <li>
+                            <a href="/change_password/"><i class="zmdi zmdi-account"></i> Change Password</a>
+                        </li>
+
+                        {% if request.user %} 
+                        <li>
+                            <a href="/admin"><i class="zmdi zmdi-settings"></i> Admin</a>
+                        </li>
+                        {% endif %}
+                        <li>
+                            <a href="/logout"><i class="zmdi zmdi-time-restore"></i> Logout</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <ul class="main-menu stem-menu">
+                    <li>
+                        <a href="/"><i class="zmdi zmdi-home"></i> Home</a>
+                    </li>
+                    {% if not request.user %}
+                    <li><a href="/accounts"><i class="zmdi zmdi-receipt"></i> Accounts</a></li>
+                    {% endif %}
+                    <li class="sub-menu">
+                        <a href=""><i class="zmdi zmdi-equalizer"></i> Benchmarking</a>
+
+                        <ul>
+                            <li><a href="/benchmarking/medicalrx">Medical/Rx</a></li>
+                            <li><a href="/benchmarking/dental">Dental</a></li>
+                            <li><a href="/benchmarking/vision">Vision</a></li>
+                            <li><a href="/benchmarking/life">Life</a></li>
+                            <li><a href="/benchmarking/std">STD</a></li>
+                            <li><a href="/benchmarking/ltd">LTD</a></li>
+                            <li><a href="/benchmarking/strategy">Strategic Planning</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/support"><i class="zmdi zmdi-pin-help"></i> Support</a></li>
+                </ul>
+            </aside>
+            
+            {% block page_body %}
+            {% endblock %}
+        </section>
+        
+        <footer id="footer">
+            Copyright &copy; 2017 bnchmrk LLC
+            
+            <ul class="f-menu">
+                <li><a href="/">Home</a></li>
+                {% if not request.user %}
+                <li><a href="/accounts">Accounts</a></li>
+                {% endif %}
+                <li><a href="/benchmarking/medicalrx">Benchmarking</a></li>
+                <li><a href="/support">Support</a></li>
+<!--                 <li><a href="">Terms</a></li>
+                <li><a href="">Privacy</a></li>
+ -->            </ul>
+        </footer>
+
+        <!-- Page Loader -->
+        <div class="page-loader">
+            <div class="preloader pls-blue">
+                <svg class="pl-circular" viewBox="25 25 50 50">
+                    <circle class="plc-path" cx="50" cy="50" r="20" />
+                </svg>
+
+                <p>Please wait...</p>
+            </div>
+        </div>
+        
+        <!-- Older IE warning message -->
+        <!--[if lt IE 9]>
+            <div class="ie-warning">
+                <h1 class="c-white">Warning!!</h1>
+                <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
+                <div class="iew-container">
+                    <ul class="iew-download">
+                        <li>
+                            <a href="http://www.google.com/chrome/">
+                                <img src="img/browsers/chrome.png" alt="">
+                                <div>Chrome</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.mozilla.org/en-US/firefox/new/">
+                                <img src="img/browsers/firefox.png" alt="">
+                                <div>Firefox</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.opera.com">
+                                <img src="img/browsers/opera.png" alt="">
+                                <div>Opera</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.apple.com/safari/">
+                                <img src="img/browsers/safari.png" alt="">
+                                <div>Safari</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
+                                <img src="img/browsers/ie.png" alt="">
+                                <div>IE (New)</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <p>Sorry for the inconvenience!</p>
+            </div>   
+        <![endif]-->
+        
+        <!-- Javascript Libraries -->
+        <script src="{% static 'vendors/bower_components/jquery/dist/jquery.min.js' %}"></script>
+        <script src="{% static 'vendors/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+
+        <script src="{% static 'vendors/bower_components/flot/jquery.flot.js' %}"></script>
+        <script src="{% static 'vendors/bower_components/flot/jquery.flot.categories.js' %}"></script>
+        <script src="{% static 'vendors/bower_components/flot/jquery.flot.resize.js' %}"></script>
+        <script src="{% static 'vendors/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js' %}"></script>
+                
+        <script src="{% static 'vendors/bower_components/moment/min/moment.min.js' %}"></script>
+        <script src="{% static 'vendors/bower_components/fullcalendar/dist/fullcalendar.min.js' %}"></script>
+        <script src="{% static 'vendors/bower_components/simpleWeather/jquery.simpleWeather.min.js' %}"></script>
+        <script src="{% static 'vendors/bower_components/Waves/dist/waves.min.js' %}"></script>
+        <script src="{% static 'vendors/bootstrap-growl/bootstrap-growl.min.js' %}"></script>
+        <script src="{% static 'vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.min.js' %}"></script>
+        <script src="{% static 'vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+        <script src="{% static 'vendors/bootgrid/jquery.bootgrid.updated.min.js' %}"></script>
+        <script src="{% static 'vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js' %}"></script>
+        
+        {% block extra_js %}
+        {% endblock %}        
+        <!-- Placeholder for IE9 -->
+        <!--[if IE 9 ]>
+            <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+        <![endif]-->
+        
+        <script src="{% static 'js/flot-charts/curved-line-chart.js' %}"></script>
+        <script src="{% static 'js/flot-charts/line-chart.js' %}"></script>
+        <script src="{% static 'js/functions.js' %}"></script>               
+    </body>
+  </html>
