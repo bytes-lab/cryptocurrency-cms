@@ -38,14 +38,16 @@ def user_logout(request):
 
 @login_required(login_url='/login')
 def home(request):
-    return render(request, 'index.html', {
-            'industries': [],
-            'EMPLOYER_THRESHOLD_MESSAGE': ''
-        })    
+    return render(request, 'index.html', {})
+
+
+@login_required(login_url='/login')
+def exchanges(request):
+    return render(request, 'exchanges.html', {})
 
 
 @csrf_exempt
-def coins(request):
+def coins_(request):
     form_param = json.loads(request.body or "{}")
     limit = int(form_param.get('rowCount'))
     page = int(form_param.get('current'))
@@ -71,5 +73,36 @@ def coins(request):
         "current": page,
         "rowCount": limit,
         "rows": coins,
+        "total": total
+        }, safe=False)
+
+
+@csrf_exempt
+def exchanges_(request):
+    form_param = json.loads(request.body or "{}")
+    limit = int(form_param.get('rowCount'))
+    page = int(form_param.get('current'))
+
+    qs = Exchange.objects.all()
+    total = qs.count()
+    exchanges = []
+
+    lstart = (page - 1) * limit
+    lend = lstart + limit
+
+    for exchange in qs[lstart:lend]:
+        exchange_ = {
+            'id': exchange.id,
+            'name': exchange.name,
+            'cryptocompare': 'YES' if exchange.cryptocompare > 0 else 'NO',
+            'coinapi': 'YES' if exchange.coinapi > 0 else 'NO',
+            'supported': 'YES' if exchange.supported else 'NO'
+        }
+        exchanges.append(exchange_)
+
+    return JsonResponse({
+        "current": page,
+        "rowCount": limit,
+        "rows": exchanges,
         "total": total
         }, safe=False)
