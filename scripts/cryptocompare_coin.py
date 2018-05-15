@@ -12,6 +12,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qobit_cms.settings")
 django.setup()
 
 from general.models import *
+from utils import send_email
 
 def main():
     url = 'https://min-api.cryptocompare.com/data/all/coinlist'
@@ -39,7 +40,9 @@ def main():
             'is_master': True
         }
 
-        MasterCoin.objects.update_or_create(symbol=val.get('Symbol'), defaults=defaults)
+        coin, is_new = MasterCoin.objects.update_or_create(symbol=val.get('Symbol'), defaults=defaults)
+        if is_new:
+            send_email(coin['symbol'])
 
 
 if __name__ == "__main__":

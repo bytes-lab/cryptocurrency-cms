@@ -29,7 +29,7 @@ function load_master_coins() {
     $("#data-table-master-coins").bootgrid({
         formatters: {
             "commands": function(column, row) {
-                return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"#" + row.id + "\"><span class=\"zmdi zmdi-plus\"></span></a>";
+                return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"#" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></a>";
             }
         },
         templates: {
@@ -46,8 +46,19 @@ function load_master_coins() {
 function load_all_coins() {
     $("#data-table-all-coins").bootgrid({
         formatters: {
+            "status": function(column, row) {
+                if (row.status == 'NEW') {
+                    return '<span class="text-primary">'+row.status+'</span>';
+                } else {
+                    return row.status;
+                }
+            },
             "commands": function(column, row) {
-                return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"#" + row.id + "\"><span class=\"zmdi zmdi-plus\"></span></a>";
+                if (row.status == 'NEW') {
+                    return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"#" + row.id + "\"><span class=\"zmdi zmdi-plus\"></span></a>";
+                } else {
+                    return '<div class="text-success m-5 f-500 f-15">N/A</div>';
+                }
             }
         },
         templates: {
@@ -88,7 +99,6 @@ function load_exchange_detail() {
                 } else {
                     return "<a type=\"button\" class=\"btn btn-icon command-add waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-eye\"></span></a>";
                 }
-
             }
         },
         templates: {

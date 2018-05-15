@@ -13,6 +13,7 @@ django.setup()
 
 from general.models import *
 from django.conf import settings
+from utils import send_email
 
 def main():
     headers = { 'X-CoinAPI-Key': settings.COINAPI_KEY }
@@ -27,6 +28,8 @@ def main():
         }
 
         coin, is_new = MasterCoin.objects.update_or_create(symbol=coin['asset_id'], defaults=defaults)
+        if is_new:
+            send_email(coin['asset_id'])
 
 
 if __name__ == "__main__":

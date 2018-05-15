@@ -12,7 +12,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qobit_cms.settings")
 django.setup()
 
 from general.models import *
-from django.conf import settings
+from utils import send_email
 
 def main():
     url = 'https://api.coinmarketcap.com/v1/ticker/?limit=0'
@@ -25,7 +25,8 @@ def main():
         }
 
         coin, is_new = MasterCoin.objects.update_or_create(symbol=coin['symbol'], defaults=defaults)
-
+        if is_new:
+            send_email(coin['symbol'])
 
 if __name__ == "__main__":
     main()
