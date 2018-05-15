@@ -44,13 +44,13 @@ def home(request):
 
 
 @login_required(login_url='/login')
-def coins(request):
-    return render(request, 'coins.html', {})
+def world_of_coins(request):
+    return render(request, 'world_of_coins.html', {})
 
 
 @login_required(login_url='/login')
-def supported_coins(request):
-    return render(request, 'supported_coins.html', {})
+def master_coins(request):
+    return render(request, 'master_coins.html', {})
 
 
 @login_required(login_url='/login')

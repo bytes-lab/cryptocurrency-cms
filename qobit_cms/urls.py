@@ -29,9 +29,9 @@ urlpatterns = [
     url(r"^logout", user_logout, name="logout"),
 
     url(r"^$", home, name="home"),
-    url(r"^coins$", coins, name="coins"),
+    url(r"^world_of_coins$", world_of_coins, name="world_of_coins"),
     url(r"^coins_$", coins_, name="coins_"),
-    url(r"^supported_coins$", supported_coins, name="supported_coins"),
+    url(r"^master_coins$", master_coins, name="master_coins"),
     url(r"^supported_coins_$", supported_coins_, name="supported_coins_"),
     url(r"^exchanges$", exchanges, name="exchanges"),
     url(r"^exchanges_$", exchanges_, name="exchanges_"),

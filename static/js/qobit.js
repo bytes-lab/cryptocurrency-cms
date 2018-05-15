@@ -102,7 +102,7 @@ function load_exchange_detail() {
             },
             "commands": function(column, row) {
                 if (row.supported == 'YES') {
-                    return '<span class="text-success m-l-5 f-500 f-15">N/A</span>';
+                    return '<div class="text-success m-5 f-500 f-15">N/A</div>';
                 } else {
                     return "<a type=\"button\" class=\"btn btn-icon command-add waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-eye\"></span></a>";
                 }
