@@ -186,16 +186,12 @@ def supported_exchanges_(request):
 
     for exchange in qs[lstart:lend]:
         pairs = exchange.pairs.filter(supported=True)
-        coins = []
-        for pair in pairs:
-            coins.append(pair.base_coin.symbol)
-            coins.append(pair.quote_coin.symbol)
-        coins = set(coins)
+        coins = [pair.base_coin.symbol for pair in pairs if pair.base_coin.supported]
 
         exchange_ = {
             'id': exchange.id,
             'exchange': exchange.name,
-            'num_coins': len(coins),
+            'num_coins': len(set(coins)),
             'num_pairs': pairs.count()
         }
         exchanges.append(exchange_)
