@@ -30,6 +30,8 @@ urlpatterns = [
 
     url(r"^$", home, name="home"),
     url(r"^world_of_coins$", world_of_coins, name="world_of_coins"),
+    url(r"^coins$", all_coins, name="all_coins"),
+    url(r"^all_coins_$", all_coins_, name="all_coins_"),
     url(r"^coins_$", coins_, name="coins_"),
     url(r"^master_coins$", master_coins, name="master_coins"),
     url(r"^supported_coins_$", supported_coins_, name="supported_coins_"),

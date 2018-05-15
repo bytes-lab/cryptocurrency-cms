@@ -49,6 +49,11 @@ def world_of_coins(request):
 
 
 @login_required(login_url='/login')
+def all_coins(request):
+    return render(request, 'all_coins.html', {})
+
+
+@login_required(login_url='/login')
 def master_coins(request):
     return render(request, 'master_coins.html', {})
 
@@ -109,6 +114,10 @@ def supported_coins_(request):
     q = Q(supported=True)
     return _coins(request, q)
 
+@csrf_exempt
+def all_coins_(request):
+    q = Q()
+    return _coins(request, q)
 
 def _coins(request, q):
     form_param = json.loads(request.body or "{}")
@@ -123,13 +132,15 @@ def _coins(request, q):
     lend = lstart + limit
 
     for coin in qs[lstart:lend]:
+        status = 'SUPPORTED' if coin.supported else 'On World of Coins' if coin.is_master else 'NEW'
         coin_ = {
             'id': coin.id,
             'symbol': coin.symbol,
             'cryptocompare': 'YES' if coin.cryptocompare > 0 else 'NO',
             'coinapi': 'YES' if coin.coinapi > 0 else 'NO',
             'cmc': 'YES' if coin.coinmarketcap > 0 else 'NO',
-            'supported': 'YES' if coin.supported else 'NO'
+            'supported': 'YES' if coin.supported else 'NO',
+            'status': status
         }
         coins.append(coin_)
 
