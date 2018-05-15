@@ -153,11 +153,11 @@ def _coins(request, q):
 
 @csrf_exempt
 def exchanges_(request):
-    form_param = json.loads(request.body or "{}")
-    limit = int(form_param.get('rowCount'))
-    page = int(form_param.get('current'))
+    limit = int(request.POST.get('rowCount'))
+    page = int(request.POST.get('current'))
+    keyword = request.POST.get('searchPhrase')
 
-    qs = Exchange.objects.all()
+    qs = Exchange.objects.filter(name__icontains=keyword)
     total = qs.count()
     exchanges = []
 
@@ -184,11 +184,11 @@ def exchanges_(request):
 
 @csrf_exempt
 def supported_exchanges_(request):
-    form_param = json.loads(request.body or "{}")
-    limit = int(form_param.get('rowCount'))
-    page = int(form_param.get('current'))
+    limit = int(request.POST.get('rowCount'))
+    page = int(request.POST.get('current'))
+    keyword = request.POST.get('searchPhrase')
 
-    qs = Exchange.objects.filter(supported=True)
+    qs = Exchange.objects.filter(name__icontains=keyword, supported=True)
     total = qs.count()
     exchanges = []
 
