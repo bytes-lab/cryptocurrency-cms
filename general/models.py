@@ -12,9 +12,9 @@ class DataProvider(models.Model):
 
 class MasterCoin(models.Model):
     symbol = models.CharField(max_length=255)
-    coinmarketcap = models.IntegerField(null=True, blank=True)  # flag for supporting, assume symbols are same
-    cryptocompare = models.IntegerField(null=True, blank=True)
-    coinapi = models.IntegerField(null=True, blank=True)
+    coinmarketcap = models.IntegerField(null=True, blank=True)  # (rank in cmc) flag for supporting, assume symbols are same
+    cryptocompare = models.IntegerField(null=True, blank=True)  # (symbol id)
+    coinapi = models.IntegerField(null=True, blank=True)        # 1
     supported_exchanges = models.CharField(max_length=255, null=True, blank=True)
     is_trading = models.BooleanField(default=True)
     sort_order = models.IntegerField(null=True, blank=True)
@@ -40,6 +40,7 @@ class MasterCoin(models.Model):
     type_is_crypto = models.BooleanField(default=True)
     is_master = models.BooleanField(default=False)
     supported = models.BooleanField(default=False)
+    supported_at = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.symbol
@@ -68,7 +69,7 @@ class Exchange(models.Model):
 
 
 class ExchangePair(models.Model):
-    exchange = models.ForeignKey(Exchange, related_name="exchanges")
+    exchange = models.ForeignKey(Exchange, related_name="pairs")
     base_coin = models.ForeignKey(MasterCoin, related_name="base_coins")
     quote_coin = models.ForeignKey(MasterCoin, related_name="quote_coins")
     coinmarketcap_availability = models.BooleanField(default=False)

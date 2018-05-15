@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse, JsonResponse
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
@@ -88,49 +89,33 @@ def add_pair(request, id):
 @login_required(login_url='/login')
 def import_all_pairs(request, id):
     exchange = Exchange.objects.get(id=id)
-    exchange.exchanges.update(supported=True)
-    exchange.exchanges.update(supported_at=datetime.datetime.now())
+    exchange.pairs.update(supported=True)
+    exchange.pairs.update(supported_at=datetime.datetime.now())
+    # support base coin of pairs
+    for pair in exchange.pairs.all():
+        pair.base_coin.supported = True
+        pair.base_coin.supported_at = datetime.datetime.now()
+        pair.base_coin.save()
     return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': id }))
 
 
 @csrf_exempt
 def coins_(request):
-    form_param = json.loads(request.body or "{}")
-    limit = int(form_param.get('rowCount'))
-    page = int(form_param.get('current'))
-
-    qs = MasterCoin.objects.filter(is_master=True)
-    total = qs.count()
-    coins = []
-
-    lstart = (page - 1) * limit
-    lend = lstart + limit
-
-    for coin in qs[lstart:lend]:
-        coin_ = {
-            'id': coin.id,
-            'symbol': coin.symbol,
-            'cryptocompare': 'YES' if coin.cryptocompare > 0 else 'NO',
-            'coinapi': 'YES' if coin.coinapi > 0 else 'NO',
-            'supported': 'YES' if coin.supported else 'NO'
-        }
-        coins.append(coin_)
-
-    return JsonResponse({
-        "current": page,
-        "rowCount": limit,
-        "rows": coins,
-        "total": total
-        }, safe=False)
-
+    q = Q(is_master=True)
+    return _coins(request, q)
 
 @csrf_exempt
 def supported_coins_(request):
+    q = Q(supported=True)
+    return _coins(request, q)
+
+
+def _coins(request, q):
     form_param = json.loads(request.body or "{}")
     limit = int(form_param.get('rowCount'))
     page = int(form_param.get('current'))
 
-    qs = MasterCoin.objects.filter(supported=True)
+    qs = MasterCoin.objects.filter(q)
     total = qs.count()
     coins = []
 
@@ -143,6 +128,7 @@ def supported_coins_(request):
             'symbol': coin.symbol,
             'cryptocompare': 'YES' if coin.cryptocompare > 0 else 'NO',
             'coinapi': 'YES' if coin.coinapi > 0 else 'NO',
+            'cmc': 'YES' if coin.coinmarketcap > 0 else 'NO',
             'supported': 'YES' if coin.supported else 'NO'
         }
         coins.append(coin_)
@@ -199,7 +185,7 @@ def supported_exchanges_(request):
     lend = lstart + limit
 
     for exchange in qs[lstart:lend]:
-        pairs = exchange.exchanges.all() # filter(supported=False)
+        pairs = exchange.pairs.filter(supported=True)
         coins = []
         for pair in pairs:
             coins.append(pair.base_coin.symbol)
@@ -229,7 +215,7 @@ def exchange_detail_(request, id):
     page = int(form_param.get('current'))
 
     exchange = Exchange.objects.get(id=id)
-    qs = exchange.exchanges.all().order_by('base_coin')
+    qs = exchange.pairs.all().order_by('base_coin')
     total = qs.count()
     result = []
 
@@ -239,7 +225,7 @@ def exchange_detail_(request, id):
     pre_coin = None
     for ii in qs[lstart:lend]:
         coin = '' if pre_coin == ii.base_coin.symbol else ii.base_coin.symbol
-        
+
         is_master = ''         
         if ii.base_coin.is_master:
             if ii.base_coin.cryptocompare > 0 and ii.base_coin.coinapi > 0:
