@@ -217,12 +217,12 @@ def supported_exchanges_(request):
 
 @csrf_exempt
 def exchange_detail_(request, id):
-    form_param = json.loads(request.body or "{}")
-    limit = int(form_param.get('rowCount'))
-    page = int(form_param.get('current'))
+    limit = int(request.POST.get('rowCount'))
+    page = int(request.POST.get('current'))
+    keyword = request.POST.get('searchPhrase')
 
     exchange = Exchange.objects.get(id=id)
-    qs = exchange.pairs.all().order_by('base_coin')
+    qs = exchange.pairs.filter(Q(base_coin__symbol__icontains=keyword) | Q(quote_coin__symbol__icontains=keyword)).order_by('base_coin')
     total = qs.count()
     result = []
 
