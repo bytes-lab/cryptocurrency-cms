@@ -239,12 +239,24 @@ def exchange_detail_(request, id):
     pre_coin = None
     for ii in qs[lstart:lend]:
         coin = '' if pre_coin == ii.base_coin.symbol else ii.base_coin.symbol
+        
+        is_master = ''         
+        if ii.base_coin.is_master:
+            if ii.base_coin.cryptocompare > 0 and ii.base_coin.coinapi > 0:
+                is_master = 'Both'
+            elif ii.base_coin.cryptocompare > 0:
+                is_master = 'Cryptocompare'
+            else:
+                is_master = 'Cryptocompare'
+        else:
+            is_master = 'None'
+
         ii_ = {
             'id': ii.id,
             'coin': coin,
             'pair': ii.base_coin.symbol + ' / ' + ii.quote_coin.symbol,
             'supported': 'YES' if ii.supported else 'NO',
-            'is_master': '' if coin == '' else 'YES' if ii.base_coin.is_master else 'NO',
+            'is_master': is_master,
             'supported_at': str(ii.supported_at) if ii.supported_at else ''
         }
         result.append(ii_)

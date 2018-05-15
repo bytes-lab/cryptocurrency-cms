@@ -19,7 +19,7 @@ function load_coins() {
                 return row[column.id].replace(/@/g, '<br>');
             },
             "commands": function(column, row) {
-                return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/print_history/" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></a>";
+                return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"#" + row.id + "\"><span class=\"zmdi zmdi-plus\"></span></a>";
             }
         },
         labels: {
@@ -88,7 +88,7 @@ function load_exchanges() {
 }
 
 function load_exchange_detail() {
-    $("#data-table-exchange-detail").bootgrid({
+    var grid = $("#data-table-exchange-detail").bootgrid({
         css: {
             icon: 'zmdi icon',
             iconColumns: 'zmdi-view-module',
@@ -104,7 +104,7 @@ function load_exchange_detail() {
                 if (row.supported == 'YES') {
                     return '<span class="text-success m-l-5 f-500 f-15">N/A</span>';
                 } else {
-                    return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/add_pair/" + row.id + "\"><span class=\"zmdi zmdi-eye\"></span></a>";
+                    return "<a type=\"button\" class=\"btn btn-icon command-add waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-eye\"></span></a>";
                 }
 
             }
@@ -130,6 +130,17 @@ function load_exchange_detail() {
 
             return JSON.stringify(model);
         }                
+    }).on("loaded.rs.jquery.bootgrid", function() {
+        grid.find(".command-add").on("click", function(e) {
+            var item_id = $(this).data("row-id");
+            //Warning Message
+            if ($('.supported-exchange').length == 0) {
+                swal({title:"Notification!", text:"The exchange is not supported.", type:"warning"}, 
+                                    function() {});                
+            } else {
+                location.href = "/add_pair/" + item_id;
+            }
+        });
     });        
 }
 

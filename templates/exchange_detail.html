@@ -20,12 +20,14 @@
                 <div class="row">
                     <div class="col-md-12 p-b-20 p-t-10">
                         {% if exchange.supported %}
-                        <span class="text-success f-500 f-16 p-t-5">Status: Supported</span>
+                            <span class="text-success f-500 f-16 p-t-5 supported-exchange">Status: Supported</span>
+                            <a class="btn btn-info waves-effect m-l-10" href="/import_all_pairs/{{ exchange.id }}">Import Coins / Pairs</a>
+                            <a class="btn btn-info waves-effect m-l-10">Refresh from exchange</a>
                         {% else %}
-                        <a class="btn btn-info waves-effect" href="/exchange_support/{{ exchange.id }}">Add Exchange</a>
+                            <a class="btn btn-info waves-effect" href="/exchange_support/{{ exchange.id }}">Add Exchange</a>
+                            <a class="btn btn-info waves-effect m-l-10" disabled>Import Coins / Pairs</a>
+                            <a class="btn btn-info waves-effect m-l-10" disabled>Refresh from exchange</a>
                         {% endif %}
-                        <a class="btn btn-info waves-effect m-l-10" href="/import_all_pairs/{{ exchange.id }}">Import Coins / Pairs</a>
-                        <a class="btn btn-info waves-effect m-l-10">Refresh from exchange</a>
                     </div>
                 </div>
                 <div class="table-responsive">
