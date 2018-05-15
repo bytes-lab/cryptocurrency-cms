@@ -90,6 +90,13 @@ def add_pair(request, id):
     pair.save()
     return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': pair.exchange.id }))
 
+@login_required(login_url='/login')
+def add_to_world(request, id):
+    coin = MasterCoin.objects.get(id=id)
+    coin.supported = True
+    coin.save()
+    return HttpResponseRedirect(reverse('all_coins'))
+
 
 @login_required(login_url='/login')
 def import_all_pairs(request, id):

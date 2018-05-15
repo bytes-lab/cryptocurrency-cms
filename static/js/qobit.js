@@ -55,7 +55,7 @@ function load_all_coins() {
             },
             "commands": function(column, row) {
                 if (row.status == 'NEW') {
-                    return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"#" + row.id + "\"><span class=\"zmdi zmdi-plus\"></span></a>";
+                    return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/add_to_world/" + row.id + "\"><span class=\"zmdi zmdi-plus\"></span></a>";
                 } else {
                     return '<div class="text-success m-5 f-500 f-15">N/A</div>';
                 }

@@ -44,4 +44,5 @@ urlpatterns = [
     url(r"^exchange_support/(?P<id>\d+)", exchange_support, name="exchange_support"),
     url(r"^import_all_pairs/(?P<id>\d+)", import_all_pairs, name="import_all_pairs"),
     url(r"^add_pair/(?P<id>\d+)", add_pair, name="add_pair"),
+    url(r"^add_to_world/(?P<id>\d+)", add_to_world, name="add_to_world"),
 ]

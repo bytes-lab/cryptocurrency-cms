@@ -26,7 +26,7 @@ def main():
 
         coin, is_new = MasterCoin.objects.update_or_create(symbol=coin['symbol'], defaults=defaults)
         if is_new:
-            send_email(coin['symbol'])
+            send_email(coin['symbol'], True, 'Coinmarketcap')
 
 if __name__ == "__main__":
     main()
