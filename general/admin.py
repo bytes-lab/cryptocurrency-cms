@@ -36,7 +36,7 @@ class CoinapiSupportFilter(SimpleListFilter):
 class MasterCoinAdmin(admin.ModelAdmin):
     list_display = ['symbol', 'supported', 'cryptocompare_support', 'coinapi_support']
     search_fields = ['symbol']
-    list_filter = [CoinapiSupportFilter, CryptocompareSupportFilter, 'supported']
+    list_filter = [CoinapiSupportFilter, CryptocompareSupportFilter, 'supported', 'is_master']
 
     def cryptocompare_support(self, obj):
         return obj.cryptocompare > 0

@@ -1,4 +1,5 @@
 import json
+import datetime
 
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
@@ -42,6 +43,16 @@ def home(request):
 
 
 @login_required(login_url='/login')
+def coins(request):
+    return render(request, 'coins.html', {})
+
+
+@login_required(login_url='/login')
+def supported_coins(request):
+    return render(request, 'supported_coins.html', {})
+
+
+@login_required(login_url='/login')
 def exchanges(request):
     return render(request, 'exchanges.html', {})
 
@@ -57,13 +68,38 @@ def exchange_detail(request, id):
     return render(request, 'exchange_detail.html', { "exchange": exchange })
 
 
+@login_required(login_url='/login')
+def exchange_support(request, id):
+    exchange = Exchange.objects.get(id=id)
+    exchange.supported = True
+    exchange.supported_at = datetime.datetime.now()
+    exchange.save()
+    return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': id }))
+
+@login_required(login_url='/login')
+def add_pair(request, id):
+    pair = ExchangePair.objects.get(id=id)
+    pair.supported = True
+    pair.supported_at = datetime.datetime.now()
+    pair.save()
+    return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': pair.exchange.id }))
+
+
+@login_required(login_url='/login')
+def import_all_pairs(request, id):
+    exchange = Exchange.objects.get(id=id)
+    exchange.exchanges.update(supported=True)
+    exchange.exchanges.update(supported_at=datetime.datetime.now())
+    return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': id }))
+
+
 @csrf_exempt
 def coins_(request):
     form_param = json.loads(request.body or "{}")
     limit = int(form_param.get('rowCount'))
     page = int(form_param.get('current'))
 
-    qs = MasterCoin.objects.all()
+    qs = MasterCoin.objects.filter(is_master=True)
     total = qs.count()
     coins = []
 
@@ -87,6 +123,36 @@ def coins_(request):
         "total": total
         }, safe=False)
 
+
+@csrf_exempt
+def supported_coins_(request):
+    form_param = json.loads(request.body or "{}")
+    limit = int(form_param.get('rowCount'))
+    page = int(form_param.get('current'))
+
+    qs = MasterCoin.objects.filter(supported=True)
+    total = qs.count()
+    coins = []
+
+    lstart = (page - 1) * limit
+    lend = lstart + limit
+
+    for coin in qs[lstart:lend]:
+        coin_ = {
+            'id': coin.id,
+            'symbol': coin.symbol,
+            'cryptocompare': 'YES' if coin.cryptocompare > 0 else 'NO',
+            'coinapi': 'YES' if coin.coinapi > 0 else 'NO',
+            'supported': 'YES' if coin.supported else 'NO'
+        }
+        coins.append(coin_)
+
+    return JsonResponse({
+        "current": page,
+        "rowCount": limit,
+        "rows": coins,
+        "total": total
+        }, safe=False)
 
 @csrf_exempt
 def exchanges_(request):
@@ -133,7 +199,7 @@ def supported_exchanges_(request):
     lend = lstart + limit
 
     for exchange in qs[lstart:lend]:
-        pairs = exchange.exchanges.filter(supported=False)
+        pairs = exchange.exchanges.all() # filter(supported=False)
         coins = []
         for pair in pairs:
             coins.append(pair.base_coin.symbol)
@@ -170,14 +236,19 @@ def exchange_detail_(request, id):
     lstart = (page - 1) * limit
     lend = lstart + limit
 
+    pre_coin = None
     for ii in qs[lstart:lend]:
+        coin = '' if pre_coin == ii.base_coin.symbol else ii.base_coin.symbol
         ii_ = {
             'id': ii.id,
-            'coin': ii.base_coin.symbol,
+            'coin': coin,
             'pair': ii.base_coin.symbol + ' / ' + ii.quote_coin.symbol,
-            'supported': 'YES' if ii.supported else 'NO'
+            'supported': 'YES' if ii.supported else 'NO',
+            'is_master': '' if coin == '' else 'YES' if ii.base_coin.is_master else 'NO',
+            'supported_at': str(ii.supported_at) if ii.supported_at else ''
         }
         result.append(ii_)
+        pre_coin = ii.base_coin.symbol
 
     return JsonResponse({
         "current": page,

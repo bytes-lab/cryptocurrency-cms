@@ -17,6 +17,17 @@
             </div>
             
             <div class="card-body card-padding">
+                <div class="row">
+                    <div class="col-md-12 p-b-20 p-t-10">
+                        {% if exchange.supported %}
+                        <span class="text-success f-500 f-16 p-t-5">Status: Supported</span>
+                        {% else %}
+                        <a class="btn btn-info waves-effect" href="/exchange_support/{{ exchange.id }}">Add Exchange</a>
+                        {% endif %}
+                        <a class="btn btn-info waves-effect m-l-10" href="/import_all_pairs/{{ exchange.id }}">Import Coins / Pairs</a>
+                        <a class="btn btn-info waves-effect m-l-10">Refresh from exchange</a>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table id="data-table-exchange-detail" class="table table-striped" data-ajax="true" data-url="/exchanges_/{{ exchange.id }}">
                         <thead>
@@ -24,6 +35,10 @@
                                 <th data-column-id="coin">Coin</th>
                                 <th data-column-id="pair">Pair</th>
                                 <th data-column-id="supported">Supported</th>
+                                <th data-column-id="is_master">Intersected</th>
+                                {% if exchange.supported %}
+                                <th data-column-id="supported_at">Date Added</th>
+                                {% endif %}
                                 <th data-column-id="action" data-formatter="commands" data-sortable="false">Action</th>
                             </tr>
                         </thead>

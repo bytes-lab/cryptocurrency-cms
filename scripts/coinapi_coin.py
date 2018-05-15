@@ -22,7 +22,8 @@ def main():
     for coin in info:
         defaults = {
             "coinapi": 1,
-            "type_is_crypto": coin.get('type_is_crypto')
+            "type_is_crypto": coin.get('type_is_crypto'),
+            "is_master": True
         }
 
         coin, is_new = MasterCoin.objects.update_or_create(symbol=coin['asset_id'], defaults=defaults)

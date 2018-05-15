@@ -101,7 +101,12 @@ function load_exchange_detail() {
                 return row[column.id].replace(/@/g, '<br>');
             },
             "commands": function(column, row) {
-                return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/exchanges/" + row.id + "\"><span class=\"zmdi zmdi-eye\"></span></a>";
+                if (row.supported == 'YES') {
+                    return '<span class="text-success m-l-5 f-500 f-15">N/A</span>';
+                } else {
+                    return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/add_pair/" + row.id + "\"><span class=\"zmdi zmdi-eye\"></span></a>";
+                }
+
             }
         },
         labels: {

@@ -35,7 +35,8 @@ def main():
             'twitter_handle': info.get('Twitter'),
             'block_time': info.get('BlockTime') or -1,
             'proof_type': info.get('ProofType'),
-            'block_reward': info.get('BlockReward')
+            'block_reward': info.get('BlockReward'),
+            'is_master': True
         }
 
         MasterCoin.objects.update_or_create(symbol=val.get('Symbol'), defaults=defaults)

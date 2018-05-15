@@ -29,11 +29,17 @@ urlpatterns = [
     url(r"^logout", user_logout, name="logout"),
 
     url(r"^$", home, name="home"),
+    url(r"^coins$", coins, name="coins"),
     url(r"^coins_$", coins_, name="coins_"),
+    url(r"^supported_coins$", supported_coins, name="supported_coins"),
+    url(r"^supported_coins_$", supported_coins_, name="supported_coins_"),
     url(r"^exchanges$", exchanges, name="exchanges"),
     url(r"^exchanges_$", exchanges_, name="exchanges_"),
     url(r"^supported_exchanges$", supported_exchanges, name="supported_exchanges"),
     url(r"^supported_exchanges_$", supported_exchanges_, name="supported_exchanges_"),
     url(r"^exchanges/(?P<id>\d+)", exchange_detail, name="exchange_detail"),
     url(r"^exchanges_/(?P<id>\d+)", exchange_detail_, name="exchange_detail_"),
+    url(r"^exchange_support/(?P<id>\d+)", exchange_support, name="exchange_support"),
+    url(r"^import_all_pairs/(?P<id>\d+)", import_all_pairs, name="import_all_pairs"),
+    url(r"^add_pair/(?P<id>\d+)", add_pair, name="add_pair"),
 ]
