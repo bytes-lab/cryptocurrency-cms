@@ -120,11 +120,11 @@ def all_coins_(request):
     return _coins(request, q)
 
 def _coins(request, q):
-    form_param = json.loads(request.body or "{}")
-    limit = int(form_param.get('rowCount'))
-    page = int(form_param.get('current'))
+    limit = int(request.POST.get('rowCount'))
+    page = int(request.POST.get('current'))
+    keyword = request.POST.get('searchPhrase')
 
-    qs = MasterCoin.objects.filter(q)
+    qs = MasterCoin.objects.filter(q & Q(symbol__icontains=keyword))
     total = qs.count()
     coins = []
 
