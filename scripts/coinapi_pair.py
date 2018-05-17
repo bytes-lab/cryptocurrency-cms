@@ -13,6 +13,7 @@ django.setup()
 
 from general.models import *
 from django.conf import settings
+from utils import send_email
 
 def get_coins():
     coins = {}
@@ -21,6 +22,7 @@ def get_coins():
     return coins
 
 def add_coin(coin):
+    send_email(coin, False, 'Coinapi')
     MasterCoin.objects.create(symbol=coin, is_trading=True, cryptocompare=1)
     return get_coins()
 

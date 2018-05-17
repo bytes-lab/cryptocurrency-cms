@@ -12,6 +12,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qobit_cms.settings")
 django.setup()
 
 from general.models import *
+from utils import send_email
 
 def get_coins():
     coins = {}
@@ -20,6 +21,7 @@ def get_coins():
     return coins
 
 def add_coin(coin):
+    send_email(coin, False, 'Cryptocompare')
     MasterCoin.objects.create(symbol=coin, is_trading=True, cryptocompare=1)
     return get_coins()
     

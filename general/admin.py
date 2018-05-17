@@ -6,7 +6,7 @@ from general.models import *
 
 
 class CryptocompareSupportFilter(SimpleListFilter):
-    title = 'cryptocompare' # or use _('country') for translated title
+    title = 'cryptocompare'
     parameter_name = 'cryptocompare'
 
     def lookups(self, request, model_admin):
@@ -20,7 +20,7 @@ class CryptocompareSupportFilter(SimpleListFilter):
 
 
 class CoinapiSupportFilter(SimpleListFilter):
-    title = 'coinapi' # or use _('country') for translated title
+    title = 'coinapi'
     parameter_name = 'coinapi'
 
     def lookups(self, request, model_admin):
@@ -33,10 +33,24 @@ class CoinapiSupportFilter(SimpleListFilter):
             return queryset.exclude(coinapi__gt=0)
 
 
+class CoinmarketcapSupportFilter(SimpleListFilter):
+    title = 'coinmarketcap'
+    parameter_name = 'coinmarketcap'
+
+    def lookups(self, request, model_admin):
+        return (('True', _('Yes')), ('False', _('No')))
+
+    def queryset(self, request, queryset):
+        if self.value() == 'True':
+            return queryset.filter(coinmarketcap__gt=0)
+        if self.value() == 'False':
+            return queryset.exclude(coinmarketcap__gt=0)
+
+
 class MasterCoinAdmin(admin.ModelAdmin):
     list_display = ['symbol', 'supported', 'cryptocompare_support', 'coinapi_support', 'coinmarketcap_support']
     search_fields = ['symbol']
-    list_filter = [CoinapiSupportFilter, CryptocompareSupportFilter, 'supported', 'is_master']
+    list_filter = [CoinmarketcapSupportFilter, CoinapiSupportFilter, CryptocompareSupportFilter, 'supported', 'is_master']
 
     def cryptocompare_support(self, obj):
         return obj.cryptocompare > 0
@@ -51,7 +65,7 @@ class MasterCoinAdmin(admin.ModelAdmin):
     def coinmarketcap_support(self, obj):
         return obj.coinmarketcap > 0
     coinmarketcap_support.boolean = True
-    coinmarketcap_support.short_description = 'Coinapi'
+    coinmarketcap_support.short_description = 'Coinmarketcap'
 
 
 class ExchangeAdmin(admin.ModelAdmin):

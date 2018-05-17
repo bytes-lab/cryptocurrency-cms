@@ -1,16 +1,17 @@
 from django.core.mail import send_mail
+from django.conf import settings
 
 def send_email(symbol, is_master, source):
     if is_master:
-        url = 'http://localhost:8000/world_of_coins'
+        url = 'http://{}/world_of_coins'.format(settings.ALLOWED_HOSTS[0])
     else:
-        url = 'http://localhost:8000/coins'
+        url = 'http://{}/coins'.format(settings.ALLOWED_HOSTS[0])
 
     send_mail(
         'Qobit Notification',
         'New coin ( {} ) is discovered from {}. Go to {} and check it.'
         .format(symbol, source, url),
-        'info@qobit.com',
-        ['jason.5001001@gmail.com'],
+        settings.DEFAULT_FROM_EMAIL,
+        ['alerts@qobit.com', 'ellis.zoric@qobit.com'],
         fail_silently=False,
     )
