@@ -256,6 +256,7 @@ def exchange_detail_(request, id):
             'coin': coin,
             'pair': ii.base_coin.symbol + ' / ' + ii.quote_coin.symbol,
             'supported': 'YES' if ii.supported else 'NO',
+            'coin_supported': ii.base_coin.supported,
             'is_master': is_master,
             'supported_at': str(ii.supported_at) if ii.supported_at else ''
         }

@@ -97,8 +97,15 @@ function load_exchange_detail() {
                 if (row.supported == 'YES') {
                     return '<div class="text-success m-5 f-500 f-15">N/A</div>';
                 } else {
-                    return "<a type=\"button\" class=\"btn btn-icon command-add waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-eye\"></span></a>";
+                    return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-plus\"></span></a>";
                 }
+            },
+            "coins": function(column, row) {
+                if (row.coin_supported) {
+                    return row.coin;
+                } else if (row.coin) {
+                    return "<span class='p-r-10'>"+row.coin+"</span>"+ "<a class='btn bgm-blue btn-xs waves-effect'>Link</a>";
+                }                
             }
         },
         templates: {
