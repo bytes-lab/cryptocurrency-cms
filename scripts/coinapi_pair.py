@@ -15,34 +15,13 @@ from general.models import *
 from django.conf import settings
 from utils import send_email
 
-def get_coins():
-    coins = {}
-    for coin in MasterCoin.objects.all():
-        coins[coin.symbol] = coin.id
-    return coins
-
-def add_coin(coin):
-    send_email(coin, False, 'Coinapi')
-    MasterCoin.objects.create(symbol=coin, is_trading=True, cryptocompare=1)
-    return get_coins()
-
-def get_exchanges():
-    exchanges = {}
-    for exchange in Exchange.objects.all():
-        exchanges[exchange.name] = exchange.id
-    return exchanges
-
-def add_exchnage(exchange):
-    Exchange.objects.create(name=exchange, coinapi=exchange)
-    return get_exchanges()
-
 def main():
     headers = { 'X-CoinAPI-Key': settings.COINAPI_KEY }
     url = 'https://rest.coinapi.io/v1/symbols'
     info = requests.get(url, headers=headers).json()
 
-    coins = get_coins()
-    exchanges = get_exchanges()
+    coins = [ii.symbol for ii in CoinapiCoin.objects.all()]
+    exchanges = [ii.coinapi for ii in Exchange.objects.all() if ii.coinapi]
 
     for pair in info:
         base = pair['asset_id_base']
@@ -50,29 +29,15 @@ def main():
         exchange = pair['exchange_id']
 
         if exchange not in exchanges:
-            exchanges = add_exchnage(exchange)
+            continue
         if base not in coins:
-            coins = add_coin(base)
+            continue
         if quote not in coins:
-            coins = add_coin(quote)
+            continue
 
-        defaults = {
-            "coinapi_availability": True,
-            "data_start": parse_date(pair.get('data_start')),
-            "data_end": parse_date(pair.get('data_end'))
-        }
-
-        pair, is_new = ExchangePair.objects.update_or_create(exchange_id=exchanges[exchange], 
-                                                             base_coin_id=coins[base],
-                                                             quote_coin_id=coins[quote],
-                                                             defaults=defaults)
-
-def parse_date(str_date):
-    return datetime.datetime.strptime(str_date, '%Y-%m-%d') if str_date else None
-
-def parse_datetime(str_datetime):
-    if str_datetime:
-        return datetime.datetime.strptime(str_datetime.split(".")[0], '%Y-%m-%dT%H:%M:%S')
+        pair, is_new = CoinapiPair.objects.update_or_create(exchange=exchange, 
+                                                            base_coin=base,
+                                                            quote_coin=quote)
 
 if __name__ == "__main__":
     main()

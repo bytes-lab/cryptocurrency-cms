@@ -35,7 +35,9 @@ def main():
                 if quote not in coins:
                     continue
 
-                pair, is_new = CryptocomparePair.objects.update_or_create(base_coin=base, quote_coin=quote)
+                pair, is_new = CryptocomparePair.objects.update_or_create(exchange=key.upper(),
+                                                                          base_coin=base, 
+                                                                          quote_coin=quote)
 
 
 if __name__ == "__main__":

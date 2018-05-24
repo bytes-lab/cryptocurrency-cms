@@ -25,7 +25,7 @@ def main():
             "website_url": exchange.get('website')
         }
         exchange, is_new = Exchange.objects.update_or_create(name=exchange['exchange_id'], defaults=defaults)
-
+        # consider more about possible minor differences over same exchanges
 
 if __name__ == "__main__":
     main()
