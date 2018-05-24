@@ -118,12 +118,19 @@ class CryptocompareCoin(models.Model):
     class Meta:
         db_table = 'cc_coin_xref'
 
+    def __str__(self):
+        return self.symbol
+
 
 class CoinmarketcapCoin(models.Model):
+    token = models.CharField(max_length=255)      # id from api
     symbol = models.CharField(max_length=255)
 
     class Meta:
         db_table = 'cmc_coin_xref'
+
+    def __str__(self):
+        return '{} - {}'.format(self.symbol, self.token)
 
 
 class CoinapiCoin(models.Model):
@@ -132,3 +139,5 @@ class CoinapiCoin(models.Model):
     class Meta:
         db_table = 'coinapi_coin_xref'
 
+    def __str__(self):
+        return self.symbol

@@ -20,13 +20,12 @@ def main():
 
     for coin in info:
         defaults = {
-            "coinmarketcap": coin['rank'],
-            "is_master": True
+            "symbol": coin['symbol'],
         }
 
-        coin, is_new = MasterCoin.objects.update_or_create(symbol=coin['symbol'], defaults=defaults)
-        if is_new:
-            send_email(coin['symbol'], True, 'Coinmarketcap')
+        coin, is_new = CoinmarketcapCoin.objects.update_or_create(token=coin['id'], defaults=defaults)
+        # if is_new:
+        #     send_email(coin['symbol'], True, 'Coinmarketcap')
 
 if __name__ == "__main__":
     main()
