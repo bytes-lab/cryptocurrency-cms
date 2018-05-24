@@ -136,9 +136,42 @@ class CoinmarketcapCoin(models.Model):
 class CoinapiCoin(models.Model):
     symbol = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
-    
+
     class Meta:
         db_table = 'coinapi_coin_xref'
 
     def __str__(self):
         return self.symbol
+
+
+class CryptocomparePair(models.Model):
+    base_coin = models.CharField(max_length=255)
+    quote_coin = models.CharField(max_length=255)
+    
+    class Meta:
+        db_table = 'cc_pair_xref'
+
+    def __str__(self):
+        return '{} - {}'.format(self.base_coin, self.quote_coin)
+
+
+class CoinmarketcapPair(models.Model):
+    base_coin = models.CharField(max_length=255)
+    quote_coin = models.CharField(max_length=255)
+    
+    class Meta:
+        db_table = 'cmc_pair_xref'
+
+    def __str__(self):
+        return '{} - {}'.format(self.base_coin, self.quote_coin)
+
+
+class CoinapiPair(models.Model):
+    base_coin = models.CharField(max_length=255)
+    quote_coin = models.CharField(max_length=255)
+    
+    class Meta:
+        db_table = 'coinapi_pair_xref'
+
+    def __str__(self):
+        return '{} - {}'.format(self.base_coin, self.quote_coin)
