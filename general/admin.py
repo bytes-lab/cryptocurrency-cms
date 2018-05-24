@@ -87,10 +87,20 @@ class ExchangePairAdmin(admin.ModelAdmin):
     list_filter = ['exchange']
 
 
+class CCCoinAdmin(admin.ModelAdmin):
+    list_display = ['symbol', 'name']
+    search_fields = ['symbol', 'name']
+
+
+class CMCCoinAdmin(admin.ModelAdmin):
+    list_display = ['symbol', 'token']
+    search_fields = ['symbol', 'token']
+
+
 admin.site.register(MasterCoin, MasterCoinAdmin)
 admin.site.register(Exchange, ExchangeAdmin)
 admin.site.register(ExchangePair, ExchangePairAdmin)
 admin.site.register(DataProvider)
-admin.site.register(CryptocompareCoin)
-admin.site.register(CoinmarketcapCoin)
-admin.site.register(CoinapiCoin)
+admin.site.register(CryptocompareCoin, CCCoinAdmin)
+admin.site.register(CoinmarketcapCoin, CMCCoinAdmin)
+admin.site.register(CoinapiCoin, CCCoinAdmin)

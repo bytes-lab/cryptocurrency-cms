@@ -135,7 +135,8 @@ class CoinmarketcapCoin(models.Model):
 
 class CoinapiCoin(models.Model):
     symbol = models.CharField(max_length=255)
-
+    name = models.CharField(max_length=255)
+    
     class Meta:
         db_table = 'coinapi_coin_xref'
 

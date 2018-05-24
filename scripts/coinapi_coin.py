@@ -22,14 +22,12 @@ def main():
 
     for coin in info:
         defaults = {
-            "coinapi": 1,
-            "type_is_crypto": coin.get('type_is_crypto'),
-            "is_master": True
+            "name": coin.get('name'),
         }
 
-        coin, is_new = MasterCoin.objects.update_or_create(symbol=coin['asset_id'], defaults=defaults)
-        if is_new:
-            send_email(coin['asset_id'], True, 'Coinapi')
+        coin, is_new = CoinapiCoin.objects.update_or_create(symbol=coin['asset_id'], defaults=defaults)
+        # if is_new:
+        #     send_email(coin['asset_id'], True, 'Coinapi')
 
 
 if __name__ == "__main__":
