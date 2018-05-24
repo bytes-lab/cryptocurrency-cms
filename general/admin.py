@@ -87,6 +87,11 @@ class ExchangePairAdmin(admin.ModelAdmin):
     list_filter = ['exchange']
 
 
+class ExchangePairXrefAdmin(admin.ModelAdmin):
+    list_display = ['base_coin', 'quote_coin']
+    search_fields = ['base_coin', 'quote_coin']
+
+
 class CCCoinAdmin(admin.ModelAdmin):
     list_display = ['symbol', 'name']
     search_fields = ['symbol', 'name']
@@ -104,3 +109,6 @@ admin.site.register(DataProvider)
 admin.site.register(CryptocompareCoin, CCCoinAdmin)
 admin.site.register(CoinmarketcapCoin, CMCCoinAdmin)
 admin.site.register(CoinapiCoin, CCCoinAdmin)
+admin.site.register(CryptocomparePair, ExchangePairXrefAdmin)
+admin.site.register(CoinmarketcapPair, ExchangePairXrefAdmin)
+admin.site.register(CoinapiPair, ExchangePairXrefAdmin)

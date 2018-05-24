@@ -14,22 +14,11 @@ django.setup()
 from general.models import *
 from utils import send_email
 
-def get_coins():
-    coins = {}
-    for coin in MasterCoin.objects.all():
-        coins[coin.symbol] = coin.id
-    return coins
-
-def add_coin(coin):
-    send_email(coin, False, 'Cryptocompare')
-    MasterCoin.objects.create(symbol=coin, is_trading=True, cryptocompare=1)
-    return get_coins()
-    
 def main():
     url = 'https://min-api.cryptocompare.com/data/all/exchanges'
     info = requests.get(url).json()
 
-    coins = get_coins()
+    coins = [ii.symbol for ii in CryptocompareCoin.objects.all()]
 
     for key, val in info.items():
         defaults = {
@@ -39,18 +28,14 @@ def main():
         exchange, is_new = Exchange.objects.update_or_create(name=key.upper(), defaults=defaults)
 
         for base, quotes in val.items():
-            for quote in quotes:
-                if base not in coins:
-                    coins = add_coin(base)
-                if quote not in coins:
-                    coins = add_coin(quote)
+            if base not in coins:
+                continue
 
-                pair, is_new = ExchangePair.objects.update_or_create(exchange=exchange, 
-                                                                     base_coin_id=coins[base],
-                                                                     quote_coin_id=coins[quote],
-                                                                     defaults={
-                                                                        "cryptocompare_availability": True
-                                                                     })
+            for quote in quotes:
+                if quote not in coins:
+                    continue
+
+                pair, is_new = CryptocomparePair.objects.update_or_create(base_coin=base, quote_coin=quote)
 
 
 if __name__ == "__main__":
