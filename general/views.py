@@ -227,12 +227,13 @@ def exchange_detail_(request, id):
     limit = int(request.POST.get('rowCount'))
     page = int(request.POST.get('current'))
     keyword = request.POST.get('searchPhrase')
+    lstart = (page - 1) * limit
+    lend = lstart + limit
 
     exchange = Exchange.objects.get(id=id)
     qs = exchange.pairs.filter(Q(base_coin__symbol__icontains=keyword) 
                              | Q(quote_coin__symbol__icontains=keyword)) \
                        .order_by('base_coin')
-
     result = {}
     for ii in qs:
         is_master = 'Master'
@@ -292,20 +293,15 @@ def exchange_detail_(request, id):
         result_cc.append(v)
 
     pre_coin = None
-    for ii in result_cc:
+    for ii in result_cc[lstart:lend]:
         [base, quote] = ii['pair'].split(' / ')
         coin = '' if pre_coin == base else base
         ii['coin'] = coin
         pre_coin = base
 
-
-    total = len(result_cc)
-    lstart = (page - 1) * limit
-    lend = lstart + limit
-
     return JsonResponse({
         "current": page,
         "rowCount": limit,
         "rows": result_cc[lstart:lend],
-        "total": total
+        "total": len(result_cc)
         }, safe=False)
