@@ -43,6 +43,9 @@ class MasterCoin(models.Model):
     supported = models.BooleanField(default=False)
     supported_at = models.DateField(null=True, blank=True)
 
+    class Meta:
+        db_table = 'mastercoin'
+
     def __str__(self):
         return self.symbol
 
@@ -65,6 +68,9 @@ class Exchange(models.Model):
     supported = models.BooleanField(default=False)
     supported_at = models.DateField(null=True, blank=True)
 
+    class Meta:
+        db_table = 'exchange'
+
     def __str__(self):
         return self.name
 
@@ -85,6 +91,9 @@ class ExchangePair(models.Model):
     supported = models.BooleanField(default=False)
     supported_at = models.DateField(null=True, blank=True)
     
+    class Meta:
+        db_table = 'exchange_pair'
+
     def __str__(self):
         return '{}: {}-{}'.format(self.exchange.name, self.base_coin.symbol, self.quote_coin.symbol)
 
@@ -97,3 +106,29 @@ class ExchangePairRawTradeProviderXref(models.Model):
     provider_base_ccy_code = models.CharField(max_length=255)
     provider_quote_ccy_code = models.CharField(max_length=255)
     source_type = models.IntegerField(default=1)
+
+    class Meta:
+        db_table = 'exchange_pair_xref'
+
+
+class CryptocompareCoin(models.Model):
+    symbol = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'cc_coin_xref'
+
+
+class CoinmarketcapCoin(models.Model):
+    symbol = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'cmc_coin_xref'
+
+
+class CoinapiCoin(models.Model):
+    symbol = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'coinapi_coin_xref'
+
