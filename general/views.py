@@ -229,43 +229,83 @@ def exchange_detail_(request, id):
     keyword = request.POST.get('searchPhrase')
 
     exchange = Exchange.objects.get(id=id)
-    qs = exchange.pairs.filter(Q(base_coin__symbol__icontains=keyword) | Q(quote_coin__symbol__icontains=keyword)).order_by('base_coin')
-    total = qs.count()
-    result = []
+    qs = exchange.pairs.filter(Q(base_coin__symbol__icontains=keyword) 
+                             | Q(quote_coin__symbol__icontains=keyword)) \
+                       .order_by('base_coin')
 
-    lstart = (page - 1) * limit
-    lend = lstart + limit
-
-    pre_coin = None
-    for ii in qs[lstart:lend]:
-        coin = '' if pre_coin == ii.base_coin.symbol else ii.base_coin.symbol
-
-        is_master = ''         
-        if ii.base_coin.is_master:
-            if ii.base_coin.cryptocompare > 0 and ii.base_coin.coinapi > 0:
-                is_master = 'Both'
-            elif ii.base_coin.cryptocompare > 0:
-                is_master = 'Cryptocompare'
-            else:
-                is_master = 'Cryptocompare'
+    result = {}
+    for ii in qs:
+        is_master = 'Master'
+        if ii.base_coin.cryptocompare > 0 and ii.base_coin.coinapi > 0:
+            is_master = 'Both'
+        elif ii.base_coin.cryptocompare > 0:
+            is_master = 'Cryptocompare'
         else:
-            is_master = 'None'
+            is_master = 'Coinapi'
 
-        ii_ = {
-            'id': ii.id,
-            'coin': coin,
-            'pair': ii.base_coin.symbol + ' / ' + ii.quote_coin.symbol,
-            'supported': 'YES' if ii.supported else 'NO',
-            'coin_supported': ii.base_coin.supported,
+        pair = ii.base_coin.symbol + ' / ' + ii.quote_coin.symbol
+        result[pair] = {
+            'pair': pair,
+            'supported': 'YES',
+            'coin_supported': True,
             'is_master': is_master,
             'supported_at': str(ii.supported_at) if ii.supported_at else ''
         }
-        result.append(ii_)
-        pre_coin = ii.base_coin.symbol
+
+    qs_cc = CryptocomparePair.objects.filter(Q(exchange__iexact=exchange.cryptocompare) &
+                                             (Q(base_coin__icontains=keyword) |
+                                              Q(quote_coin__icontains=keyword))) \
+                                     .order_by('base_coin')
+
+    qs_cp = CoinapiPair.objects.filter(Q(exchange__iexact=exchange.coinapi) &
+                                       (Q(base_coin__icontains=keyword) |
+                                        Q(quote_coin__icontains=keyword))) \
+                               .order_by('base_coin')
+
+    for ii in qs_cc:
+        pair = ii.base_coin + ' / ' + ii.quote_coin
+        if pair not in result:
+            result[pair] = {
+                'pair': pair,
+                'supported': 'NO',
+                'coin_supported': False,
+                'is_master': 'Cryptocompare',
+                'supported_at': ''
+            }
+
+    for ii in qs_cp:
+        pair = ii.base_coin + ' / ' + ii.quote_coin
+        if pair in result:
+            if result[pair]['supported'] == 'NO':
+                result[pair]['is_master'] = 'Both'
+        else:
+            result[pair] = {
+                'pair': pair,
+                'supported': 'NO',
+                'coin_supported': False,
+                'is_master': 'Coinapi',
+                'supported_at': ''
+            }
+
+    result_cc = []
+    for k, v in sorted(result.items()):
+        result_cc.append(v)
+
+    pre_coin = None
+    for ii in result_cc:
+        [base, quote] = ii['pair'].split(' / ')
+        coin = '' if pre_coin == base else base
+        ii['coin'] = coin
+        pre_coin = base
+
+
+    total = len(result_cc)
+    lstart = (page - 1) * limit
+    lend = lstart + limit
 
     return JsonResponse({
         "current": page,
         "rowCount": limit,
-        "rows": result,
+        "rows": result_cc[lstart:lend],
         "total": total
         }, safe=False)

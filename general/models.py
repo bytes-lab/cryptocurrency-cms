@@ -79,7 +79,6 @@ class ExchangePair(models.Model):
     exchange = models.ForeignKey(Exchange, related_name="pairs")
     base_coin = models.ForeignKey(MasterCoin, related_name="base_coins")
     quote_coin = models.ForeignKey(MasterCoin, related_name="quote_coins")
-    coinmarketcap_availability = models.BooleanField(default=False)
     cryptocompare_availability = models.BooleanField(default=False)
     coinapi_availability = models.BooleanField(default=False)
     data_start = models.DateField(null=True, blank=True)
