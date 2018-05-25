@@ -97,14 +97,14 @@ function load_exchange_detail() {
                 if (row.supported == 'YES') {
                     return '<div class="text-success m-5 f-500 f-15">N/A</div>';
                 } else {
-                    return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-plus\"></span></a>";
+                    return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.pair + "\"><span class=\"zmdi zmdi-plus\"></span></a>";
                 }
             },
             "coins": function(column, row) {
                 if (row.coin_supported) {
                     return row.coin;
                 } else if (row.coin) {
-                    return "<span class='p-r-10'>"+row.coin+"</span>"+ "<a class='btn bgm-blue btn-xs waves-effect'>Link</a>";
+                    return "<span class='p-r-10'>"+row.coin+"</span>"+ "<a class='btn bgm-blue btn-xs waves-effect' href='/add_coin/"+row.coin+"/"+row.exchange+"'>Link</a>";
                 }                
             }
         },
@@ -117,14 +117,14 @@ function load_exchange_detail() {
             cache: false
         },
     }).on("loaded.rs.jquery.bootgrid", function() {
-        grid.find(".command-add").on("click", function(e) {
-            var item_id = $(this).data("row-id");
+        grid.find(".command-edit").on("click", function(e) {
+            var pair = $(this).data("row-id");
             //Warning Message
             if ($('.supported-exchange').length == 0) {
                 swal({title:"Notification!", text:"The exchange is not supported. Please add the exchange first.", type:"warning"}, 
                                     function() {});                
             } else {
-                location.href = "/add_pair/" + item_id;
+                location.href = "/add_pair/" + pair;
             }
         });
     });        

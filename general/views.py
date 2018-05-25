@@ -135,6 +135,10 @@ def _coins(request, q):
     total = qs.count()
     coins = []
 
+    cc_coins = [ii.symbol for ii in CryptocompareCoin.objects.all()]
+    cmc_coins = [ii.symbol for ii in CoinmarketcapCoin.objects.all()]
+    cp_coins = [ii.symbol for ii in CoinapiCoin.objects.all()]
+
     lstart = (page - 1) * limit
     lend = lstart + limit
 
@@ -143,9 +147,9 @@ def _coins(request, q):
         coin_ = {
             'id': coin.id,
             'symbol': coin.symbol,
-            'cryptocompare': 'YES' if coin.cryptocompare > 0 else 'NO',
-            'coinapi': 'YES' if coin.coinapi > 0 else 'NO',
-            'cmc': 'YES' if coin.coinmarketcap > 0 else 'NO',
+            'cryptocompare': 'YES' if coin.cryptocompare > 0 or coin.symbol in cc_coins else 'NO',
+            'coinapi': 'YES' if coin.coinapi > 0 or coin.symbol in cp_coins else 'NO',
+            'cmc': 'YES' if coin.coinmarketcap > 0 or coin.symbol in cmc_coins else 'NO',
             'supported': 'YES' if coin.supported else 'NO',
             'status': status
         }
@@ -297,6 +301,7 @@ def exchange_detail_(request, id):
         [base, quote] = ii['pair'].split(' / ')
         coin = '' if pre_coin == base else base
         ii['coin'] = coin
+        ii['exchange'] = id
         pre_coin = base
 
     return JsonResponse({
@@ -304,4 +309,4 @@ def exchange_detail_(request, id):
         "rowCount": limit,
         "rows": result_cc[lstart:lend],
         "total": len(result_cc)
-        }, safe=False)
+    }, safe=False)
