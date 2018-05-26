@@ -83,12 +83,13 @@ def exchange_support(request, id):
     return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': id }))
 
 @login_required(login_url='/login')
-def add_pair(request, id):
-    pair = ExchangePair.objects.get(id=id)
-    pair.supported = True
-    pair.supported_at = datetime.datetime.now()
+def add_pair(request, exchange, pair):
+    [base, quote] = pair.split('-')
+    exchange = Exchange.objects.get(id=exchange)
+    # pair.supported = True
+    # pair.supported_at = datetime.datetime.now()
     # pair.save()
-    return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': pair.exchange.id }))
+    return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': exchange.id }))
 
 @login_required(login_url='/login')
 def add_coin(request, coin, exchange):
@@ -365,8 +366,8 @@ def exchange_detail_(request, id):
         ii['exchange'] = id
         pre_coin = base
         ii['quote_coin_supported'] = MasterCoin.objects.filter(symbol=quote).exists()
-        if 'coin_supported' not in ii and coin:
-            ii['coin_supported'] = MasterCoin.objects.filter(symbol=coin).exists()
+        if 'coin_supported' not in ii:
+            ii['coin_supported'] = MasterCoin.objects.filter(symbol=base).exists()
 
 
     return JsonResponse({
