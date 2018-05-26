@@ -97,14 +97,14 @@ function load_exchange_detail() {
                 if (row.supported == 'YES') {
                     return '<div class="text-success m-5 f-500 f-15">N/A</div>';
                 } else {
-                    return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.pair + "\"><span class=\"zmdi zmdi-plus\"></span></a>";
+                    return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-pair=\"" + row.pair + "\" data-exchange=\""+row.exchange+"\"><span class=\"zmdi zmdi-plus\"></span></a>";
                 }
             },
             "coins": function(column, row) {
                 if (row.coin_supported) {
                     return row.coin;
                 } else if (row.coin) {
-                    return "<span class='p-r-10'>"+row.coin+"</span>"+ "<a class='btn bgm-blue btn-xs waves-effect' href='/add_coin/"+row.coin+"/"+row.exchange+"'>Link</a>";
+                    return "<span class='p-r-10'>"+row.coin+"</span>"+ "<a class='btn bgm-blue btn-xs waves-effect' href='/add_coin/"+row.coin+"/"+row.exchange+"' title='Add a base coin'>Link</a>";
                 }                
             }
         },
@@ -118,13 +118,14 @@ function load_exchange_detail() {
         },
     }).on("loaded.rs.jquery.bootgrid", function() {
         grid.find(".command-edit").on("click", function(e) {
-            var pair = $(this).data("row-id");
+            var pair = $(this).data("row-pair").replace(' / ', '-');
+            var exchange = $(this).data("exchange");
             //Warning Message
             if ($('.supported-exchange').length == 0) {
                 swal({title:"Notification!", text:"The exchange is not supported. Please add the exchange first.", type:"warning"}, 
                                     function() {});                
             } else {
-                location.href = "/add_pair/" + pair;
+                location.href = "/add_pair/" + exchange + '/' + pair;
             }
         });
     });        

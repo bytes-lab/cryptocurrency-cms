@@ -20,7 +20,8 @@ def main():
 
     for key, val in coins.items():
         defaults = {
-            'name': val.get('Name')
+            'name': val.get('Name'),
+            'fullname': val.get('FullName')
         }
 
         coin, is_new = CryptocompareCoin.objects.update_or_create(symbol=val.get('Symbol'), defaults=defaults)

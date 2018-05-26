@@ -15,6 +15,7 @@ class MasterCoin(models.Model):
     coinmarketcap = models.IntegerField(null=True, blank=True)  # (rank in cmc) flag for supporting, assume symbols are same
     cryptocompare = models.IntegerField(null=True, blank=True)  # (symbol id)
     cryptocompare_name = models.CharField(max_length=255, null=True, blank=True)
+    #cryptocompare_symbol = models.CharField(max_length=255, null=True, blank=True)
     coinapi = models.IntegerField(null=True, blank=True)        # 
     supported_exchanges = models.CharField(max_length=255, null=True, blank=True)
     is_trading = models.BooleanField(default=True)
@@ -113,7 +114,8 @@ class ExchangePairRawTradeProviderXref(models.Model):
 class CryptocompareCoin(models.Model):
     symbol = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
-
+    fullname = models.CharField(max_length=255)
+    
     class Meta:
         db_table = 'cc_coin_xref'
 

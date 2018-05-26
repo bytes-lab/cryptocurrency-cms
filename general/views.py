@@ -91,6 +91,18 @@ def add_pair(request, id):
     return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': pair.exchange.id }))
 
 @login_required(login_url='/login')
+def add_coin(request, coin, exchange):
+    exchange = Exchange.objects.get(id=exchange)
+    cc_pairs = CryptocomparePair.objects.filter(exchange__iexact=exchange.cryptocompare, base_coin=coin)
+    cp_pairs = CoinapiPair.objects.filter(exchange__iexact=exchange.coinapi, base_coin=coin)
+
+    cc_coins = CryptocompareCoin.objects.all()
+    cmc_coins = CoinmarketcapCoin.objects.all()
+    cp_coins = CoinapiCoin.objects.all()
+
+    return render(request, 'add_coin.html', locals())
+
+@login_required(login_url='/login')
 def add_to_world(request, id):
     coin = MasterCoin.objects.get(id=id)
     coin.supported = True
@@ -242,7 +254,7 @@ def exchange_detail_(request, id):
     for ii in qs:
         is_master = 'Master'
         if ii.base_coin.cryptocompare > 0 and ii.base_coin.coinapi > 0:
-            is_master = 'Both'
+            is_master = 'Coinapi / Cryptocompare'
         elif ii.base_coin.cryptocompare > 0:
             is_master = 'Cryptocompare'
         else:
@@ -282,7 +294,7 @@ def exchange_detail_(request, id):
         pair = ii.base_coin + ' / ' + ii.quote_coin
         if pair in result:
             if result[pair]['supported'] == 'NO':
-                result[pair]['is_master'] = 'Both'
+                result[pair]['is_master'] = 'Coinapi / Cryptocompare'
         else:
             result[pair] = {
                 'pair': pair,

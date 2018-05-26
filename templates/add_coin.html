@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block page_body %}
+<section id="content">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="c-purple f-500 f-20">Add Coin ( {{ coin }} ) from {{ exchange.name }}</h2>
+            </div>
+            
+            <div class="card-body card-padding">
+                <div class="row">
+                    <div class="col-md-2 p-b-20 p-t-10">
+                        <h4>Coinapi</h4>
+                        {% for ii in cp_pairs %}
+                            <div>{{ ii.base_coin }} - {{ ii.quote_coin }}</div>
+                        {% endfor %}
+                        <h4 class="m-t-15">Cryptocompare</h4>
+                        {% for ii in cc_pairs %}
+                            <div>{{ ii.base_coin }} - {{ ii.quote_coin }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-8 p-t-10">
+                        <div class="col-sm-3 m-b-25">
+                            <p class="f-500 m-b-15 c-black">Cryptocompare</p>
+                            
+                            <select class="selectpicker" data-live-search="true">
+                            {% for ii in cc_coins %}
+                                <option {% if ii.symbol == coin %} selected {% endif %}>
+                                    {{ ii.name }}
+                                </option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-3 m-b-25">
+                            <p class="f-500 m-b-15 c-black">Coinmarketcap</p>
+                            
+                            <select class="selectpicker" data-live-search="true">
+                            {% for ii in cmc_coins %}
+                                <option {% if ii.symbol == coin %} selected {% endif %}>
+                                    {{ ii.token }}
+                                </option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-3 m-b-25">
+                            <p class="f-500 m-b-15 c-black">Coinapi</p>
+                            
+                            <select class="selectpicker" data-live-search="true">
+                            {% for ii in cp_coins %}
+                                <option {% if ii.symbol == coin %} selected {% endif %}>
+                                    {{ ii.name }}
+                                </option>
+                            {% endfor %}
+                            </select>
+                        </div>                        
+                        <div class="col-sm-12 p-t-25">
+                            <a class="btn btn-info waves-effect m-l-10" href="/import_all_pairs/{{ exchange.id }}">Add Coin</a>
+                            <a class="btn btn-default waves-effect m-l-10">Cancel</a>                    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/qobit.js' %}"></script>
+    <script src="{% static 'js/common.js' %}"></script>
+{% endblock %}
