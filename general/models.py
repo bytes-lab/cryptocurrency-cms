@@ -43,6 +43,7 @@ class MasterCoin(models.Model):
     is_master = models.BooleanField(default=False)
     supported = models.BooleanField(default=False)
     supported_at = models.DateField(null=True, blank=True)
+    alias = models.ForeignKey("MasterCoin", null=True, blank=True)
 
     class Meta:
         db_table = 'mastercoin'
@@ -115,7 +116,7 @@ class CryptocompareCoin(models.Model):
     symbol = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     fullname = models.CharField(max_length=255)
-    
+
     class Meta:
         db_table = 'cc_coin_xref'
 
