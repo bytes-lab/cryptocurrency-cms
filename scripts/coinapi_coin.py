@@ -26,8 +26,8 @@ def main():
         }
 
         coin, is_new = CoinapiCoin.objects.update_or_create(symbol=coin['asset_id'], defaults=defaults)
-        if is_new:
-            send_email(coin['asset_id'], True, 'Coinapi')
+        # if is_new:
+        #     send_email(coin['asset_id'], True, 'Coinapi')
 
 
 if __name__ == "__main__":

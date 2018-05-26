@@ -24,8 +24,8 @@ def main():
         }
 
         coin, is_new = CoinmarketcapCoin.objects.update_or_create(token=coin['id'], defaults=defaults)
-        if is_new:
-            send_email(coin['symbol'], True, 'Coinmarketcap')
+        # if is_new:
+        #     send_email(coin['symbol'], True, 'Coinmarketcap')
 
 if __name__ == "__main__":
     main()

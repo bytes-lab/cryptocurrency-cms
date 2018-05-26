@@ -29,7 +29,8 @@ function load_master_coins() {
     $("#data-table-master-coins").bootgrid({
         formatters: {
             "commands": function(column, row) {
-                return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"#" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></a>";
+                return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/attach_coin/" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></a>"+
+                    "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/admin/general/mastercoin/" + row.id + "/change\"><span class=\"zmdi zmdi-assignment\"></span></a>";
             }
         },
         templates: {

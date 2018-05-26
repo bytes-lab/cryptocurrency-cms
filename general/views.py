@@ -92,13 +92,32 @@ def add_pair(request, id):
 
 @login_required(login_url='/login')
 def add_coin(request, coin, exchange):
-    exchange = Exchange.objects.get(id=exchange)
-    cc_pairs = CryptocomparePair.objects.filter(exchange__iexact=exchange.cryptocompare, base_coin=coin)
-    cp_pairs = CoinapiPair.objects.filter(exchange__iexact=exchange.coinapi, base_coin=coin)
+    if exchange:
+        exchange = Exchange.objects.get(id=exchange)
+        cc_pairs = CryptocomparePair.objects.filter(exchange__iexact=exchange.cryptocompare, base_coin=coin)
+        cp_pairs = CoinapiPair.objects.filter(exchange__iexact=exchange.coinapi, base_coin=coin)
 
     cc_coins = CryptocompareCoin.objects.all()
     cmc_coins = CoinmarketcapCoin.objects.all()
     cp_coins = CoinapiCoin.objects.all()
+
+    return render(request, 'add_coin.html', locals())
+
+@login_required(login_url='/login')
+def attach_coin(request, coin):
+    coin = MasterCoin.objects.get(id=coin)
+    cc_coins = CryptocompareCoin.objects.all()
+    cmc_coins = CoinmarketcapCoin.objects.all()
+    cp_coins = CoinapiCoin.objects.all()
+
+    if request.method == 'POST':
+        coin.cryptocompare = request.POST.get('cc_coin') or None
+        coin.coinmarketcap = request.POST.get('cmc_coin') or None
+        coin.coinapi = request.POST.get('cp_coin') or None
+        if coin.cryptocompare:
+            coin.cryptocompare_name = CryptocompareCoin.objects.get(id=coin.cryptocompare).name
+        coin.save()
+        coin = MasterCoin.objects.get(id=coin.id) # weird
 
     return render(request, 'add_coin.html', locals())
 

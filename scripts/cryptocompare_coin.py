@@ -25,8 +25,8 @@ def main():
         }
 
         coin, is_new = CryptocompareCoin.objects.update_or_create(symbol=val.get('Symbol'), defaults=defaults)
-        if is_new:
-            send_email(val.get('Symbol'), True, 'Cryptocompare')
+        # if is_new:
+        #     send_email(val.get('Symbol'), True, 'Cryptocompare')
 
 
 if __name__ == "__main__":
