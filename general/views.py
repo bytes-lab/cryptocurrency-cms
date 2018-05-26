@@ -93,12 +93,20 @@ def add_pair(request, id):
 @login_required(login_url='/login')
 def add_coin(request, coin, exchange):
     exchange = Exchange.objects.get(id=exchange)
-    cc_pairs = CryptocomparePair.objects.filter(exchange__iexact=exchange.cryptocompare, base_coin=coin)
-    cp_pairs = CoinapiPair.objects.filter(exchange__iexact=exchange.coinapi, base_coin=coin)
+    cc_pairs = CryptocomparePair.objects.filter(Q(exchange__iexact=exchange.cryptocompare) & (Q(base_coin=coin)|Q(quote_coin=coin)))
+    cp_pairs = CoinapiPair.objects.filter(Q(exchange__iexact=exchange.coinapi) & (Q(base_coin=coin)|Q(quote_coin=coin)))
 
     cc_coins = CryptocompareCoin.objects.all()
     cmc_coins = CoinmarketcapCoin.objects.all()
     cp_coins = CoinapiCoin.objects.all()
+
+    coin__ = coin.replace('*', '')
+    ccd_coins = [ii.symbol for ii in CryptocompareCoin.objects.filter(symbol__startswith=coin__)]
+    ccd_coins = ', '.join(ccd_coins) if len(ccd_coins) > 1 else ''
+    cmcd_coins = [ii.symbol for ii in CoinmarketcapCoin.objects.filter(symbol__startswith=coin__)]
+    cmcd_coins = ', '.join(cmcd_coins) if len(cmcd_coins) > 1 else ''
+    cpd_coins = [ii.symbol for ii in CoinapiCoin.objects.filter(symbol__startswith=coin__)]
+    cpd_coins = ', '.join(cpd_coins) if len(cpd_coins) > 1 else ''
 
     if request.method == 'POST':
         cc = request.POST.get('cc_coin') or None
@@ -124,6 +132,14 @@ def attach_coin(request, coin):
     cc_coins = CryptocompareCoin.objects.all()
     cmc_coins = CoinmarketcapCoin.objects.all()
     cp_coins = CoinapiCoin.objects.all()
+
+    coin__ = coin.symbol.replace('*', '')
+    ccd_coins = [ii.symbol for ii in CryptocompareCoin.objects.filter(symbol__startswith=coin__)]
+    ccd_coins = ', '.join(ccd_coins) if len(ccd_coins) > 1 else ''
+    cmcd_coins = [ii.symbol for ii in CoinmarketcapCoin.objects.filter(symbol__startswith=coin__)]
+    cmcd_coins = ', '.join(cmcd_coins) if len(cmcd_coins) > 1 else ''
+    cpd_coins = [ii.symbol for ii in CoinapiCoin.objects.filter(symbol__startswith=coin__)]
+    cpd_coins = ', '.join(cpd_coins) if len(cpd_coins) > 1 else ''
 
     if request.method == 'POST':
         coin.cryptocompare = request.POST.get('cc_coin') or None
@@ -193,9 +209,9 @@ def _coins(request, q):
         coin_ = {
             'id': coin.id,
             'symbol': coin.symbol,
-            'cryptocompare': 'YES' if coin.cryptocompare > 0 or coin.symbol in cc_coins else 'NO',
-            'coinapi': 'YES' if coin.coinapi > 0 or coin.symbol in cp_coins else 'NO',
-            'cmc': 'YES' if coin.coinmarketcap > 0 or coin.symbol in cmc_coins else 'NO',
+            'cryptocompare': 'YES' if coin.cryptocompare > 0 else 'NO',
+            'coinapi': 'YES' if coin.coinapi > 0  else 'NO',
+            'cmc': 'YES' if coin.coinmarketcap > 0 else 'NO',
             'supported': 'YES' if coin.supported else 'NO',
             'status': status
         }
@@ -345,10 +361,13 @@ def exchange_detail_(request, id):
         [base, quote] = ii['pair'].split(' / ')
         coin = '' if pre_coin == base else base
         ii['coin'] = coin
+        ii['quote_coin'] = quote
         ii['exchange'] = id
         pre_coin = base
+        ii['quote_coin_supported'] = MasterCoin.objects.filter(symbol=quote).exists()
         if 'coin_supported' not in ii and coin:
             ii['coin_supported'] = MasterCoin.objects.filter(symbol=coin).exists()
+
 
     return JsonResponse({
         "current": page,

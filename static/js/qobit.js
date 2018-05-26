@@ -106,7 +106,14 @@ function load_exchange_detail() {
                     return row.coin;
                 } else if (row.coin) {
                     return "<span class='p-r-10'>"+row.coin+"</span>"+ "<a class='btn bgm-blue btn-xs waves-effect' href='/add_coin/"+row.coin+"/"+row.exchange+"' title='Add a base coin'>Link</a>";
-                }                
+                }
+            },
+            "pair": function(column, row) {
+                if (row.quote_coin_supported) {
+                    return row.pair;
+                } else {
+                    return "<span class='p-r-10'>"+row.pair+"</span>"+ "<a class='btn bgm-blue btn-xs waves-effect' href='/add_coin/"+row.quote_coin+"/"+row.exchange+"' title='Add a quote coin'>Link</a>";
+                }
             }
         },
         templates: {
