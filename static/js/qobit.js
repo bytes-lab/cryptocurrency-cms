@@ -97,8 +97,14 @@ function load_exchange_detail() {
             "commands": function(column, row) {
                 if (row.supported == 'YES') {
                     return '<div class="text-success m-5 f-500 f-15">N/A</div>';
+                } else if ($('.supported-exchange').length == 0) {
+                    return '<div class="text-danger m-5 f-500 f-15">N/A</div>';
                 } else {
-                    return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-pair=\"" + row.pair + "\" data-exchange=\""+row.exchange+"\"><span class=\"zmdi zmdi-plus\"></span></a>";
+                    var exchange = row.exchange;
+                    if (!row.coin_supported || !row.quote_coin_supported) {
+                        exchange = -1;
+                    }
+                    return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-pair=\"" + row.pair + "\" data-exchange=\""+exchange+"\"><span class=\"zmdi zmdi-plus\"></span></a>";
                 }
             },
             "coins": function(column, row) {
@@ -129,8 +135,8 @@ function load_exchange_detail() {
             var pair = $(this).data("row-pair").replace(' / ', '-');
             var exchange = $(this).data("exchange");
             //Warning Message
-            if ($('.supported-exchange').length == 0) {
-                swal({title:"Notification!", text:"The exchange is not supported. Please add the exchange first.", type:"warning"}, 
+            if (exchange < 0) {
+                swal({title:"Notification!", text:"The base coin or quote coin is not supported. Please add them first.", type:"warning"}, 
                                     function() {});                
             } else {
                 location.href = "/add_pair/" + exchange + '/' + pair;

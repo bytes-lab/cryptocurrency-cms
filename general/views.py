@@ -87,7 +87,7 @@ def add_pair(request, id):
     pair = ExchangePair.objects.get(id=id)
     pair.supported = True
     pair.supported_at = datetime.datetime.now()
-    pair.save()
+    # pair.save()
     return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': pair.exchange.id }))
 
 @login_required(login_url='/login')
