@@ -117,17 +117,25 @@
                     {% if exchange %}
                     <div class="col-md-3 p-b-10">
                         <h4>Coinapi</h4>
-                        <div class="pair-list">
-                            {% for ii in cp_pairs %}
-                                <div>{{ ii.base_coin }} - {{ ii.quote_coin }}</div>
-                            {% endfor %}                            
-                        </div>
+                        {% if cp_pairs %}
+                            <div class="pair-list">
+                                {% for ii in cp_pairs %}
+                                    <div>{{ ii.base_coin }} - {{ ii.quote_coin }}</div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <span class="text-warning">Not supported</span>
+                        {% endif %}
                         <h4 class="m-t-15">Cryptocompare</h4>
-                        <div class="pair-list">
-                            {% for ii in cc_pairs %}
-                                <div>{{ ii.base_coin }} - {{ ii.quote_coin }}</div>
-                            {% endfor %}                            
-                        </div>
+                        {% if cc_pairs %}
+                            <div class="pair-list">
+                                {% for ii in cc_pairs %}
+                                    <div>{{ ii.base_coin }} - {{ ii.quote_coin }}</div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <span class="text-warning">Not supported</span>
+                        {% endif %}
                     </div>
                     {% endif %}
                 </div>
