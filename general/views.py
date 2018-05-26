@@ -92,14 +92,29 @@ def add_pair(request, id):
 
 @login_required(login_url='/login')
 def add_coin(request, coin, exchange):
-    if exchange:
-        exchange = Exchange.objects.get(id=exchange)
-        cc_pairs = CryptocomparePair.objects.filter(exchange__iexact=exchange.cryptocompare, base_coin=coin)
-        cp_pairs = CoinapiPair.objects.filter(exchange__iexact=exchange.coinapi, base_coin=coin)
+    exchange = Exchange.objects.get(id=exchange)
+    cc_pairs = CryptocomparePair.objects.filter(exchange__iexact=exchange.cryptocompare, base_coin=coin)
+    cp_pairs = CoinapiPair.objects.filter(exchange__iexact=exchange.coinapi, base_coin=coin)
 
     cc_coins = CryptocompareCoin.objects.all()
     cmc_coins = CoinmarketcapCoin.objects.all()
     cp_coins = CoinapiCoin.objects.all()
+
+    if request.method == 'POST':
+        cc = request.POST.get('cc_coin') or None
+        cmc = request.POST.get('cmc_coin') or None
+        cp = request.POST.get('cp_coin') or None
+        cc_name = CryptocompareCoin.objects.get(id=cc).name if cc else ''
+        coin = MasterCoin(cryptocompare=cc,
+                          coinmarketcap=cmc,
+                          coinapi=cp,
+                          cryptocompare_name=cc_name,
+                          symbol=coin,
+                          supported=True,
+                          is_master=True,
+                          is_trading=True)
+        coin.save()
+        coin = MasterCoin.objects.get(id=coin.id) # weird
 
     return render(request, 'add_coin.html', locals())
 
@@ -304,7 +319,6 @@ def exchange_detail_(request, id):
             result[pair] = {
                 'pair': pair,
                 'supported': 'NO',
-                'coin_supported': False,
                 'is_master': 'Cryptocompare',
                 'supported_at': ''
             }
@@ -318,7 +332,6 @@ def exchange_detail_(request, id):
             result[pair] = {
                 'pair': pair,
                 'supported': 'NO',
-                'coin_supported': False,
                 'is_master': 'Coinapi',
                 'supported_at': ''
             }
@@ -334,6 +347,8 @@ def exchange_detail_(request, id):
         ii['coin'] = coin
         ii['exchange'] = id
         pre_coin = base
+        if 'coin_supported' not in ii and coin:
+            ii['coin_supported'] = MasterCoin.objects.filter(symbol=coin).exists()
 
     return JsonResponse({
         "current": page,
