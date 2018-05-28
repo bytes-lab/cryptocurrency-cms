@@ -1,4 +1,5 @@
 import json
+import requests
 import datetime
 
 from django.shortcuts import render

@@ -93,8 +93,8 @@ class ExchangePairXrefAdmin(admin.ModelAdmin):
 
 
 class CCCoinAdmin(admin.ModelAdmin):
-    list_display = ['symbol', 'name', 'fullname']
-    search_fields = ['symbol', 'name', 'fullname']
+    list_display = ['symbol', 'name', 'coinname', 'fullname']
+    search_fields = ['symbol', 'name', 'coinname', 'fullname']
 
 
 class CPCoinAdmin(admin.ModelAdmin):

@@ -12,6 +12,7 @@ class DataProvider(models.Model):
 
 class MasterCoin(models.Model):
     symbol = models.CharField(max_length=255)
+    original_symbol = models.CharField(max_length=255)
     coinmarketcap = models.IntegerField(null=True, blank=True)  # (rank in cmc) flag for supporting, assume symbols are same
     cryptocompare = models.IntegerField(null=True, blank=True)  # (symbol id)
     cryptocompare_name = models.CharField(max_length=255, null=True, blank=True)
@@ -66,6 +67,7 @@ class Exchange(models.Model):
     reddit_url = models.CharField(max_length=255, null=True, blank=True)
     facebook_url = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(max_length=255, null=True, blank=True)
+    api_link = models.CharField(max_length=255, null=True, blank=True)
     supported = models.BooleanField(default=False)
     supported_at = models.DateField(null=True, blank=True)
 
