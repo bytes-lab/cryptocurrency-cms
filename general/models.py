@@ -15,7 +15,6 @@ class MasterCoin(models.Model):
     coinmarketcap = models.IntegerField(null=True, blank=True)  # (rank in cmc) flag for supporting, assume symbols are same
     cryptocompare = models.IntegerField(null=True, blank=True)  # (symbol id)
     cryptocompare_name = models.CharField(max_length=255, null=True, blank=True)
-    #cryptocompare_symbol = models.CharField(max_length=255, null=True, blank=True)
     coinapi = models.IntegerField(null=True, blank=True)        # 
     supported_exchanges = models.CharField(max_length=255, null=True, blank=True)
     is_trading = models.BooleanField(default=True)
@@ -46,7 +45,7 @@ class MasterCoin(models.Model):
     alias = models.ForeignKey("MasterCoin", null=True, blank=True)
 
     class Meta:
-        db_table = 'coin_list'
+        db_table = 'coin'
 
     def __str__(self):
         return self.symbol
@@ -87,8 +86,8 @@ class ExchangePair(models.Model):
     data_end = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=255, null=True, blank=True)
     source = models.CharField(max_length=255, null=True, blank=True)
-    raw_trade_source = models.ForeignKey(MasterCoin, null=True, blank=True, related_name="raw_trade_sources")
-    orderbook_source = models.ForeignKey(MasterCoin, null=True, blank=True, related_name="orderbook_sources")
+    raw_trade_source = models.CharField(max_length=255, null=True, blank=True)
+    orderbook_source = models.CharField(max_length=255, null=True, blank=True)
     supported = models.BooleanField(default=False)
     supported_at = models.DateField(null=True, blank=True)
     
@@ -106,6 +105,7 @@ class ExchangePairRawTradeProviderXref(models.Model):
     provider_exch_code = models.CharField(max_length=255)
     provider_base_ccy_code = models.CharField(max_length=255)
     provider_quote_ccy_code = models.CharField(max_length=255)
+    market_type = models.CharField(max_length=255)
     source_type = models.IntegerField(default=1)
 
     class Meta:
@@ -115,6 +115,7 @@ class ExchangePairRawTradeProviderXref(models.Model):
 class CryptocompareCoin(models.Model):
     symbol = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
+    coinname = models.CharField(max_length=255)
     fullname = models.CharField(max_length=255)
 
     class Meta:
@@ -162,9 +163,54 @@ class CoinapiPair(models.Model):
     exchange = models.CharField(max_length=255)
     base_coin = models.CharField(max_length=255)
     quote_coin = models.CharField(max_length=255)
-    
+    symbol_id = models.CharField(max_length=255)
+    market_type = models.CharField(max_length=255)
+
     class Meta:
         db_table = 'coinapi_pair_xref'
 
     def __str__(self):
         return '{} - {}'.format(self.base_coin, self.quote_coin)
+
+
+# ------------------------------------------------------------------- #
+
+class TMasterCoin(models.Model):
+    symbol = models.CharField(max_length=255)
+    coinmarketcap = models.IntegerField(null=True, blank=True)  # (rank in cmc) flag for supporting, assume symbols are same
+    cryptocompare = models.IntegerField(null=True, blank=True)  # (symbol id)
+    cryptocompare_name = models.CharField(max_length=255, null=True, blank=True)
+    coinapi = models.IntegerField(null=True, blank=True)        # 
+    supported_exchanges = models.CharField(max_length=255, null=True, blank=True)
+    is_trading = models.BooleanField(default=True)
+    sort_order = models.IntegerField(null=True, blank=True)
+    image_url = models.CharField(max_length=255, null=True, blank=True)
+    category = models.CharField(max_length=255, null=True, blank=True)
+    tags = models.CharField(max_length=255, null=True, blank=True)
+    whitepaper_url = models.CharField(max_length=255, null=True, blank=True)
+    website_url = models.CharField(max_length=255, null=True, blank=True)
+    launch_date = models.DateField(null=True, blank=True)
+    nethash_per_second = models.CharField(max_length=255, null=True, blank=True)
+    block_time = models.IntegerField(null=True, blank=True)
+    block_reward = models.CharField(max_length=255, null=True, blank=True)
+    proof_type = models.CharField(max_length=255, null=True, blank=True)
+    algorithm = models.CharField(max_length=255, null=True, blank=True)
+    ico_price = models.CharField(max_length=255, null=True, blank=True)
+    twitter_handle = models.CharField(max_length=255, null=True, blank=True)
+    twitter_url = models.CharField(max_length=255, null=True, blank=True)
+    facebook_url = models.CharField(max_length=255, null=True, blank=True)
+    source_code_url = models.CharField(max_length=255, null=True, blank=True)
+    explorers_url = models.CharField(max_length=255, null=True, blank=True)
+    slack_channel = models.CharField(max_length=255, null=True, blank=True)
+    reddit_url = models.CharField(max_length=255, null=True, blank=True)
+    type_is_crypto = models.BooleanField(default=True)
+    is_master = models.BooleanField(default=False)
+    supported = models.BooleanField(default=False)
+    supported_at = models.DateField(null=True, blank=True)
+    alias = models.ForeignKey("TMasterCoin", null=True, blank=True)
+
+    class Meta:
+        db_table = 'mastercoin'
+
+    def __str__(self):
+        return self.symbol

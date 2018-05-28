@@ -37,7 +37,9 @@ def main():
 
         pair, is_new = CoinapiPair.objects.update_or_create(exchange=exchange, 
                                                             base_coin=base,
-                                                            quote_coin=quote)
+                                                            quote_coin=quote,
+                                                            symbol_id=pair['symbol_id'],
+                                                            market_type=pair['symbol_type'])
 
 if __name__ == "__main__":
     main()

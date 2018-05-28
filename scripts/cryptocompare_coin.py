@@ -21,6 +21,7 @@ def main():
     for key, val in coins.items():
         defaults = {
             'name': val.get('Name'),
+            'coinname': val.get('CoinName'),
             'fullname': val.get('FullName')
         }
 
