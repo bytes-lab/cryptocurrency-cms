@@ -46,7 +46,7 @@ class MasterCoin(models.Model):
     alias = models.ForeignKey("MasterCoin", null=True, blank=True)
 
     class Meta:
-        db_table = 'mastercoin'
+        db_table = 'coin_list'
 
     def __str__(self):
         return self.symbol
