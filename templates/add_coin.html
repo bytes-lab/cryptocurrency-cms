@@ -109,7 +109,7 @@
                                 </p>
                             </div>
                             <div class="col-sm-12 p-t-25">
-                                <div class="col-md-4 p-0 p-r-15">
+                                <div class="col-md-3 p-0 p-r-15">
                                     <label>Alias</label>
                                     <select class="selectpicker m-t-15" data-live-search="true" name="alias">
                                         <option value="">---</option>
@@ -118,7 +118,19 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="col-md-8 p-l-25 p-t-25">
+                                <div class="col-md-3 p-r-10 p-l-10">
+                                    <div class="form-group fg-line">
+                                        <label>New Symbol</label>
+                                        <input type="text" class="form-control m-t-10" name="new_symbol" value="{{ coin }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 p-r-10 p-l-10">
+                                    <div class="form-group fg-line">
+                                        <label>Original Symbol</label>
+                                        <input type="text" class="form-control m-t-10" readonly="" value="{% if coin.original_symbol %} {{ coin.original_symbol }} {% else %} {{ coin }} {% endif %}">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 p-l-25 p-t-25">
                                     <button class="btn btn-info waves-effect m-l-10">Add Coin</button>
                                     <a class="btn btn-default waves-effect m-l-10" href="#" onclick="javascript: window.history.back();">Cancel</a>
                                 </div>

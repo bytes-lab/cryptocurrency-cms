@@ -135,13 +135,15 @@ def add_coin(request, coin, exchange):
         cmc = request.POST.get('cmc_coin') or None
         cp = request.POST.get('cp_coin') or None
         alias = request.POST.get('alias') or None
+        new_symbol = request.POST.get('new_symbol') or None
         cc_name = CryptocompareCoin.objects.get(id=cc).name if cc else ''
 
         coin = MasterCoin(cryptocompare=cc,
                           coinmarketcap=cmc,
                           coinapi=cp,
                           cryptocompare_name=cc_name,
-                          symbol=coin,
+                          symbol=new_symbol,
+                          original_symbol=coin,
                           alias_id=alias,
                           supported=True,
                           is_master=True,
@@ -172,6 +174,8 @@ def attach_coin(request, coin):
         coin.coinmarketcap = request.POST.get('cmc_coin') or None
         coin.coinapi = request.POST.get('cp_coin') or None
         coin.alias_id = request.POST.get('alias') or None
+        coin.symbol = request.POST.get('new_symbol') or None
+        
         if coin.cryptocompare:
             coin.cryptocompare_name = CryptocompareCoin.objects.get(id=coin.cryptocompare).name
         coin.save()
@@ -346,39 +350,21 @@ def exchange_detail_(request, id):
             'supported_at': str(ii.supported_at) if ii.supported_at else ''
         }
 
-    qs_cc = CryptocomparePair.objects.filter(Q(exchange__iexact=exchange.cryptocompare) &
-                                             (Q(base_coin__icontains=keyword) |
-                                              Q(quote_coin__icontains=keyword))) \
-                                     .order_by('base_coin')
+    try:
+        pairs = requests.get(exchange.api_link).json()['data']
+        for ii in pairs:
+            pair = ii['baseCurrency'] + ' / ' + ii['quoteCurrency']
+            if keyword.lower() not in pair.lower():
+                continue
 
-    qs_cp = CoinapiPair.objects.filter(Q(exchange__iexact=exchange.coinapi) &
-                                       (Q(base_coin__icontains=keyword) |
-                                        Q(quote_coin__icontains=keyword))) \
-                               .order_by('base_coin')
-
-    for ii in qs_cc:
-        pair = ii.base_coin + ' / ' + ii.quote_coin
-        if pair not in result:
-            result[pair] = {
-                'pair': pair,
-                'supported': 'NO',
-                'is_master': 'Cryptocompare',
-                'supported_at': ''
-            }
-
-    for ii in qs_cp:
-        pair = ii.base_coin + ' / ' + ii.quote_coin
-        if pair in result:
-            if result[pair]['supported'] == 'NO':
-                result[pair]['is_master'] = 'Coinapi / Cryptocompare'
-        else:
-            result[pair] = {
-                'pair': pair,
-                'supported': 'NO',
-                'is_master': 'Coinapi',
-                'supported_at': ''
-            }
-
+            if pair not in result:
+                result[pair] = {
+                    'pair': pair,
+                    'supported': 'NO',
+                    'supported_at': ''
+                }
+    except Exception as e:
+        pass
     result_cc = []
     for k, v in sorted(result.items()):
         result_cc.append(v)
@@ -395,6 +381,21 @@ def exchange_detail_(request, id):
         if 'coin_supported' not in ii:
             ii['coin_supported'] = MasterCoin.objects.filter(symbol=base).exists()
 
+        if ii['supported'] == 'NO':
+            cc_support = CryptocomparePair.objects.filter(Q(exchange__iexact=exchange.cryptocompare) &
+                                                         (Q(base_coin=base) |
+                                                          Q(quote_coin=quote))).exists()
+            cp_support = CoinapiPair.objects.filter(Q(exchange__iexact=exchange.coinapi) &
+                                                     (Q(base_coin=base) |
+                                                      Q(quote_coin=quote))).exists()
+            is_master = ''
+            if cc_support and cp_support:
+                is_master = 'Coinapi / Cryptocompare'
+            elif cc_support:
+                is_master = 'Cryptocompare'
+            elif cp_support:
+                is_master = 'Coinapi'
+            ii['is_master'] = is_master
 
     return JsonResponse({
         "current": page,
