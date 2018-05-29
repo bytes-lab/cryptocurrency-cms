@@ -87,10 +87,29 @@ def exchange_support(request, id):
 def add_pair(request, exchange, pair):
     [base, quote] = pair.split('-')
     exchange = Exchange.objects.get(id=exchange)
-    # pair.supported = True
-    # pair.supported_at = datetime.datetime.now()
-    # pair.save()
-    return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': exchange.id }))
+    coins = MasterCoin.objects.all().order_by('symbol')
+
+    cc_support = CryptocomparePair.objects.filter(Q(exchange__iexact=exchange.cryptocompare) &
+                                                 (Q(base_coin=base) |
+                                                  Q(quote_coin=quote))).exists()
+    cp_support = CoinapiPair.objects.filter(Q(exchange__iexact=exchange.coinapi) &
+                                             (Q(base_coin=base) |
+                                              Q(quote_coin=quote))).exists()
+
+    if request.method == 'POST':
+        base_coin = request.POST.get('base_coin')
+        quote_coin = request.POST.get('quote_coin')
+        
+        pair = ExchangePair(exchange=exchange,
+                            base_coin_id=base_coin,
+                            quote_coin_id=quote_coin,
+                            cryptocompare_availability=cc_support,
+                            coinapi_availability=cp_support,
+                            supported=True,
+                            supported_at=datetime.datetime.now())
+        pair.save()
+
+    return render(request, 'add_pair.html', locals())
 
 @login_required(login_url='/login')
 def add_coin(request, coin, exchange):

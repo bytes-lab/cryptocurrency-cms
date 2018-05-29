@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block page_body %}
+<section id="content">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="c-purple f-500 f-20">Add Pair ( {{ base }} / {{ quote }} ) from {{ exchange.name }}</h2>
+            </div>
+            
+            <div class="card-body card-padding">
+                <div class="row">
+                    <div class="col-md-9 p-t-10">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <div class="col-sm-4 m-b-25">
+                                <p class="f-400 m-b-15 c-black f-16">Base Coin</p>
+                                
+                                <select class="selectpicker m-t-15" data-live-search="true" name="base_coin" required="">
+                                <option value="">---</option>
+                                {% for ii in coins %}
+                                    <option {% if ii.symbol == base %} selected {% endif %} value="{{ ii.id }}">
+                                        {{ ii.symbol }} ( {{ ii.original_symbol }} )
+                                    </option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-4 m-b-25">
+                                <p class="f-500 m-b-15 c-black f-16">Quote Coin</p>
+                                
+                                <select class="selectpicker m-t-15" data-live-search="true" name="quote_coin" required="">
+                                <option value="">---</option>
+                                {% for ii in coins %}
+                                    <option {% if ii.symbol == quote%} selected {% endif %} value="{{ ii.id }}">
+                                        {{ ii.symbol }} ( {{ ii.original_symbol }} )
+                                    </option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-12 p-t-25">
+                                <button class="btn btn-info waves-effect m-l-10">Add Pair</button>
+                                <a class="btn btn-default waves-effect m-l-10" href="#" onclick="javascript: window.history.back();">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                    {% if exchange %}
+                    <div class="col-md-3 p-b-10">
+                        <h4>Coinapi</h4>
+                        {% if cp_support %}
+                            <span class="text-success f-15">Supported</span>
+                        {% else %}
+                            <span class="text-warning f-15">Not supported</span>
+                        {% endif %}
+                        <h4 class="m-t-15">Cryptocompare</h4>
+                        {% if cc_support %}
+                            <span class="text-success f-15">Supported</span>
+                        {% else %}
+                            <span class="text-warning f-15">Not supported</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/qobit.js' %}"></script>
+    <script src="{% static 'js/common.js' %}"></script>
+{% endblock %}

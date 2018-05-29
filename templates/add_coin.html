@@ -39,7 +39,7 @@
                                         </option>
                                     {% else %}
                                     <option {% if ii.symbol == coin or ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
-                                        {{ ii.fullname }}
+                                        {{ ii.coinname }} ( {{ ii.symbol }} )
                                     </option>
                                     {% endif %}
                                 {% endfor %}
