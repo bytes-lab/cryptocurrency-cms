@@ -10,6 +10,13 @@ class DataProvider(models.Model):
         return self.provider_code
 
 
+class Culture(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
 class MasterCoin(models.Model):
     symbol = models.CharField(max_length=255)
     original_symbol = models.CharField(max_length=255)
@@ -174,6 +181,15 @@ class CoinapiPair(models.Model):
     def __str__(self):
         return '{} - {}'.format(self.base_coin, self.quote_coin)
 
+
+class CoinLocale(models.Model):
+    coin = models.ForeignKey(MasterCoin)
+    culture = models.ForeignKey(Culture)
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return '{} - {}'.format(self.coin.symbol, self.name)
 
 # ------------------------------------------------------------------- #
 
