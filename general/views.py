@@ -128,17 +128,21 @@ def add_coin(request, coin, exchange):
     cmcd_coins = ', '.join(cmcd_coins) if len(cmcd_coins) > 1 else ''
     cpd_coins = [ii.symbol for ii in CoinapiCoin.objects.filter(symbol__startswith=coin__)]
     cpd_coins = ', '.join(cpd_coins) if len(cpd_coins) > 1 else ''
+    coins = MasterCoin.objects.all().order_by('symbol')
 
     if request.method == 'POST':
         cc = request.POST.get('cc_coin') or None
         cmc = request.POST.get('cmc_coin') or None
         cp = request.POST.get('cp_coin') or None
+        alias = request.POST.get('alias') or None
         cc_name = CryptocompareCoin.objects.get(id=cc).name if cc else ''
+
         coin = MasterCoin(cryptocompare=cc,
                           coinmarketcap=cmc,
                           coinapi=cp,
                           cryptocompare_name=cc_name,
                           symbol=coin,
+                          alias_id=alias,
                           supported=True,
                           is_master=True,
                           is_trading=True)
@@ -161,11 +165,13 @@ def attach_coin(request, coin):
     cmcd_coins = ', '.join(cmcd_coins) if len(cmcd_coins) > 1 else ''
     cpd_coins = [ii.symbol for ii in CoinapiCoin.objects.filter(symbol__startswith=coin__)]
     cpd_coins = ', '.join(cpd_coins) if len(cpd_coins) > 1 else ''
-
+    coins = MasterCoin.objects.all().order_by('symbol')
+    
     if request.method == 'POST':
         coin.cryptocompare = request.POST.get('cc_coin') or None
         coin.coinmarketcap = request.POST.get('cmc_coin') or None
         coin.coinapi = request.POST.get('cp_coin') or None
+        coin.alias_id = request.POST.get('alias') or None
         if coin.cryptocompare:
             coin.cryptocompare_name = CryptocompareCoin.objects.get(id=coin.cryptocompare).name
         coin.save()
