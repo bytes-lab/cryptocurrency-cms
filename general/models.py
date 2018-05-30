@@ -6,12 +6,18 @@ from django.db import models
 class DataProvider(models.Model):
     provider_code = models.CharField(max_length=255)
 
+    class Meta:
+        db_table = 'data_provider'
+
     def __str__(self):
         return self.provider_code
 
 
 class Culture(models.Model):
     name = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'culture'
 
     def __str__(self):
         return self.name
@@ -187,6 +193,10 @@ class CoinLocale(models.Model):
     culture = models.ForeignKey(Culture)
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'coin_locale'
+        unique_together = ('coin', 'culture',)
 
     def __str__(self):
         return '{} - {}'.format(self.coin.symbol, self.name)

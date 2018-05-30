@@ -5,6 +5,12 @@ from django.utils.translation import gettext_lazy as _
 from general.models import *
 
 
+class CoinLocaleTabularInline(admin.TabularInline):
+    model = CoinLocale
+    extra = 0
+    fields = ['name', 'culture', 'description']
+
+
 class CryptocompareSupportFilter(SimpleListFilter):
     title = 'cryptocompare'
     parameter_name = 'cryptocompare'
@@ -48,6 +54,7 @@ class CoinmarketcapSupportFilter(SimpleListFilter):
 
 
 class MasterCoinAdmin(admin.ModelAdmin):
+    inlines = [CoinLocaleTabularInline]
     list_display = ['symbol', 'supported', 'cryptocompare_support', 'coinapi_support', 'coinmarketcap_support']
     search_fields = ['symbol']
     list_filter = [CoinmarketcapSupportFilter, CoinapiSupportFilter, CryptocompareSupportFilter, 'supported', 'is_master']
@@ -112,7 +119,7 @@ admin.site.register(Exchange, ExchangeAdmin)
 admin.site.register(ExchangePair, ExchangePairAdmin)
 admin.site.register(DataProvider)
 admin.site.register(Culture)
-admin.site.register(CoinLocale)
+# admin.site.register(CoinLocale)
 admin.site.register(CryptocompareCoin, CCCoinAdmin)
 admin.site.register(CoinmarketcapCoin, CMCCoinAdmin)
 admin.site.register(CoinapiCoin, CPCoinAdmin)
