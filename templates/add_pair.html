@@ -9,7 +9,7 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h2 class="c-purple f-500 f-20">Add Pair ( {{ base }} / {{ quote }} ) from {{ exchange.name }}</h2>
+                <h2 class="c-purple f-500 f-20">Add Pair ( {{ base }} / {{ quote }} ) from {{ exchange.name }} {% if pair_supported %}<span class="text-success"> - Connected</span> {% endif %}</h2>
             </div>
             
             <div class="card-body card-padding">

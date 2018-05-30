@@ -108,7 +108,8 @@ def add_pair(request, exchange, pair):
                             supported=True,
                             supported_at=datetime.datetime.now())
         pair.save()
-
+        pair_supported = True
+        
     return render(request, 'add_pair.html', locals())
 
 @login_required(login_url='/login')

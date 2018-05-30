@@ -139,7 +139,8 @@ function load_exchange_detail() {
                 swal({title:"Notification!", text:"The base coin or quote coin is not supported. Please add them first.", type:"warning"}, 
                                     function() {});                
             } else {
-                location.href = "/add_pair/" + exchange + '/' + pair;
+                var url = "/add_pair/" + exchange + '/' + pair;
+                window.open(url,'_blank');
             }
         });
     });        
