@@ -21,7 +21,7 @@
                     <div class="col-md-9 p-t-10">
                         <form action="" method="POST">
                             {% csrf_token %}
-                            <div class="col-sm-4 m-b-25">
+                            <div class="col-sm-3 m-b-25">
                                 <p class="f-400 m-b-15 c-black f-16">Cryptocompare: 
                                     {% if coin.is_master and coin.cryptocompare %}
                                         <span class="text-success">Connected ({{coin.cryptocompare}})</span>
@@ -50,7 +50,7 @@
                                     {% endif %}
                                 </p>
                             </div>
-                            <div class="col-sm-4 m-b-25">
+                            <div class="col-sm-3 m-b-25">
                                 <p class="f-500 m-b-15 c-black f-16">Coinmarketcap:
                                     {% if coin.is_master and coin.coinmarketcap %}
                                         <span class="text-success">Connected ({{coin.coinmarketcap}})</span>
@@ -79,7 +79,7 @@
                                     {% endif %}
                                 </p>
                             </div>
-                            <div class="col-sm-4 m-b-25">
+                            <div class="col-sm-3 m-b-25">
                                 <p class="f-500 m-b-15 c-black f-16">Coinapi:
                                     {% if coin.is_master and coin.coinapi %}
                                         <span class="text-success">Connected ({{coin.coinapi}})</span>
@@ -108,15 +108,21 @@
                                     {% endif %}
                                 </p>
                             </div>
+                            <div class="col-md-3 m-b-25">
+                                <p class="f-500 m-b-15 c-black f-16">Alias</p>
+                                <select class="selectpicker m-t-15" data-live-search="true" name="alias">
+                                    <option value="">---</option>
+                                    {% for ii in coins %}
+                                        <option {% if ii.id == coin.alias_id %} selected {% endif %} value="{{ ii.id }}">{{ ii.symbol }} ( {{ ii.original_symbol }} )</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                             <div class="col-sm-12 p-t-25">
                                 <div class="col-md-3 p-0 p-r-15">
-                                    <label>Alias</label>
-                                    <select class="selectpicker m-t-15" data-live-search="true" name="alias">
-                                        <option value="">---</option>
-                                        {% for ii in coins %}
-                                            <option {% if ii.id == coin.alias_id %} selected {% endif %} value="{{ ii.id }}">{{ ii.symbol }} ( {{ ii.original_symbol }} )</option>
-                                        {% endfor %}
-                                    </select>
+                                    <div class="form-group fg-line">
+                                        <label>Full Name</label>
+                                        <input type="text" class="form-control m-t-10" name="full_name" value="{{ full_name }}">
+                                    </div>
                                 </div>
                                 <div class="col-md-3 p-r-10 p-l-10">
                                     <div class="form-group fg-line">
@@ -130,7 +136,7 @@
                                         <input type="text" class="form-control m-t-10" readonly="" value="{% if coin.original_symbol %} {{ coin.original_symbol }} {% else %} {{ coin }} {% endif %}">
                                     </div>
                                 </div>
-                                <div class="col-md-3 p-l-25 p-t-25">
+                                <div class="col-md-3 p-l-25 p-t-25 m-t-5">
                                     <button class="btn btn-info waves-effect m-l-10">Add Coin</button>
                                     <a class="btn btn-default waves-effect m-l-10" href="#" onclick="javascript: window.history.back();">Cancel</a>
                                 </div>

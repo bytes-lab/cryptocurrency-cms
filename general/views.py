@@ -130,14 +130,19 @@ def add_coin(request, coin, exchange):
     cpd_coins = ', '.join(cpd_coins) if len(cpd_coins) > 1 else ''
     coins = MasterCoin.objects.all().order_by('symbol')
 
+    # for coin's name
+    full_name = CoinapiCoin.objects.filter(symbol=coin).first()
+    full_name = full_name.name if full_name else ''
+
     if request.method == 'POST':
         cc = request.POST.get('cc_coin') or None
         cmc = request.POST.get('cmc_coin') or None
         cp = request.POST.get('cp_coin') or None
         alias = request.POST.get('alias') or None
         new_symbol = request.POST.get('new_symbol') or None
-        cc_name = CryptocompareCoin.objects.get(id=cc).name if cc else ''
+        full_name = request.POST.get('full_name', '')
 
+        cc_name = CryptocompareCoin.objects.get(id=cc).name if cc else ''
         coin = MasterCoin(cryptocompare=cc,
                           coinmarketcap=cmc,
                           coinapi=cp,
@@ -150,6 +155,9 @@ def add_coin(request, coin, exchange):
                           is_trading=True)
         coin.save()
         coin = MasterCoin.objects.get(id=coin.id) # weird
+
+        culture = Culture.objects.filter(name='en_US').first()
+        CoinLocale.objects.update_or_create(coin=coin, culture=culture, defaults={ 'name': full_name })
 
     return render(request, 'add_coin.html', locals())
 
@@ -168,6 +176,10 @@ def attach_coin(request, coin):
     cpd_coins = [ii.symbol for ii in CoinapiCoin.objects.filter(symbol__startswith=coin__)]
     cpd_coins = ', '.join(cpd_coins) if len(cpd_coins) > 1 else ''
     coins = MasterCoin.objects.all().order_by('symbol')
+
+    # for coin's name
+    full_name = CoinapiCoin.objects.filter(symbol=coin.original_symbol).first()
+    full_name = full_name.name if full_name else ''
     
     if request.method == 'POST':
         coin.cryptocompare = request.POST.get('cc_coin') or None
@@ -175,11 +187,15 @@ def attach_coin(request, coin):
         coin.coinapi = request.POST.get('cp_coin') or None
         coin.alias_id = request.POST.get('alias') or None
         coin.symbol = request.POST.get('new_symbol') or None
-        
+        full_name = request.POST.get('full_name', '')
+
         if coin.cryptocompare:
             coin.cryptocompare_name = CryptocompareCoin.objects.get(id=coin.cryptocompare).name
         coin.save()
         coin = MasterCoin.objects.get(id=coin.id) # weird
+
+        culture = Culture.objects.filter(name='en_US').first()
+        CoinLocale.objects.update_or_create(coin=coin, culture=culture, defaults={ 'name': full_name })
 
     return render(request, 'add_coin.html', locals())
 
