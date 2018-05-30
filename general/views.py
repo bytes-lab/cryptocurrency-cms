@@ -240,7 +240,7 @@ def _coins(request, q):
     page = int(request.POST.get('current'))
     keyword = request.POST.get('searchPhrase')
 
-    qs = MasterCoin.objects.filter(q & Q(symbol__icontains=keyword))
+    qs = MasterCoin.objects.filter(q & Q(symbol__icontains=keyword)).order_by('symbol')
     total = qs.count()
     coins = []
 
@@ -256,6 +256,7 @@ def _coins(request, q):
         coin_ = {
             'id': coin.id,
             'symbol': coin.symbol,
+            'alias': coin.alias.symbol if coin.alias else '-',
             'cryptocompare': 'YES' if coin.cryptocompare > 0 else 'NO',
             'coinapi': 'YES' if coin.coinapi > 0  else 'NO',
             'cmc': 'YES' if coin.coinmarketcap > 0 else 'NO',

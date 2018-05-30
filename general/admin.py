@@ -55,7 +55,7 @@ class CoinmarketcapSupportFilter(SimpleListFilter):
 
 class MasterCoinAdmin(admin.ModelAdmin):
     inlines = [CoinLocaleTabularInline]
-    list_display = ['symbol', 'supported', 'cryptocompare_support', 'coinapi_support', 'coinmarketcap_support']
+    list_display = ['symbol', 'alias', 'cryptocompare_support', 'coinapi_support', 'coinmarketcap_support']
     search_fields = ['symbol']
     list_filter = [CoinmarketcapSupportFilter, CoinapiSupportFilter, CryptocompareSupportFilter, 'supported', 'is_master']
 
