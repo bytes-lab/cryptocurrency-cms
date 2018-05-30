@@ -109,8 +109,56 @@ def add_pair(request, exchange, pair):
                             supported_at=datetime.datetime.now())
         pair.save()
         pair_supported = True
-        
+
     return render(request, 'add_pair.html', locals())
+
+
+@login_required(login_url='/login')
+def import_all_pairs(request, id):
+    exchange = Exchange.objects.get(id=id)
+
+    if request.method == 'GET':
+        coins = MasterCoin.objects.all().order_by('symbol')
+
+        try:
+            pairs = requests.get(exchange.api_link).json()['data']
+        except Exception as e:
+            pairs = []
+
+        pairs_ = []
+        pairs__ = []
+        for ii in pairs:
+            base = ii['baseCurrency']
+            quote = ii['quoteCurrency']
+            if ExchangePair.objects.filter(exchange=exchange, 
+                                           base_coin__original_symbol=base, 
+                                           quote_coin__original_symbol=quote):
+                continue
+            bb = MasterCoin.objects.filter(original_symbol=base).count()
+            qq = MasterCoin.objects.filter(original_symbol=quote).count()
+            if bb and qq:
+                if bb > 1 or qq > 1:
+                    pairs_.append({ 'base': base, 'quote': quote})
+                else:
+                    pairs__.append({ 'base': base, 'quote': quote})
+    else:
+        num_pairs = request.POST.get('num_pairs', 0)
+
+        for idx in range(int(num_pairs)):
+            base_coin = request.POST.get('base_coin'+str(idx+1))
+            quote_coin = request.POST.get('quote_coin'+str(idx+1))
+            
+            pair = ExchangePair(exchange=exchange,
+                                base_coin_id=base_coin,
+                                quote_coin_id=quote_coin,
+                                cryptocompare_availability=True,
+                                coinapi_availability=True,
+                                supported=True,
+                                supported_at=datetime.datetime.now())
+            pair.save()
+        return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': id }))
+    return render(request, 'add_all_pair.html', locals())
+
 
 @login_required(login_url='/login')
 def add_coin(request, coin, exchange):
@@ -208,19 +256,6 @@ def add_to_world(request, id):
     return HttpResponseRedirect(reverse('all_coins'))
 
 
-@login_required(login_url='/login')
-def import_all_pairs(request, id):
-    exchange = Exchange.objects.get(id=id)
-    exchange.pairs.update(supported=True)
-    exchange.pairs.update(supported_at=datetime.datetime.now())
-    # support base coin of pairs
-    for pair in exchange.pairs.all():
-        pair.base_coin.supported = True
-        pair.base_coin.supported_at = datetime.datetime.now()
-        pair.base_coin.save()
-    return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': id }))
-
-
 @csrf_exempt
 def coins_(request):
     q = Q(is_master=True)
@@ -310,7 +345,7 @@ def supported_exchanges_(request):
     page = int(request.POST.get('current'))
     keyword = request.POST.get('searchPhrase')
 
-    qs = Exchange.objects.filter(name__icontains=keyword, supported=True)
+    qs = Exchange.objects.filter(name__icontains=keyword, supported=True).order_by('name')
     total = qs.count()
     exchanges = []
 
