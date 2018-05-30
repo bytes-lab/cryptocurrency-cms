@@ -24,7 +24,7 @@
                                 <option value="">---</option>
                                 {% for ii in coins %}
                                     <option {% if ii.symbol == base %} selected {% endif %} value="{{ ii.id }}">
-                                        {{ ii.symbol }} ( {{ ii.original_symbol }} )
+                                        {{ ii.coinlocale_set.first.name }} - {{ ii.symbol }} ( {{ ii.original_symbol }} )
                                     </option>
                                 {% endfor %}
                                 </select>
@@ -36,7 +36,7 @@
                                 <option value="">---</option>
                                 {% for ii in coins %}
                                     <option {% if ii.symbol == quote%} selected {% endif %} value="{{ ii.id }}">
-                                        {{ ii.symbol }} ( {{ ii.original_symbol }} )
+                                        {{ ii.coinlocale_set.first.name }} - {{ ii.symbol }} ( {{ ii.original_symbol }} )
                                     </option>
                                 {% endfor %}
                                 </select>
