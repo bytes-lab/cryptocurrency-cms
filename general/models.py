@@ -14,7 +14,7 @@ class DataProvider(models.Model):
 
 
 class Culture(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
     class Meta:
         db_table = 'culture'
@@ -198,8 +198,8 @@ class CoinLocale(models.Model):
         db_table = 'coin_locale'
         unique_together = ('coin', 'culture',)
 
-    def __str__(self):
-        return '{} - {}'.format(self.coin.symbol, self.name)
+    def __unicode__(self):
+        return u'{} - {}'.format(self.coin.symbol, self.name)
 
 # ------------------------------------------------------------------- #
 
