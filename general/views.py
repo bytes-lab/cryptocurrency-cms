@@ -96,6 +96,11 @@ def add_pair(request, exchange, pair):
                                              (Q(base_coin=base) |
                                               Q(quote_coin=quote))).exists()
 
+    bd_coins = [ii.symbol for ii in MasterCoin.objects.filter(original_symbol=base)]
+    bd_coins = ', '.join(bd_coins) if len(bd_coins) > 1 else ''
+    qd_coins = [ii.symbol for ii in MasterCoin.objects.filter(original_symbol=quote)]
+    qd_coins = ', '.join(qd_coins) if len(qd_coins) > 1 else ''
+
     if request.method == 'POST':
         base_coin = request.POST.get('base_coin')
         quote_coin = request.POST.get('quote_coin')

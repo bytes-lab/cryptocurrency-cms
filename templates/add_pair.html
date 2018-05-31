@@ -28,6 +28,11 @@
                                     </option>
                                 {% endfor %}
                                 </select>
+                                <p class="m-t-15">
+                                    {% if bd_coins %}
+                                    <span class="c-red f-15">** Duplicates ({{ bd_coins }})</span>
+                                    {% endif %}
+                                </p>                                
                             </div>
                             <div class="col-sm-4 m-b-25">
                                 <p class="f-500 m-b-15 c-black f-16">Quote Coin</p>
@@ -40,10 +45,15 @@
                                     </option>
                                 {% endfor %}
                                 </select>
+                                <p class="m-t-15">
+                                    {% if qd_coins %}
+                                    <span class="c-red f-15">** Duplicates ({{ qd_coins }})</span>
+                                    {% endif %}
+                                </p>                                
                             </div>
                             <div class="col-sm-12 p-t-25">
                                 <button class="btn btn-info waves-effect m-l-10">Add Pair</button>
-                                <a class="btn btn-default waves-effect m-l-10" href="#" onclick="javascript: window.history.back();">Cancel</a>
+                                <a class="btn btn-default waves-effect m-l-10" href="/exchanges/{{ exchange.id }}">Cancel</a>
                             </div>
                         </form>
                     </div>
@@ -66,7 +76,6 @@
                 </div>
             </div>
         </div>
-        
     </div>
 </section>
 {% endblock %}
