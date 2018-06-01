@@ -146,6 +146,9 @@ def import_all_pairs(request, id):
                     pairs_.append({ 'base': base, 'quote': quote})
                 else:
                     pairs__.append({ 'base': base, 'quote': quote})
+                    # segmentation
+                    if len(pairs__) > 50:
+                        break
     else:
         num_pairs = request.POST.get('num_pairs', 0)
 
