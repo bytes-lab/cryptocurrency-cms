@@ -188,6 +188,20 @@ class CoinapiPair(models.Model):
         return '{} - {}'.format(self.base_coin, self.quote_coin)
 
 
+class TempPair(models.Model):
+    pair = models.CharField(max_length=255)
+    exchange = models.CharField(max_length=255)
+    declined = models.BooleanField(default=False)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'tmp_pair'
+        unique_together = (("pair", "exchange"),)
+
+    def __str__(self):
+        return '{} - {}'.format(self.exchange, self.pair)
+
+
 class CoinLocale(models.Model):
     coin = models.ForeignKey(MasterCoin)
     culture = models.ForeignKey(Culture)
