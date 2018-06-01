@@ -361,14 +361,21 @@ def supported_exchanges_(request):
     lend = lstart + limit
 
     for exchange in qs[lstart:lend]:
-        pairs = exchange.pairs.filter(supported=True)
-        coins = [pair.base_coin.symbol for pair in pairs if pair.base_coin.supported]
+        pairs = exchange.pairs.all()
+        coins = [pair.base_coin.symbol for pair in pairs]
+        num_pairs = pairs.count()
+
+        try:
+            pairs_a = requests.get(exchange.api_link).json()['data'] or []
+        except Exception as e:
+            pairs_a = []
 
         exchange_ = {
             'id': exchange.id,
             'exchange': exchange.name,
             'num_coins': len(set(coins)),
-            'num_pairs': pairs.count()
+            'num_pairs': num_pairs,
+            'num_new_pairs': len(pairs_a) - num_pairs
         }
         exchanges.append(exchange_)
 

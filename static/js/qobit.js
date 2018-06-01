@@ -156,6 +156,13 @@ function load_supported_exchanges() {
         formatters: {
             "commands": function(column, row) {
                 return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/exchanges/" + row.id + "\"><span class=\"zmdi zmdi-eye\"></span></a>";
+            },
+            "new_pairs": function(column, row) {
+                if (row.num_new_pairs > 0) {
+                    return "<a class='btn bgm-red btn-xs waves-effect' href='#' title='Add a base coin'>"+row.num_new_pairs+"</a>";
+                } else {
+                    return '<div class="text-success m-5 f-500 f-15">N/A</div>';
+                }
             }
         },
         templates: {
