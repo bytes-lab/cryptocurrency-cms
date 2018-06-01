@@ -90,7 +90,7 @@ class ExchangeAdmin(admin.ModelAdmin):
 
 
 class ExchangePairAdmin(admin.ModelAdmin):
-    list_display = ['exchange', 'base_coin', 'quote_coin']
+    list_display = ['exchange', 'base_coin', 'quote_coin', 'supported_at']
     list_filter = ['exchange']
 
 
