@@ -262,7 +262,7 @@ def support_pair_(instance):
             cursor.execute(query, [instance.base_coin.original_symbol, instance.quote_coin.original_symbol])
 
 def support_pair(sender, instance, **kwargs):
-    pool = ThreadPool(processes=4)
+    pool = ThreadPool(processes=2)
     pool.apply_async(support_pair_, (instance))
 
 
