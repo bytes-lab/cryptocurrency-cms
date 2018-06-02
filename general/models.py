@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import time
 import pdb
+import thread
 
 from django.db import models
 from django.db import connection
@@ -226,6 +227,7 @@ def dictfetchall(cursor, base, quote):
     "Return all rows from a cursor as a dict"
     columns = [col[0] for col in cursor.description]
     result = []
+    
     for row in cursor.fetchall():
         ii = dict(zip(columns, row))
         ii.pop('base_currency')
@@ -262,8 +264,6 @@ def support_pair_(instance):
             cursor.execute(query, [instance.base_coin.original_symbol, instance.quote_coin.original_symbol])
 
 def support_pair(sender, instance, **kwargs):
-    pool = ThreadPool(processes=2)
-    pool.apply_async(support_pair_, (instance))
-
+    thread.start_new_thread(support_pair_, (instance,))
 
 post_save.connect(support_pair, sender=ExchangePair)
