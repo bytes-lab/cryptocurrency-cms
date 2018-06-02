@@ -1,14 +1,11 @@
 from __future__ import unicode_literals
 
 import time
-import pdb
 import thread
 
 from django.db import models
 from django.db import connection
 from django.db.models.signals import post_save
-
-from multiprocessing.pool import ThreadPool
 
 class DataProvider(models.Model):
     provider_code = models.CharField(max_length=255)
