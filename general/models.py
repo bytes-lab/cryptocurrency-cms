@@ -1,7 +1,11 @@
 from __future__ import unicode_literals
 
-from django.db import models
+import time
+import pdb
 
+from django.db import models
+from django.db import connection
+from django.db.models.signals import post_save
 
 class DataProvider(models.Model):
     provider_code = models.CharField(max_length=255)
@@ -214,3 +218,45 @@ class CoinLocale(models.Model):
 
     def __unicode__(self):
         return u'{} - {}'.format(self.coin.symbol, self.name)
+
+
+def dictfetchall(cursor, base, quote):
+    "Return all rows from a cursor as a dict"
+    columns = [col[0] for col in cursor.description]
+    result = []
+    for row in cursor.fetchall():
+        ii = dict(zip(columns, row))
+        ii.pop('base_currency')
+        ii.pop('quote_currency')
+        ii['base_currency_id'] = base
+        ii['quote_currency_id'] = quote
+        result.append(ii)
+    return result
+
+def support_pair(sender, instance, **kwargs):
+    pair_ = '{}-{}'.format(instance.base_coin.original_symbol, instance.quote_coin.original_symbol)
+    # delete a record in temp pair table
+    TempPair.objects.filter(exchange=instance.exchange.name, pair=pair_).delete()
+    table_name = 'tmp_{}_rates'.format(instance.exchange.name.lower())
+    query = "SELECT * FROM {} WHERE base_currency = %s and quote_currency = %s".format(table_name)
+
+    with connection.cursor() as cursor:
+        cursor.execute(query, [instance.base_coin.original_symbol, instance.quote_coin.original_symbol])
+        res = dictfetchall(cursor, instance.base_coin.id, instance.quote_coin.id)
+
+        if res:
+            values = []
+            placeholders = ', '.join(['%s'] * len(res[0]))
+            columns = ', '.join(res[0].keys())
+            sql = "INSERT INTO %s ( %s ) VALUES ( %s )" % (table_name[4:], columns, placeholders)
+
+            # copy records
+            for ii in res:
+                values.append(ii.values())
+            cursor.executemany(sql, values)
+
+            # delete records in temp table
+            query = "DELETE FROM {} WHERE base_currency = %s and quote_currency = %s".format(table_name)
+            cursor.execute(query)
+
+post_save.connect(support_pair, sender=ExchangePair)
