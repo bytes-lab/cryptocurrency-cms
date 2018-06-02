@@ -257,6 +257,6 @@ def support_pair(sender, instance, **kwargs):
 
             # delete records in temp table
             query = "DELETE FROM {} WHERE base_currency = %s and quote_currency = %s".format(table_name)
-            cursor.execute(query)
+            cursor.execute(query, [instance.base_coin.original_symbol, instance.quote_coin.original_symbol])
 
 post_save.connect(support_pair, sender=ExchangePair)
