@@ -394,84 +394,82 @@ def exchange_detail_(request, id):
     exchange = Exchange.objects.get(id=id)
     qs = exchange.pairs.filter(Q(base_coin__symbol__icontains=keyword) 
                              | Q(quote_coin__symbol__icontains=keyword))
-    result = {}
+    s_pairs = {}
     for ii in qs:
-        is_master = 'Master'
-        if ii.base_coin.cryptocompare > 0 and ii.base_coin.coinapi > 0:
-            is_master = 'Coinapi / Cryptocompare'
-        elif ii.base_coin.cryptocompare > 0:
-            is_master = 'Cryptocompare'
-        else:
-            is_master = 'Coinapi'
-
         pair = ii.base_coin.symbol + ' / ' + ii.quote_coin.symbol
-        result[pair] = {
-            'pair': pair,
-            'supported': 'YES',
-            'coin_supported': True,
-            'is_master': is_master,
-            'supported_at': str(ii.supported_at) if ii.supported_at else ''
-        }
+        s_pairs[pair] = str(ii.supported_at) if ii.supported_at else ''
 
-    result_cc = []
-    for k, v in sorted(result.items()):
-        result_cc.append(v)
+    master_coins = [ii.symbol for ii in MasterCoin.objects.all()]
+    cc_pairs = ['{}-{}-{}'.format(ii.exchange.upper(), ii.base_coin, ii.quote_coin) for ii in CryptocomparePair.objects.all() if keyword.upper() in ii.base_coin or keyword.upper() in ii.quote_coin]
+    cp_pairs = ['{}-{}-{}'.format(ii.exchange.upper(), ii.base_coin, ii.quote_coin) for ii in CoinapiPair.objects.all() if keyword.upper() in ii.base_coin or keyword.upper() in ii.quote_coin]
 
-    result_n = {}
+    result_a = {}
+    result_b = {}
+    result_c = {}
+
     try:
         pairs = requests.get(exchange.api_link).json()['data']
         for ii in pairs:
-            pair = ii['baseCurrency'] + ' / ' + ii['quoteCurrency']
+            base = ii['baseCurrency']
+            quote = ii['quoteCurrency']
+            pair = base + ' / ' + quote
             if keyword.lower() not in pair.lower():
                 continue
 
-            if pair not in result:
-                result_n[pair] = {
-                    'pair': pair,
-                    'supported': 'NO',
-                    'supported_at': ''
-                }
+            coin_supported = base in master_coins
+            quote_coin_supported = quote in master_coins
+            supported = 'YES' if pair in s_pairs else 'NO'
+
+            ii_ = {
+                'pair': pair,
+                'exchange': id,
+                'coin': base,
+                'coin_supported': coin_supported,
+                'quote_coin': quote,
+                'quote_coin_supported': quote_coin_supported,
+                'supported': supported,
+                'supported_at': s_pairs.get(pair, ''),
+            }
+
+            if not coin_supported or not quote_coin_supported:
+                result_a[pair] = ii_
+            elif supported == 'NO':
+                result_b[pair] = ii_
+            else:
+                result_c[pair] = ii_
     except Exception as e:
         pass
 
-    result_c = []
-    for k, v in sorted(result_n.items()):
-        result_c.append(v)
-
-    result_cc = result_c + result_cc    # put unsupported pairs first
-
-    master_coins = [ii.symbol for ii in MasterCoin.objects.all()]
-    cc_pairs = ['{}-{}-{}'.format(ii.exchange.upper(), ii.base_coin, ii.quote_coin) for ii in CryptocomparePair.objects.all()]
-    cp_pairs = ['{}-{}-{}'.format(ii.exchange.upper(), ii.base_coin, ii.quote_coin) for ii in CoinapiPair.objects.all()]
+    result = []
+    for k, v in sorted(result_a.items()):       # unsupported coins
+        result.append(v)
+    for k, v in sorted(result_b.items()):       # unsupported pairs
+        result.append(v)
+    for k, v in sorted(result_c.items()):       # supported pairs
+        result.append(v)
 
     pre_coin = None
-    for ii in result_cc[lstart:lend]:
+    for ii in result[lstart:lend]:
         [base, quote] = ii['pair'].split(' / ')
         coin = '' if pre_coin == base else base
         ii['coin'] = coin
-        ii['quote_coin'] = quote
-        ii['exchange'] = id
         pre_coin = base
-        ii['quote_coin_supported'] = quote in master_coins
-        if 'coin_supported' not in ii:
-            ii['coin_supported'] = base in master_coins
 
-        if ii['supported'] == 'NO':
-            cc_support = '{}-{}-{}'.format(exchange.cryptocompare.upper(), base, quote) in cc_pairs
-            cp_support = '{}-{}-{}'.format(exchange.coinapi.upper(), base, quote) in cp_pairs
+        cc_support = '{}-{}-{}'.format(exchange.cryptocompare.upper(), base, quote) in cc_pairs
+        cp_support = '{}-{}-{}'.format(exchange.coinapi.upper(), base, quote) in cp_pairs
 
-            intersect = ''
-            if cc_support and cp_support:
-                intersect = 'Coinapi / Cryptocompare'
-            elif cc_support:
-                intersect = 'Cryptocompare'
-            elif cp_support:
-                intersect = 'Coinapi'
-            ii['is_master'] = intersect
+        intersect = ''
+        if cc_support and cp_support:
+            intersect = 'Coinapi / Cryptocompare'
+        elif cc_support:
+            intersect = 'Cryptocompare'
+        elif cp_support:
+            intersect = 'Coinapi'
+        ii['is_master'] = intersect
 
     return JsonResponse({
         "current": page,
         "rowCount": limit,
-        "rows": result_cc[lstart:lend],
-        "total": len(result_cc)
+        "rows": result[lstart:lend],
+        "total": len(result)
     }, safe=False)
