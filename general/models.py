@@ -7,6 +7,8 @@ from django.db import models
 from django.db import connection
 from django.db.models.signals import post_save
 
+from multiprocessing.pool import ThreadPool
+
 class DataProvider(models.Model):
     provider_code = models.CharField(max_length=255)
 
@@ -233,7 +235,7 @@ def dictfetchall(cursor, base, quote):
         result.append(ii)
     return result
 
-def support_pair(sender, instance, **kwargs):
+def support_pair_(instance):
     pair_ = '{}-{}'.format(instance.base_coin.original_symbol, instance.quote_coin.original_symbol)
     # delete a record in temp pair table
     TempPair.objects.filter(exchange=instance.exchange.name, pair=pair_).delete()
@@ -248,7 +250,7 @@ def support_pair(sender, instance, **kwargs):
             values = []
             placeholders = ', '.join(['%s'] * len(res[0]))
             columns = ', '.join(res[0].keys())
-            sql = "INSERT INTO %s ( %s ) VALUES ( %s )" % (table_name[4:], columns, placeholders)
+            sql = "INSERT INTO %s ( %s ) VALUES ( %s ) ON CONFLICT DO NOTHING" % (table_name[4:], columns, placeholders)
 
             # copy records
             for ii in res:
@@ -258,5 +260,10 @@ def support_pair(sender, instance, **kwargs):
             # delete records in temp table
             query = "DELETE FROM {} WHERE base_currency = %s and quote_currency = %s".format(table_name)
             cursor.execute(query, [instance.base_coin.original_symbol, instance.quote_coin.original_symbol])
+
+def support_pair(sender, instance, **kwargs):
+    pool = ThreadPool(processes=4)
+    pool.apply_async(support_pair_, (instance))
+
 
 post_save.connect(support_pair, sender=ExchangePair)
