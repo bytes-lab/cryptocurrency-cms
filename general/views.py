@@ -235,8 +235,13 @@ def attach_coin(request, coin):
     coins = MasterCoin.objects.all().order_by('symbol')
 
     # for coin's name
-    full_name = CoinapiCoin.objects.filter(symbol=coin.original_symbol).first()
-    full_name = full_name.name if full_name else ''
+    culture = Culture.objects.filter(name='en_US').first()
+    cl = CoinLocale.objects.filter(coin=coin, culture=culture).first()
+    if cl:
+        full_name = cl.name
+    else:
+        full_name = CoinapiCoin.objects.filter(symbol=coin.original_symbol).first()
+        full_name = full_name.name if full_name else ''
     
     if request.method == 'POST':
         coin.cryptocompare = request.POST.get('cc_coin') or None
@@ -251,7 +256,6 @@ def attach_coin(request, coin):
         coin.save()
         coin = MasterCoin.objects.get(id=coin.id) # weird
 
-        culture = Culture.objects.filter(name='en_US').first()
         CoinLocale.objects.update_or_create(coin=coin, culture=culture, defaults={ 'name': full_name })
 
     return render(request, 'add_coin.html', locals())
