@@ -149,6 +149,7 @@ class CryptocompareCoin(models.Model):
     name = models.CharField(max_length=255)
     coinname = models.CharField(max_length=255)
     fullname = models.CharField(max_length=255)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'cc_coin_xref'
@@ -160,6 +161,7 @@ class CryptocompareCoin(models.Model):
 class CoinmarketcapCoin(models.Model):
     token = models.CharField(max_length=255)      # id from api
     symbol = models.CharField(max_length=255)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'cmc_coin_xref'
@@ -171,6 +173,7 @@ class CoinmarketcapCoin(models.Model):
 class CoinapiCoin(models.Model):
     symbol = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'coinapi_coin_xref'
@@ -183,6 +186,7 @@ class CryptocomparePair(models.Model):
     exchange = models.CharField(max_length=255)
     base_coin = models.CharField(max_length=255)
     quote_coin = models.CharField(max_length=255)
+    is_deleted = models.BooleanField(default=False)
     
     class Meta:
         db_table = 'cc_pair_xref'
@@ -197,6 +201,7 @@ class CoinapiPair(models.Model):
     quote_coin = models.CharField(max_length=255)
     symbol_id = models.CharField(max_length=255)
     market_type = models.CharField(max_length=255)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'coinapi_pair_xref'
@@ -205,18 +210,18 @@ class CoinapiPair(models.Model):
         return '{} - {}'.format(self.base_coin, self.quote_coin)
 
 
-class TempPair(models.Model):
-    pair = models.CharField(max_length=255)
-    exchange = models.CharField(max_length=255)
-    declined = models.BooleanField(default=False)
-    added_at = models.DateTimeField(auto_now_add=True)
+# class TempPair(models.Model):
+#     pair = models.CharField(max_length=255)
+#     exchange = models.CharField(max_length=255)
+#     declined = models.BooleanField(default=False)
+#     added_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = 'tmp_pair'
-        unique_together = (("pair", "exchange"),)
+#     class Meta:
+#         db_table = 'tmp_pair'
+#         unique_together = (("pair", "exchange"),)
 
-    def __str__(self):
-        return '{} - {}'.format(self.exchange, self.pair)
+#     def __str__(self):
+#         return '{} - {}'.format(self.exchange, self.pair)
 
 
 class CoinLocale(models.Model):
