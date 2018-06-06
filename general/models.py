@@ -117,6 +117,19 @@ class ExchangePair(models.Model):
         return '{}: {}-{}'.format(self.exchange.name, self.base_coin.symbol, self.quote_coin.symbol)
 
 
+class ExchangePairXref(models.Model):
+    exchange = models.CharField(max_length=255)
+    base_coin = models.CharField(max_length=255)
+    quote_coin = models.CharField(max_length=255)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'exchange_pair_xref'
+
+    def __str__(self):
+        return '{}-{}-{}'.format(self.exchange, self.base_coin, self.quote_coin)
+
+
 class ExchangePairRawTradeProviderXref(models.Model):
     exchange_pair = models.ForeignKey(ExchangePair)
     data_provider_id = models.ForeignKey(DataProvider)
@@ -128,7 +141,7 @@ class ExchangePairRawTradeProviderXref(models.Model):
     source_type = models.IntegerField(default=1)
 
     class Meta:
-        db_table = 'exchange_pair_xref'
+        db_table = 'exchange_pair_xreff'
 
 
 class CryptocompareCoin(models.Model):
