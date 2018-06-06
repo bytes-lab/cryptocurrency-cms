@@ -23,6 +23,11 @@ def main():
     coins = [ii.symbol for ii in CoinapiCoin.objects.all()]
     exchanges = [ii.coinapi for ii in Exchange.objects.all() if ii.coinapi]
 
+    all_pairs = {}
+    for pair in CoinapiPair.objects.all():
+        pair_ = '{}-{}-{}'.format(pair.exchange, pair.base_coin, pair.quote_coin)
+        all_pairs[pair_] = pair.id
+
     for pair in info:
         base = pair['asset_id_base']
         quote = pair['asset_id_quote']
@@ -35,11 +40,19 @@ def main():
         if quote not in coins:
             continue
 
+        pair_ = '{}-{}-{}'.format(exchange, base, quote)
+        if pair_ in all_pairs:
+            all_pairs.pop(pair_)
+
         pair, is_new = CoinapiPair.objects.update_or_create(exchange=exchange, 
                                                             base_coin=base,
                                                             quote_coin=quote,
                                                             symbol_id=pair['symbol_id'],
-                                                            market_type=pair['symbol_type'])
+                                                            market_type=pair['symbol_type'],
+                                                            defaults={ 'is_deleted': False })
+    if all_pairs:
+        CoinapiPair.objects.filter(id__in=all_pairs.values()).update(is_deleted=True)
+
 
 if __name__ == "__main__":
     main()

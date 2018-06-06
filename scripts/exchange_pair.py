@@ -14,7 +14,7 @@ from general.models import *
 def main():
     for exchange in Exchange.objects.filter(supported=True):
         all_pairs = {}
-        for pair in ExchangePairXref.objects.filter(exchange=exchange.name):
+        for pair in ExchangePairXref.objects.filter(exchange=exchange.name, is_deleted=False):
             pair_ = '{}-{}'.format(pair.base_coin, pair.quote_coin)
             all_pairs[pair_] = pair.id
 
@@ -30,7 +30,8 @@ def main():
 
             ExchangePairXref.objects.update_or_create(exchange=exchange.name, 
                                                       base_coin=ii['baseCurrency'], 
-                                                      quote_coin=ii['quoteCurrency'])
+                                                      quote_coin=ii['quoteCurrency'],
+                                                      defaults={ 'is_deleted': False })
         if all_pairs:
             ExchangePairXref.objects.filter(id__in=all_pairs.values()).update(is_deleted=True)
 

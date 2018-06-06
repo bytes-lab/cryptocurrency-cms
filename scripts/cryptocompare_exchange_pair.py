@@ -20,6 +20,11 @@ def main():
 
     coins = [ii.symbol for ii in CryptocompareCoin.objects.all()]
 
+    all_pairs = {}
+    for pair in CryptocomparePair.objects.all():
+        pair_ = '{}-{}-{}'.format(pair.exchange, pair.base_coin, pair.quote_coin)
+        all_pairs[pair_] = pair.id
+
     for key, val in info.items():
         defaults = {
             "cryptocompare": key
@@ -35,9 +40,16 @@ def main():
                 if quote not in coins:
                     continue
 
+                pair_ = '{}-{}-{}'.format(key.upper(), base, quote)
+                if pair_ in all_pairs:
+                    all_pairs.pop(pair_)
+
                 pair, is_new = CryptocomparePair.objects.update_or_create(exchange=key.upper(),
                                                                           base_coin=base, 
-                                                                          quote_coin=quote)
+                                                                          quote_coin=quote,
+                                                                          defaults={ 'is_deleted': False })
+    if all_pairs:
+        CryptocomparePair.objects.filter(id__in=all_pairs.values()).update(is_deleted=True)
 
 
 if __name__ == "__main__":
