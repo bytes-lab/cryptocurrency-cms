@@ -19,7 +19,7 @@ def main():
             all_pairs[pair_] = pair.id
 
         try:
-            pairs = requests.get(exchange.api_link).json()['data']
+            pairs = requests.get(exchange.api_link).json()['data'] or []
         except Exception as e:
             pairs = []
 
