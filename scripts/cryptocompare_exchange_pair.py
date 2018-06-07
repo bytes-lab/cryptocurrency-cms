@@ -11,6 +11,7 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qobit_cms.settings")
 django.setup()
 
+from django.db.models import Q
 from general.models import *
 from utils import send_email
 
@@ -51,6 +52,13 @@ def main():
     if all_pairs:
         CryptocomparePair.objects.filter(id__in=all_pairs.values()).update(is_deleted=True)
 
+    # update cc, cp availability
+    for ii in ExchangePair.objects.all():
+        cc_support = CryptocomparePair.objects.filter(Q(exchange__iexact=ii.exchange.cryptocompare) &
+                                                 (Q(base_coin=ii.base_coin.original_symbol) |
+                                                  Q(quote_coin=ii.quote_coin.original_symbol))).exists()
+        ii.cryptocompare_availability = cc_support
+        ii.save()
 
 if __name__ == "__main__":
     main()
