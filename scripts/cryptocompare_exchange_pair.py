@@ -53,11 +53,21 @@ def main():
         CryptocomparePair.objects.filter(id__in=all_pairs.values()).update(is_deleted=True)
 
     # update cc, cp availability
+    true_ids = []
+    false_ids = []
+
     for ii in ExchangePair.objects.all():
         cc_support = CryptocomparePair.objects.filter(Q(exchange__iexact=ii.exchange.cryptocompare) &
                                                  (Q(base_coin=ii.base_coin.original_symbol) |
                                                   Q(quote_coin=ii.quote_coin.original_symbol))).exists()
-        ExchangePair.objects.filter(id=ii.id).update(cryptocompare_availability=cc_support)
+        if cc_support:
+            true_ids.append(ii.id)
+        else:
+            false_ids.append(ii.id)
+
+    ExchangePair.objects.filter(id__in=true_ids).update(cryptocompare_availability=True)
+    ExchangePair.objects.filter(id__in=false_ids).update(cryptocompare_availability=False)
+
 
 if __name__ == "__main__":
     main()
