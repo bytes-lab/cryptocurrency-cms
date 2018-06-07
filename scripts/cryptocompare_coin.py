@@ -30,6 +30,7 @@ def main():
             'name': val.get('Name'),
             'coinname': val.get('CoinName'),
             'fullname': val.get('FullName'),
+            'image_uri': val.get('ImageUrl'),
             "is_deleted": False
         }
 

@@ -7,3 +7,4 @@ migrations
 static/media
 settings.py
 static/icons
+migrations_qa

@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse, JsonResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-
+from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 
@@ -477,3 +477,24 @@ def exchange_detail_(request, id):
         "rows": result[lstart:lend],
         "total": len(result)
     }, safe=False)
+
+def download_icon(request, id):
+    coin = MasterCoin.objects.get(id=id)
+    if coin.cryptocompare:
+        url = CryptocompareCoin.objects.get(id=coin.cryptocompare).image_uri
+
+        url_ = "https://www.cryptocompare.com" + url
+        headers = { 'cookie': '__cfduid=d4f723e7ca0160143b1c13ac7bf1819741528343396; _tuts_session=d04a378a2fdc02aa0b2fdf22d285452a; _ga=GA1.2.2058121609.1528343396; _gid=GA1.2.541871630.1528343396; __gads=ID=e0ebfc441b1d895d:T=1528343400:S=ALNI_MZpYcNa89niIKwttMQ54vlOpzhdyQ' }
+
+        for size in [16, 32, 48, 64, 128]:
+            url = url_ + '?width={}'.format(size)
+            file_name = coin.symbol.replace('*', 'star')
+            file_path = settings.BASE_DIR + '/static/icons/{}-{}.png'.format(file_name, size)
+            print url, file_path
+            info = requests.get(url, headers=headers)
+            with open(file_path, "wb") as file:
+                file.write(info.content)
+            coin.image_uri = '/static/icons/{}'.format(file_name)
+            coin.save()
+        return HttpResponse('success')
+    return HttpResponse('fail')
