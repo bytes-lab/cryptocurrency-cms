@@ -40,10 +40,12 @@ def main():
             url = url_ + '?width={}'.format(size)
             file_name = coin.symbol.replace('*', 'star')
             file_path = base_url + '/static/icons/{}-{}.png'.format(file_name, size)
-            print url, file_path
             info = requests.get(url, headers=headers)
             with open(file_path, "wb") as file:
                 file.write(info.content)
+
+            coin.image_uri = '/static/icons/{}'.format(file_name)
+            coin.save()
 
 
 if __name__ == "__main__":
