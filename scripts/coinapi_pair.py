@@ -13,6 +13,7 @@ django.setup()
 
 from general.models import *
 from django.conf import settings
+from django.db.models import Q
 from utils import send_email
 
 def main():
@@ -53,6 +54,13 @@ def main():
     if all_pairs:
         CoinapiPair.objects.filter(id__in=all_pairs.values()).update(is_deleted=True)
 
+    # update cc, cp availability
+    for ii in ExchangePair.objects.all():
+        cp_support = CoinapiPair.objects.filter(Q(exchange__iexact=ii.exchange.coinapi) &
+                                                 (Q(base_coin=ii.base_coin.original_symbol) |
+                                                  Q(quote_coin=ii.quote_coin.original_symbol))).exists()
+        ii.coinapi_availability = cp_support
+        ii.save()
 
 if __name__ == "__main__":
     main()
