@@ -497,4 +497,4 @@ def download_icon(request, id):
             coin.image_uri = '/static/icons/{}'.format(file_name)
             coin.save()
         return HttpResponse('success')
-    return HttpResponse('fail')
+    return HttpResponse('Icon is not available.')

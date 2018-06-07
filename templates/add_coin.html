@@ -141,7 +141,7 @@
                                     <button class="btn btn-info waves-effect m-l-10">Add Coin</button>
                                     <a class="btn btn-default waves-effect m-l-10" href="#" onclick="javascript: window.history.back();">Cancel</a>
                                     {% if culture %}
-                                        <a class="btn bgm-green waves-effect m-l-10">Download Icon</a>
+                                        <a class="btn bgm-green waves-effect m-l-10 download-icon" data-id="{{ coin.id }}">Download Icon</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -182,4 +182,16 @@
 {% block extra_js %}
     <script src="{% static 'js/qobit.js' %}"></script>
     <script src="{% static 'js/common.js' %}"></script>
+    <script type="text/javascript">
+        $('.download-icon').click(function() {
+            var url = "/download_icon/"+$(this).data('id');
+            $.get(url, function(res) {
+                if (res == 'success') {
+                    alert('Icon downloaded successfully.');
+                } else {
+                    alert(res);
+                }
+            })
+        })
+    </script>
 {% endblock %}
