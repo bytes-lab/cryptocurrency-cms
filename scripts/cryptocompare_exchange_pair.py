@@ -57,8 +57,7 @@ def main():
         cc_support = CryptocomparePair.objects.filter(Q(exchange__iexact=ii.exchange.cryptocompare) &
                                                  (Q(base_coin=ii.base_coin.original_symbol) |
                                                   Q(quote_coin=ii.quote_coin.original_symbol))).exists()
-        ii.cryptocompare_availability = cc_support
-        ii.save()
+        ExchangePair.objects.filter(id=ii.id).update(cryptocompare_availability=cc_support)
 
 if __name__ == "__main__":
     main()

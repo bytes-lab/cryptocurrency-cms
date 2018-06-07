@@ -59,8 +59,7 @@ def main():
         cp_support = CoinapiPair.objects.filter(Q(exchange__iexact=ii.exchange.coinapi) &
                                                  (Q(base_coin=ii.base_coin.original_symbol) |
                                                   Q(quote_coin=ii.quote_coin.original_symbol))).exists()
-        ii.coinapi_availability = cp_support
-        ii.save()
+        ExchangePair.objects.filter(id=ii.id).update(coinapi_availability=cp_support)
 
 if __name__ == "__main__":
     main()
