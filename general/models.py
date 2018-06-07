@@ -122,6 +122,8 @@ class ExchangePairXref(models.Model):
     base_coin = models.CharField(max_length=255)
     quote_coin = models.CharField(max_length=255)
     is_deleted = models.BooleanField(default=False)
+    cryptocompare_availability = models.BooleanField(default=False)
+    coinapi_availability = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'exchange_pair_xref'
