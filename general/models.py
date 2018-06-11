@@ -85,6 +85,7 @@ class Exchange(models.Model):
     facebook_url = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(max_length=255, null=True, blank=True)
     api_link = models.CharField(max_length=255, null=True, blank=True)
+    script_present = models.BooleanField(default=False)
     supported = models.BooleanField(default=False)
     supported_at = models.DateField(null=True, blank=True)
 
