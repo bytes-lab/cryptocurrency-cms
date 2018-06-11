@@ -76,16 +76,16 @@ class MasterCoinAdmin(admin.ModelAdmin):
 
 
 class ExchangeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'cryptocompare_support', 'coinapi_support']
+    list_display = ['name', 'coinapi_support', 'cryptocompare_support']
     search_fields = ['name']
     list_filter = [CryptocompareSupportFilter, CoinapiSupportFilter]
 
     def cryptocompare_support(self, obj):
-        return obj.cryptocompare > 0
+        return obj.cryptocompare != None and obj.cryptocompare.strip() != ''
     cryptocompare_support.boolean = True
 
     def coinapi_support(self, obj):
-        return obj.coinapi > 0
+        return obj.coinapi != None and obj.coinapi.strip() != ''
     coinapi_support.boolean = True
 
 
