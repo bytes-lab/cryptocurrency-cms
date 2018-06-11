@@ -198,6 +198,7 @@ def add_coin(request, coin, exchange):
         alias = request.POST.get('alias') or None
         new_symbol = request.POST.get('new_symbol') or None
         full_name = request.POST.get('full_name', '')
+        is_master = False if alias else True
 
         cc_name = CryptocompareCoin.objects.get(id=cc).name if cc else ''
         coin = MasterCoin(cryptocompare=cc,
@@ -208,7 +209,7 @@ def add_coin(request, coin, exchange):
                           original_symbol=coin,
                           alias_id=alias,
                           supported=True,
-                          is_master=True,
+                          is_master=is_master,
                           is_trading=True)
         coin.save()
         coin = MasterCoin.objects.get(id=coin.id) # weird
@@ -248,6 +249,7 @@ def attach_coin(request, coin):
         coin.coinmarketcap = request.POST.get('cmc_coin') or None
         coin.coinapi = request.POST.get('cp_coin') or None
         coin.alias_id = request.POST.get('alias') or None
+        coin.is_master = False if coin.alias_id else True
         coin.symbol = request.POST.get('new_symbol') or None
         full_name = request.POST.get('full_name', '')
 
