@@ -9,14 +9,14 @@ $(window).load(function () {
     /* --------------------------------------------------------
      Page Loader
      -----------------------------------------------------------*/
-    if(!$('html').hasClass('ismobile')) {
-        if($('.page-loader')[0]) {
-            setTimeout (function () {
-                $('.page-loader').fadeOut();
-            }, 500);
+    // if(!$('html').hasClass('ismobile')) {
+    //     if($('.page-loader')[0]) {
+    //         setTimeout (function () {
+    //             $('.page-loader').fadeOut();
+    //         }, 500);
 
-        }
-    }
+    //     }
+    // }
 })
 
 $(document).ready(function(){

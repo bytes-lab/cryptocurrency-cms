@@ -12,7 +12,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qobit_cms.settings")
 django.setup()
 
 from general.models import *
-from django.conf import settings
 from utils import send_email
 
 def main():
@@ -34,13 +33,13 @@ def main():
 
             defaults = {
                 "name": coin.get('name'),
-                "symbol": coin.get('symbol'),
+                "symbol": coin.get('symbol').upper(),
                 "is_deleted": False
             }
 
             coin, is_new = CoingeckoCoin.objects.update_or_create(uid=coin['id'], defaults=defaults)
             # if is_new:
-            #     send_email(coin['asset_id'], True, 'Coinapi')
+            #     send_email(coin['asset_id'], True, 'Coingecko')
 
     if all_coins:
         CoingeckoCoin.objects.filter(id__in=all_coins.values()).update(is_deleted=True)

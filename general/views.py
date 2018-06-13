@@ -263,6 +263,17 @@ def attach_coin(request, coin):
     return render(request, 'add_coin.html', locals())
 
 @login_required(login_url='/login')
+def bulk_pair_coin(request):
+    page = request.GET.get('page', 1)
+    page_size = 5
+    coins = MasterCoin.objects.all()[(page-1)*page_size:page*page_size]
+    cc_coins = CryptocompareCoin.objects.all()
+    cmc_coins = CoinmarketcapCoin.objects.all()
+    cp_coins = CoinapiCoin.objects.all()
+    cg_coins = CoingeckoCoin.objects.all()
+    return render(request, 'bulk_pair_coin.html', locals())
+
+@login_required(login_url='/login')
 def add_to_world(request, id):
     coin = MasterCoin.objects.get(id=id)
     coin.supported = True
