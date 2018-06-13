@@ -110,8 +110,9 @@ class CPCoinAdmin(admin.ModelAdmin):
 
 
 class GKCoinAdmin(admin.ModelAdmin):
-    list_display = ['uid', 'symbol', 'name']
+    list_display = ['uid', 'symbol', 'name', 'is_deleted']
     search_fields = ['uid', 'symbol', 'name']
+    list_filter = ['is_deleted']
 
 
 class CMCCoinAdmin(admin.ModelAdmin):
