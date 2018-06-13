@@ -20,9 +20,9 @@ class CryptocompareSupportFilter(SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value() == 'True':
-            return queryset.filter(cryptocompare__gt=0)
+            return queryset.exclude(cryptocompare__isnull=True)
         if self.value() == 'False':
-            return queryset.exclude(cryptocompare__gt=0)
+            return queryset.filter(cryptocompare__isnull=True)
 
 
 class CoinapiSupportFilter(SimpleListFilter):
@@ -34,9 +34,9 @@ class CoinapiSupportFilter(SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value() == 'True':
-            return queryset.filter(coinapi__gt=0)
+            return queryset.exclude(coinapi__isnull=True)
         if self.value() == 'False':
-            return queryset.exclude(coinapi__gt=0)
+            return queryset.filter(coinapi__isnull=True)
 
 
 class CoinmarketcapSupportFilter(SimpleListFilter):
@@ -48,29 +48,48 @@ class CoinmarketcapSupportFilter(SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value() == 'True':
-            return queryset.filter(coinmarketcap__gt=0)
+            return queryset.exclude(coinmarketcap__isnull=True)
         if self.value() == 'False':
-            return queryset.exclude(coinmarketcap__gt=0)
+            return queryset.filter(coinmarketcap__isnull=True)
+
+
+class CoingeckoSupportFilter(SimpleListFilter):
+    title = 'coinmarketcap'
+    parameter_name = 'coinmarketcap'
+
+    def lookups(self, request, model_admin):
+        return (('True', _('Yes')), ('False', _('No')))
+
+    def queryset(self, request, queryset):
+        if self.value() == 'True':
+            return queryset.exclude(coingecko__isnull=True)
+        if self.value() == 'False':
+            return queryset.filter(coingecko__isnull=True)
 
 
 class MasterCoinAdmin(admin.ModelAdmin):
     inlines = [CoinLocaleTabularInline]
-    list_display = ['symbol', 'alias', 'cryptocompare_support', 'coinapi_support', 'coinmarketcap_support']
+    list_display = ['symbol', 'alias', 'cryptocompare_support', 'coinapi_support', 'coinmarketcap_support', 'coingecko_support']
     search_fields = ['symbol']
-    list_filter = [CoinmarketcapSupportFilter, CoinapiSupportFilter, CryptocompareSupportFilter, 'supported', 'is_master']
+    list_filter = [CoingeckoSupportFilter, CoinmarketcapSupportFilter, CoinapiSupportFilter, CryptocompareSupportFilter, 'supported', 'is_master']
 
     def cryptocompare_support(self, obj):
-        return obj.cryptocompare > 0
+        return obj.cryptocompare != None
     cryptocompare_support.boolean = True
     cryptocompare_support.short_description = 'Cryptocompare'
 
+    def coingecko_support(self, obj):
+        return obj.coingecko != None
+    coingecko_support.boolean = True
+    coingecko_support.short_description = 'Cryptocompare'
+
     def coinapi_support(self, obj):
-        return obj.coinapi > 0
+        return obj.coinapi != None
     coinapi_support.boolean = True
     coinapi_support.short_description = 'Coinapi'
 
     def coinmarketcap_support(self, obj):
-        return obj.coinmarketcap > 0
+        return obj.coinmarketcap != None
     coinmarketcap_support.boolean = True
     coinmarketcap_support.short_description = 'Coinmarketcap'
 
