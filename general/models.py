@@ -186,6 +186,31 @@ class CoinapiCoin(models.Model):
         return self.symbol
 
 
+class CoingeckoCoin(models.Model):
+    uid = models.CharField(max_length=255)
+    symbol = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'coingecko_coin_xref'
+
+    def __str__(self):
+        return self.symbol
+
+
+class CoinapiCoin(models.Model):
+    symbol = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'coinapi_coin_xref'
+
+    def __str__(self):
+        return self.symbol
+
+
 class CryptocomparePair(models.Model):
     exchange = models.CharField(max_length=255)
     base_coin = models.CharField(max_length=255)

@@ -109,6 +109,11 @@ class CPCoinAdmin(admin.ModelAdmin):
     search_fields = ['symbol', 'name']
 
 
+class GKCoinAdmin(admin.ModelAdmin):
+    list_display = ['uid', 'symbol', 'name']
+    search_fields = ['uid', 'symbol', 'name']
+
+
 class CMCCoinAdmin(admin.ModelAdmin):
     list_display = ['symbol', 'token']
     search_fields = ['symbol', 'token']
@@ -122,6 +127,7 @@ admin.site.register(Culture)
 # admin.site.register(CoinLocale)
 admin.site.register(CryptocompareCoin, CCCoinAdmin)
 admin.site.register(CoinmarketcapCoin, CMCCoinAdmin)
+admin.site.register(CoingeckoCoin, GKCoinAdmin)
 admin.site.register(CoinapiCoin, CPCoinAdmin)
 admin.site.register(CryptocomparePair, ExchangePairXrefAdmin)
 admin.site.register(CoinapiPair, ExchangePairXrefAdmin)
