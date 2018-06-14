@@ -54,8 +54,8 @@ class CoinmarketcapSupportFilter(SimpleListFilter):
 
 
 class CoingeckoSupportFilter(SimpleListFilter):
-    title = 'coinmarketcap'
-    parameter_name = 'coinmarketcap'
+    title = 'coingecko'
+    parameter_name = 'coingecko'
 
     def lookups(self, request, model_admin):
         return (('True', _('Yes')), ('False', _('No')))

@@ -267,7 +267,7 @@ def bulk_pair_coin(request):
     page = int(request.GET.get('page', 1))
     prev_page = page - 1 if page > 1 else 1
     page_size = 10
-    coins = MasterCoin.objects.all()
+    coins = MasterCoin.objects.all().order_by('symbol')
     total_number = coins.count()
     max_page = int((total_number+page_size-1) / page_size)
     next_page = page + 1 if max_page > page else max_page
@@ -277,6 +277,20 @@ def bulk_pair_coin(request):
     cmc_coins = CoinmarketcapCoin.objects.all()
     cp_coins = CoinapiCoin.objects.all()
     cg_coins = CoingeckoCoin.objects.all()
+
+    if request.method == 'POST':
+        for idx in range(page_size):
+            coin = request.POST.get('coin'+str(idx+1))
+            if coin:
+                cc_coin = request.POST.get('cc_coin'+str(idx+1)) or None
+                cmc_coin = request.POST.get('cmc_coin'+str(idx+1)) or None
+                cp_coin = request.POST.get('cp_coin'+str(idx+1)) or None
+                cg_coin = request.POST.get('cg_coin'+str(idx+1)) or None
+                MasterCoin.objects.filter(id=coin).update(cryptocompare=cc_coin,
+                                                          coinmarketcap=cmc_coin,
+                                                          coinapi=cp_coin,
+                                                          coingecko=cg_coin)
+
     return render(request, 'bulk_pair_coin.html', locals())
 
 @login_required(login_url='/login')

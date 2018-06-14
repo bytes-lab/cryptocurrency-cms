@@ -38,9 +38,9 @@
                     <div class="row">
                         <div class="col-md-2 p-t-10">
                             <p class="f-500 m-b-15 c-black f-15 pull-right">
-                            {{ coin.coinlocale_set.first.name }} ( {{ coin.symbol }} )
+                                <a target="_blank" href="/attach_coin/{{ coin.id }}">{{ coin.coinlocale_set.first.name }} ( {{ coin.symbol }} )</a>
                             </p>
-                            <input type="hidden" name="coin{{forloop.counter}}">
+                            <input type="hidden" name="coin{{forloop.counter}}" value="{{ coin.id }}">
                         </div>
                         <div class="col-md-10 p-t-10">
                             <div class="col-sm-3 m-b-15">
@@ -56,7 +56,7 @@
                                 <option value="">NULL</option>
                                 <option value="0" {% if coin.cryptocompare == 0%} selected {% endif %} >---</option>
                                 {% for ii in cc_coins %}
-                                    {% if coin.cryptocompare > 0 %}
+                                    {% if coin.cryptocompare > -1 %}
                                         {% if coin.cryptocompare == ii.id %}
                                             <option selected value="{{ ii.id }}">
                                                 {{ ii.coinname }} ( {{ ii.symbol }} )
@@ -83,7 +83,7 @@
                                 <option value="">NULL</option>
                                 <option value="0" {% if coin.coinmarketcap == 0%} selected {% endif %} >---</option>
                                 {% for ii in cmc_coins %}
-                                    {% if coin.coinmarketcap > 0 %}
+                                    {% if coin.coinmarketcap > -1 %}
                                         {% if coin.coinmarketcap == ii.id %}
                                             <option selected value="{{ ii.id }}">
                                                 {{ ii.token }} ( {{ ii.symbol }} )
@@ -110,7 +110,7 @@
                                 <option value="">NULL</option>
                                 <option value="0" {% if coin.coinapi == 0%} selected {% endif %} >---</option>
                                 {% for ii in cp_coins %}
-                                    {% if coin.coinapi > 0 %}
+                                    {% if coin.coinapi > -1 %}
                                         {% if coin.coinapi == ii.id %}
                                             <option selected value="{{ ii.id }}">
                                                 {{ ii.name }} ( {{ ii.symbol }} )
@@ -137,7 +137,7 @@
                                 <option value="">NULL</option>
                                 <option value="0" {% if coin.coingecko == 0%} selected {% endif %} >---</option>
                                 {% for ii in cg_coins %}
-                                    {% if coin.coingecko > 0 %}
+                                    {% if coin.coingecko > -1 %}
                                         {% if coin.coingecko == ii.id %}
                                             <option selected value="{{ ii.id }}">
                                                 {{ ii.name }} ( {{ ii.symbol }} )
