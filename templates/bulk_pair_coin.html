@@ -40,6 +40,7 @@
                             <p class="f-500 m-b-15 c-black f-15 pull-right">
                             {{ coin.coinlocale_set.first.name }} ( {{ coin.symbol }} )
                             </p>
+                            <input type="hidden" name="coin{{forloop.counter}}">
                         </div>
                         <div class="col-md-10 p-t-10">
                             <div class="col-sm-3 m-b-15">
@@ -51,13 +52,19 @@
                                     {% endif %}
                                 </p>
                                 
-                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cc_coin" data-size="10">
+                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cc_coin{{forloop.counter}}" data-size="10">
                                 <option value="">NULL</option>
                                 <option value="0" {% if coin.cryptocompare == 0%} selected {% endif %} >---</option>
                                 {% for ii in cc_coins %}
-                                    <option {% if ii.id == coin.cryptocompare or ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
-                                        {{ ii.coinname }} ( {{ ii.symbol }} )
-                                    </option>
+                                    {% if coin.cryptocompare == ii.id %}
+                                        <option selected value="{{ ii.id }}">
+                                            {{ ii.coinname }} ( {{ ii.symbol }} )
+                                        </option>
+                                    {% else %}
+                                        <option {% if ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
+                                            {{ ii.coinname }} ( {{ ii.symbol }} )
+                                        </option>
+                                    {% endif %}
                                 {% endfor %}
                                 </select>
                             </div>
@@ -70,13 +77,19 @@
                                     {% endif %}
                                 </p>
                                 
-                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cmc_coin" data-size="10">
+                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cmc_coin{{forloop.counter}}" data-size="10">
                                 <option value="">NULL</option>
                                 <option value="0" {% if coin.coinmarketcap == 0%} selected {% endif %} >---</option>
                                 {% for ii in cmc_coins %}
-                                    <option {% if ii.id == coin.coinmarketcap or ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
-                                        {{ ii.token }} ( {{ ii.symbol }} )
-                                    </option>
+                                    {% if coin.coinmarketcap == ii.id %}
+                                        <option selected value="{{ ii.id }}">
+                                            {{ ii.token }} ( {{ ii.symbol }} )
+                                        </option>
+                                    {% else %}
+                                        <option {% if ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
+                                            {{ ii.token }} ( {{ ii.symbol }} )
+                                        </option>
+                                    {% endif %}
                                 {% endfor %}
                                 </select>
                             </div>
@@ -89,13 +102,19 @@
                                     {% endif %}
                                 </p>
                                 
-                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cp_coin" data-size="10">
+                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cp_coin{{forloop.counter}}" data-size="10">
                                 <option value="">NULL</option>
                                 <option value="0" {% if coin.coinapi == 0%} selected {% endif %} >---</option>
                                 {% for ii in cp_coins %}
-                                    <option {% if ii.id == coin.coinapi or ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
-                                        {{ ii.name }} ( {{ ii.symbol }} )
-                                    </option>
+                                    {% if coin.coinapi == ii.id %}
+                                        <option selected value="{{ ii.id }}">
+                                            {{ ii.name }} ( {{ ii.symbol }} )
+                                        </option>
+                                    {% else %}
+                                        <option {% if ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
+                                            {{ ii.name }} ( {{ ii.symbol }} )
+                                        </option>
+                                    {% endif %}
                                 {% endfor %}
                                 </select>
                             </div>
@@ -108,13 +127,19 @@
                                     {% endif %}
                                 </p>
                                 
-                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cp_coin" data-size="10">
+                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cg_coin{{forloop.counter}}" data-size="10">
                                 <option value="">NULL</option>
                                 <option value="0" {% if coin.coingecko == 0%} selected {% endif %} >---</option>
                                 {% for ii in cg_coins %}
-                                    <option {% if ii.id == coin.coingecko or ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
-                                        {{ ii.name }} ( {{ ii.symbol }} )
-                                    </option>
+                                    {% if coin.coingecko == ii.id %}
+                                        <option selected value="{{ ii.id }}">
+                                            {{ ii.name }} ( {{ ii.symbol }} )
+                                        </option>
+                                    {% else %}
+                                        <option {% if ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
+                                            {{ ii.name }} ( {{ ii.symbol }} )
+                                        </option>
+                                    {% endif %}
                                 {% endfor %}
                                 </select>
                             </div>
