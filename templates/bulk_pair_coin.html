@@ -160,9 +160,10 @@
                             <button class="btn btn-info waves-effect m-l-10">Pair Coins</button>
                             <a class="btn btn-default waves-effect m-l-10" href="#" onclick="javascript: window.history.back();">Cancel</a>
                         </div>
-                        <div class="col-md-1 p-t-20">
+                        <div class="col-md-2 p-t-20">
                             <ul class="pagination">
                                 <li><a href="/bulk_pair_coin?page={{ prev_page }}" aria-label="Previous"><i class="zmdi zmdi-chevron-left"></i></a></li>
+                                <li class="p-t-5 f-500">{{ page }} / {{ max_page }}</li>
                                 <li><a href="/bulk_pair_coin?page={{ next_page }}" aria-label="Next"><i class="zmdi zmdi-chevron-right"></i></a></li>
                              </ul>                            
                         </div>
