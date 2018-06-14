@@ -264,9 +264,15 @@ def attach_coin(request, coin):
 
 @login_required(login_url='/login')
 def bulk_pair_coin(request):
-    page = request.GET.get('page', 1)
-    page_size = 15
-    coins = MasterCoin.objects.all()[(page-1)*page_size:page*page_size]
+    page = int(request.GET.get('page', 1))
+    prev_page = page - 1 if page > 1 else 1
+    page_size = 10
+    coins = MasterCoin.objects.all()
+    total_number = coins.count()
+    max_page = int((total_number+page_size-1) / page_size)
+    next_page = page + 1 if max_page > page else max_page
+
+    coins = coins[(page-1)*page_size:page*page_size]
     cc_coins = CryptocompareCoin.objects.all()
     cmc_coins = CoinmarketcapCoin.objects.all()
     cp_coins = CoinapiCoin.objects.all()
