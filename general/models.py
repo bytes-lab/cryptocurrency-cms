@@ -149,6 +149,7 @@ class ExchangePairRawTradeProviderXref(models.Model):
 
 
 class CryptocompareCoin(models.Model):
+    uid = models.IntegerField(null=True)
     symbol = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     coinname = models.CharField(max_length=255)
@@ -252,6 +253,28 @@ class TempPair(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.exchange, self.pair)
+
+
+class CoinHourlyInfo(models.Model):
+    coin = models.ForeignKey(MasterCoin)
+    date_of_entry = models.DateTimeField(auto_now_add=True)
+    total_supply = models.IntegerField()
+    circulating_supply = models.IntegerField()
+    twitter_followers = models.IntegerField()
+    github_commits = models.IntegerField()
+    reddit_followers = models.IntegerField()
+    net_hashes_per_second = models.FloatField()
+    block_time = models.IntegerField()
+    block_reward = models.FloatField()
+    block_number = models.IntegerField()
+    block_reward_reduction = models.CharField(max_length=255, null=True, blank=True)
+    difficulty_adjustment = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        db_table = 'coin_hourly_info'
+
+    def __unicode__(self):
+        return self.coin.symbol
 
 
 class CoinLocale(models.Model):
