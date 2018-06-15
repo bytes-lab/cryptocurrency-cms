@@ -27,7 +27,7 @@ def main():
             all_coins.pop(val.get('Symbol'))
 
         defaults = {
-            'uid': val.get('id'),
+            'uid': val.get('Id'),
             'name': val.get('Name'),
             'coinname': val.get('CoinName'),
             'fullname': val.get('FullName'),

@@ -12,7 +12,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qobit_cms.settings")
 django.setup()
 
 from general.models import *
-from utils import send_email
 
 def main():
     url = 'https://min-api.cryptocompare.com/data/all/coinlist'
