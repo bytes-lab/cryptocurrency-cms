@@ -30,6 +30,7 @@ class Culture(models.Model):
 class MasterCoin(models.Model):
     symbol = models.CharField(max_length=255)
     original_symbol = models.CharField(max_length=255)
+
     coinmarketcap = models.IntegerField(null=True, blank=True)
     cryptocompare = models.IntegerField(null=True, blank=True)
     coingecko = models.IntegerField(null=True, blank=True)
@@ -39,16 +40,13 @@ class MasterCoin(models.Model):
     is_trading = models.BooleanField(default=True)
     sort_order = models.IntegerField(null=True, blank=True)
     image_uri = models.CharField(max_length=255, null=True, blank=True)
+
     category = models.CharField(max_length=255, null=True, blank=True)
     tags = models.CharField(max_length=500, null=True, blank=True)
     coingecko_category = models.CharField(max_length=500, null=True, blank=True)
     cmc_tags = models.CharField(max_length=500, null=True, blank=True)
-    whitepaper_url = models.CharField(max_length=255, null=True, blank=True)
-    website_url = models.CharField(max_length=255, null=True, blank=True)
+
     launch_date = models.DateField(null=True, blank=True)
-    nethash_per_second = models.CharField(max_length=255, null=True, blank=True)
-    block_time = models.IntegerField(null=True, blank=True)
-    block_reward = models.CharField(max_length=255, null=True, blank=True)
     proof_type = models.CharField(max_length=255, null=True, blank=True)
     algorithm = models.CharField(max_length=255, null=True, blank=True)
 
@@ -252,18 +250,18 @@ class CoinapiPair(models.Model):
         return '{} - {}'.format(self.base_coin, self.quote_coin)
 
 
-class TempPair(models.Model):
-    pair = models.CharField(max_length=255)
-    exchange = models.CharField(max_length=255)
-    declined = models.BooleanField(default=False)
-    added_at = models.DateTimeField(auto_now_add=True)
+# class TempPair(models.Model):
+#     pair = models.CharField(max_length=255)
+#     exchange = models.CharField(max_length=255)
+#     declined = models.BooleanField(default=False)
+#     added_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = 'tmp_pair'
-        unique_together = (("pair", "exchange"),)
+#     class Meta:
+#         db_table = 'tmp_pair'
+#         unique_together = (("pair", "exchange"),)
 
-    def __str__(self):
-        return '{} - {}'.format(self.exchange, self.pair)
+#     def __str__(self):
+#         return '{} - {}'.format(self.exchange, self.pair)
 
 
 class CoinHourlyInfo(models.Model):
