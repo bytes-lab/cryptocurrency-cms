@@ -40,7 +40,9 @@ class MasterCoin(models.Model):
     sort_order = models.IntegerField(null=True, blank=True)
     image_uri = models.CharField(max_length=255, null=True, blank=True)
     category = models.CharField(max_length=255, null=True, blank=True)
-    tags = models.CharField(max_length=255, null=True, blank=True)
+    tags = models.CharField(max_length=500, null=True, blank=True)
+    coingecko_category = models.CharField(max_length=500, null=True, blank=True)
+    cmc_tags = models.CharField(max_length=500, null=True, blank=True)
     whitepaper_url = models.CharField(max_length=255, null=True, blank=True)
     website_url = models.CharField(max_length=255, null=True, blank=True)
     launch_date = models.DateField(null=True, blank=True)
@@ -291,6 +293,9 @@ class CoinLocale(models.Model):
     culture = models.ForeignKey(Culture)
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
+    short_description = models.TextField(null=True, blank=True)
+    feature = models.TextField(null=True, blank=True)
+    technology = models.TextField(null=True, blank=True)
 
     class Meta:
         db_table = 'coin_locale'
