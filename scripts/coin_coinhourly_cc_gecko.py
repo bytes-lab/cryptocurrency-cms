@@ -23,6 +23,7 @@ def main():
         hour_info = {}
         locale_info = {}
 
+        print (coin.id, coin.symbol, '----------------')
         if coin.cryptocompare:
             cc_coin = CryptocompareCoin.objects.get(id=coin.cryptocompare)
             url_ = 'https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id={}'.format(cc_coin.uid)
@@ -35,13 +36,13 @@ def main():
             coin.social_twitter_identifier = get_csv(coin.social_twitter_identifier, [info.get('Twitter')])
 
             hour_info = {
-                'total_supply': info.get('TotalCoinSupply'),
-                'net_hashes_per_second': info.get('NetHashesPerSecond'),
-                'block_number': info.get('BlockNumber'),
-                'block_reward_reduction': info.get('BlockRewardReduction'),
-                'difficulty_adjustment': info.get('DifficultyAdjustment'),
-                'block_time': info.get('BlockTime') or -1,
-                'block_reward': info.get('BlockReward')            
+                'total_supply': info.get('TotalCoinSupply') or None,
+                'net_hashes_per_second': info.get('NetHashesPerSecond') or None,
+                'block_number': info.get('BlockNumber') or None,
+                'block_reward_reduction': info.get('BlockRewardReduction') or None,
+                'difficulty_adjustment': info.get('DifficultyAdjustment') or None,
+                'block_time': info.get('BlockTime') or None,
+                'block_reward': info.get('BlockReward') or None
             }
 
             locale_info = {
@@ -55,11 +56,11 @@ def main():
             info = requests.get(url_).json()
 
             coin.coingecko_category = get_csv('', info.get('categories'))
-            coin.ico_data = json.dump(info.get('ico_data', {}))
+            coin.ico_data = json.dumps(info.get('ico_data', {}))
             
             coin.chat_telegram_identifier = get_csv(coin.chat_telegram_identifier, [info.get('links')['telegram_channel_identifier']])
             # coin.chat_discord_identifier = get_csv(coin.chat_discord_identifier, info.get('WebsiteUrl'))
-            coin.chat_slack_identifier = get_csv(coin.chat_slack_identifier, info.get('ico_data', {}).get('links', {}).get('slack'))
+            coin.chat_slack_identifier = get_csv(coin.chat_slack_identifier, [info.get('ico_data', {}).get('links', {}).get('slack')])
 
             # coin.social_reddit_identifier = get_csv(coin.social_reddit_identifier, info.get('WebsiteUrl'))
             coin.social_twitter_identifier = get_csv(coin.social_twitter_identifier, [info.get('links')['twitter_screen_name']])
@@ -67,12 +68,12 @@ def main():
             coin.social_btt_identifier = info.get('links')['bitcointalk_thread_identifier']
             
             coin.links_website = get_csv(coin.links_website, info.get('links')['homepage'])
-            coin.links_whitepaper = get_csv(coin.links_whitepaper, info.get('ico_data', {}).get('links', {}).get('whitepaper'))
+            coin.links_whitepaper = get_csv(coin.links_whitepaper, [info.get('ico_data', {}).get('links', {}).get('whitepaper')])
             coin.links_ann = get_csv(coin.links_ann, info.get('links')['announcement_url'])
             coin.links_explorer = get_csv(coin.links_explorer, info.get('links')['blockchain_site'])
-            coin.links_source_code = get_csv(coin.links_source_code, info.get('ico_data', {}).get('links', {}).get('github'))
+            coin.links_source_code = get_csv(coin.links_source_code, [info.get('ico_data', {}).get('links', {}).get('github')])
             coin.links_forum = get_csv(coin.links_forum, info.get('links')['official_forum_url'])
-            coin.links_blog = get_csv(coin.links_blog, info.get('ico_data', {}).get('links', {}).get('blog'))
+            coin.links_blog = get_csv(coin.links_blog, [info.get('ico_data', {}).get('links', {}).get('blog')])
 
             # hour_info['circulating_supply'] = info.get('Twitter')
             hour_info['twitter_followers'] = info.get('community_data')['twitter_followers']
@@ -82,11 +83,13 @@ def main():
         coin.save()
 
         if hour_info:
+            print (hour_info)
             hour_info['coin_id'] = coin.id
             CoinHourlyInfo.objects.create(**hour_info)
 
         if locale_info:
-            coin.locale_set.first().update(**locale_info)
+            culture = Culture.objects.filter(name='en_US').first()
+            CoinLocale.objects.update_or_create(coin=coin, culture=culture, defaults=locale_info)
 
 
 if __name__ == "__main__":
