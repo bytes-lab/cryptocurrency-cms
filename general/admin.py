@@ -8,7 +8,7 @@ from general.models import *
 class CoinLocaleTabularInline(admin.TabularInline):
     model = CoinLocale
     extra = 0
-    fields = ['name', 'culture', 'description']
+    fields = ['name', 'culture', 'short_description', 'description', 'feature', 'technology']
 
 
 class CryptocompareSupportFilter(SimpleListFilter):
