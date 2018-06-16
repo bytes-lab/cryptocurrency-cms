@@ -18,6 +18,16 @@ def get_csv(str1, list2):
     list_val = [ii for ii in list_val if ii and ii.strip()]
     return ','.join(set(list_val))
 
+def get_identifier(list1, list2):
+    result = []
+    for ii in list1:
+        if not ii:
+            continue
+        for iii in list2:
+            if iii in ii:
+                result.append(ii.split(iii)[1].strip('/'))
+    return result
+
 def main():
     for coin in MasterCoin.objects.all():
         hour_info = {}
@@ -59,7 +69,7 @@ def main():
             coin.ico_data = json.dumps(info.get('ico_data', {}))
             
             coin.chat_telegram_identifier = get_csv(coin.chat_telegram_identifier, [info.get('links')['telegram_channel_identifier']])
-            # coin.chat_discord_identifier = get_csv(coin.chat_discord_identifier, info.get('WebsiteUrl'))
+            coin.chat_discord_identifier = get_csv(coin.chat_discord_identifier, get_identifier(info.get('links').get('chat_url', []), ['discord.gg', 'discordapp.com/invite']))
             coin.chat_slack_identifier = get_csv(coin.chat_slack_identifier, [info.get('ico_data', {}).get('links', {}).get('slack')])
 
             # coin.social_reddit_identifier = get_csv(coin.social_reddit_identifier, info.get('WebsiteUrl'))
