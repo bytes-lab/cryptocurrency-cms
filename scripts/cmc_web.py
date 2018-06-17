@@ -49,18 +49,22 @@ def main():
     for coin in MasterCoin.objects.all():
         if coin.coinmarketcap:
             cmc_coin = CoinmarketcapCoin.objects.get(id=coin.coinmarketcap)
-            url_ = 'https://coinmarketcap.com/currencies/{}/'.format(cmc_coin.token)
-            response = urllib2.urlopen(url_)
-            htmlparser = etree.HTMLParser()
-            tree = etree.parse(response, htmlparser)
-            xpath = "/html/body/div[@class='container main-section']/div[@class='row']/div[@class='col-lg-10']/div[@class='row bottom-margin-2x']/div[@class='col-sm-4 col-sm-pull-8']/ul[@class='list-unstyled']/li"
-            lis = tree.xpath(xpath)
-            chats = get_urls(lis, 'Chat')
-            coin.chat_discord_identifier = get_csv(coin.chat_discord_identifier, get_identifier(chats, ['discord.gg', 'discordapp.com/invite']))
-            coin.chat_telegram_identifier = get_csv(coin.chat_telegram_identifier, get_identifier(chats, ['t.me']))
-            coin.cmc_tags = get_tags(lis)
+            try:
+                url_ = 'https://coinmarketcap.com/currencies/{}/'.format(cmc_coin.token)
+                response = urllib2.urlopen(url_)
+                htmlparser = etree.HTMLParser()
+                tree = etree.parse(response, htmlparser)
+                xpath = "/html/body/div[@class='container main-section']/div[@class='row']/div[@class='col-lg-10']/div[@class='row bottom-margin-2x']/div[@class='col-sm-4 col-sm-pull-8']/ul[@class='list-unstyled']/li"
+                lis = tree.xpath(xpath)
+                chats = get_urls(lis, 'Chat')
+                coin.chat_discord_identifier = get_csv(coin.chat_discord_identifier, get_identifier(chats, ['discord.gg', 'discordapp.com/invite']))
+                coin.chat_telegram_identifier = get_csv(coin.chat_telegram_identifier, get_identifier(chats, ['t.me']))
+                coin.cmc_tags = get_tags(lis)
+                coin.save()
+            except Exception as e:
+                print str(e)
+                print '---------------------------------'
             print url_
-            coin.save()
 
 
 if __name__ == "__main__":
