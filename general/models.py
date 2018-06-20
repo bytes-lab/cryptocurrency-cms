@@ -269,15 +269,30 @@ class CoinHourlyInfo(models.Model):
     date_of_entry = models.DateTimeField(auto_now_add=True)
     total_supply = models.FloatField(null=True)
     circulating_supply = models.FloatField(null=True)
-    twitter_followers = models.IntegerField(null=True)
-    github_commits = models.IntegerField(null=True)
-    reddit_followers = models.IntegerField(null=True)
     net_hashes_per_second = models.FloatField(null=True)
     block_time = models.IntegerField(null=True)
     block_reward = models.FloatField(null=True)
     block_number = models.IntegerField(null=True)
     block_reward_reduction = models.CharField(max_length=255, null=True, blank=True)
     difficulty_adjustment = models.CharField(max_length=255, null=True, blank=True)
+
+    facebook_likes = models.IntegerField(null=True)
+    twitter_followers = models.IntegerField(null=True)
+    reddit_subscribers = models.IntegerField(null=True)
+    reddit_average_posts_48h = models.IntegerField(null=True)
+    reddit_average_comments_48h = models.IntegerField(null=True)
+    reddit_accounts_active_48h = models.IntegerField(null=True)
+
+    repo_forks = models.IntegerField(null=True)
+    repo_stars = models.IntegerField(null=True)
+    repo_subscribers = models.IntegerField(null=True)
+    repo_total_issues = models.IntegerField(null=True)
+    repo_closed_issues = models.IntegerField(null=True)
+    repo_pull_requests_merged = models.IntegerField(null=True)
+    repo_pull_request_contributors = models.IntegerField(null=True)
+    repo_commit_count_4_weeks = models.IntegerField(null=True)
+    alexa_rank = models.IntegerField(null=True)
+    bing_matches = models.IntegerField(null=True)
 
     class Meta:
         db_table = 'coin_hourly_info'

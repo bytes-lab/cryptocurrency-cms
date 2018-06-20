@@ -85,10 +85,24 @@ def main():
             coin.links_forum = get_csv(coin.links_forum, info.get('links')['official_forum_url'])
             coin.links_blog = get_csv(coin.links_blog, [info.get('ico_data', {}).get('links', {}).get('blog')])
 
-            # hour_info['circulating_supply'] = info.get('Twitter')
+            hour_info['circulating_supply'] = info.get('market_data')['circulating_supply']
+            hour_info['facebook_likes'] = info.get('community_data')['facebook_likes']
             hour_info['twitter_followers'] = info.get('community_data')['twitter_followers']
-            # hour_info['github_commits'] = info.get('Twitter')
-            hour_info['reddit_followers'] = info.get('community_data')['reddit_subscribers']
+            hour_info['reddit_subscribers'] = info.get('community_data')['reddit_subscribers']
+            hour_info['reddit_average_posts_48h'] = info.get('community_data')['reddit_average_posts_48h']
+            hour_info['reddit_average_comments_48h'] = info.get('community_data')['reddit_average_comments_48h']
+            hour_info['reddit_accounts_active_48h'] = info.get('community_data')['reddit_accounts_active_48h']
+
+            hour_info['repo_forks'] = info.get('developer_data')['forks']
+            hour_info['repo_stars'] = info.get('developer_data')['stars']
+            hour_info['repo_subscribers'] = info.get('developer_data')['subscribers']
+            hour_info['repo_total_issues'] = info.get('developer_data')['total_issues']
+            hour_info['repo_closed_issues'] = info.get('developer_data')['closed_issues']
+            hour_info['repo_pull_requests_merged'] = info.get('developer_data')['pull_requests_merged']
+            hour_info['repo_pull_request_contributors'] = info.get('developer_data')['pull_request_contributors']
+            hour_info['repo_commit_count_4_weeks'] = info.get('developer_data')['commit_count_4_weeks']
+            hour_info['alexa_rank'] = info.get('public_interest_stats')['alexa_rank']
+            hour_info['bing_matches'] = info.get('public_interest_stats')['bing_matches']
 
         coin.save()
 
