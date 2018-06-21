@@ -94,7 +94,7 @@ def main():
             coin.links_forum = get_csv(coin.links_forum, info.get('links')['official_forum_url'])
             coin.links_blog = get_csv(coin.links_blog, [info.get('ico_data', {}).get('links', {}).get('blog')])
 
-            hour_info['circulating_supply'] = info.get('market_data')['circulating_supply']
+            hour_info['circulating_supply'] = info.get('market_data').get('circulating_supply')
             hour_info['facebook_likes'] = info.get('community_data')['facebook_likes']
             hour_info['twitter_followers'] = info.get('community_data')['twitter_followers']
             hour_info['reddit_subscribers'] = info.get('community_data')['reddit_subscribers']
