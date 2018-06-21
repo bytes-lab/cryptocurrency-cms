@@ -18,14 +18,18 @@ def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
-def main():
-    start_date = date(2016, 1, 1)
-    end_date = date(2018, 6, 21)
-    for single_date in daterange(start_date, end_date):
-        for coin in MasterCoin.objects.all():
-            hour_info = {}
+def get_start_date(coin, start_date_, end_date):
+    result = CoinHourlyInfo.objects.filter(coin=coin, date_of_entry__gt=start_date_, date_of_entry__lt=end_date).order_by('date_of_entry').first()
+    return result.date_of_entry.date() if result else start_date_
 
-            if coin.coingecko:
+def main():
+    start_date_ = date(2016, 1, 1)
+    end_date = date(2018, 6, 15)
+    for coin in MasterCoin.objects.all():
+        hour_info = {}
+        if coin.coingecko:
+            start_date = get_start_date(coin, start_date_, end_date)
+            for single_date in daterange(start_date, end_date):
                 cg_coin = CoingeckoCoin.objects.get(id=coin.coingecko)
                 url_ = 'https://api.coingecko.com/api/v3/coins/{}/history?date={}&localization=false'.format(cg_coin.uid, single_date.strftime("%d-%m-%Y"))
                 info = requests.get(url_).json()
