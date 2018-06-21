@@ -67,7 +67,7 @@ def main():
                 coin.chat_telegram_identifier = get_csv(coin.chat_telegram_identifier, get_identifier(chats, ['t.me']))
                 coin.cmc_tags = get_tags(lis)
                 max_supply = tree.xpath("/html/body/div[@class='container main-section']/div[@class='row']/div[@class='col-lg-10']/div[@class='row bottom-margin-2x']/div[@class='col-sm-8 col-sm-push-4']/div[@class='coin-summary-item col-xs-6  col-md-3 ']/div[@class='coin-summary-item-detail details-text-medium']/span/text()") or tree.xpath("/html/body/div[@class='container main-section']/div[@class='row']/div[@class='col-lg-10']/div[@class='row bottom-margin-2x']/div[@class='col-sm-8 col-sm-push-4']/div[@class='coin-summary-item col-xs-6 col-md-3 col-xs-offset-6 col-md-offset-9']/div[@class='coin-summary-item-detail details-text-medium']/span/text()")
-                coin.max_supply = clean_text(max_supply) if max_supply else None
+                coin.max_supply = clean_text(max_supply[0]) if max_supply else None
                 coin.save()
             except Exception as e:
                 print str(e)

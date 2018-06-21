@@ -2,6 +2,8 @@ import json
 import time
 import requests
 import datetime
+import urllib2
+from lxml import etree
 
 import os
 from os import sys, path
@@ -12,6 +14,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qobit_cms.settings")
 django.setup()
 
 from general.models import *
+import pdb
 
 def get_csv(str1, list2):
     list_val = (str1 or '').split(',') + list2
@@ -27,6 +30,12 @@ def get_identifier(list1, list2):
             if iii in ii:
                 result.append(ii.split(iii)[1].strip('/'))
     return result
+
+def clean_text(text):
+    try:
+        return int(text.strip().replace(',', ''))
+    except Exception as e:
+        pass
 
 def main():
     for coin in MasterCoin.objects.all():
@@ -105,6 +114,21 @@ def main():
             hour_info['bing_matches'] = info.get('public_interest_stats')['bing_matches']
 
         coin.save()
+
+        if coin.coinmarketcap:
+            cmc_coin = CoinmarketcapCoin.objects.get(id=coin.coinmarketcap)
+            try:
+                url_ = 'https://coinmarketcap.com/currencies/{}/'.format(cmc_coin.token)
+                response = urllib2.urlopen(url_)
+                htmlparser = etree.HTMLParser()
+                tree = etree.parse(response, htmlparser)
+                total_supply = tree.xpath("/html/body/div[@class='container main-section']/div[@class='row']/div[@class='col-lg-10']/div[@class='row bottom-margin-2x']/div[@class='col-sm-8 col-sm-push-4']/div[@class='coin-summary-item col-xs-6 col-md-3'][4]/div[@class='coin-summary-item-detail details-text-medium']/span/text()")
+                hour_info['total_supply'] = clean_text(total_supply[0]) if total_supply else None
+                circulating_supply = tree.xpath("/html/body/div[@class='container main-section']/div[@class='row']/div[@class='col-lg-10']/div[@class='row bottom-margin-2x']/div[@class='col-sm-8 col-sm-push-4']/div[@class='coin-summary-item col-xs-6 col-md-3'][3]/div[@class='coin-summary-item-detail details-text-medium']/span/text()")
+                hour_info['circulating_supply'] = clean_text(circulating_supply[0]) if circulating_supply else None
+                pdb.set_trace()
+            except Exception as e:
+                print str(e)
 
         if hour_info:
             print (hour_info)
