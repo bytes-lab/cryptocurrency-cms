@@ -25,14 +25,14 @@ def main():
         for coin in MasterCoin.objects.all():
             hour_info = {}
 
-            print (coin.id, coin.symbol, '----------------')
             if coin.coingecko:
                 cg_coin = CoingeckoCoin.objects.get(id=coin.coingecko)
                 url_ = 'https://api.coingecko.com/api/v3/coins/{}/history?date={}&localization=false'.format(cg_coin.uid, single_date.strftime("%d-%m-%Y"))
                 info = requests.get(url_).json()
-
+                print (url_, '-----------------------')
                 if not info.get('community_data'):
                     continue
+                print (coin.id, coin.symbol, single_date, '----------------')
                 hour_info['facebook_likes'] = info.get('community_data')['facebook_likes']
                 hour_info['twitter_followers'] = info.get('community_data')['twitter_followers']
                 hour_info['reddit_subscribers'] = info.get('community_data')['reddit_subscribers']
@@ -50,6 +50,7 @@ def main():
                 hour_info['repo_commit_count_4_weeks'] = info.get('developer_data')['commit_count_4_weeks']
                 hour_info['alexa_rank'] = info.get('public_interest_stats')['alexa_rank']
                 hour_info['bing_matches'] = info.get('public_interest_stats')['bing_matches']
+                hour_info['date_of_entry'] = single_date
 
             if hour_info:
                 print (hour_info)

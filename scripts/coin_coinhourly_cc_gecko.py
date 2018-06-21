@@ -38,6 +38,7 @@ def clean_text(text):
         pass
 
 def main():
+    current_time = datetime.datetime.now()
     for coin in MasterCoin.objects.all():
         hour_info = {}
         locale_info = {}
@@ -126,13 +127,13 @@ def main():
                 hour_info['total_supply'] = clean_text(total_supply[0]) if total_supply else None
                 circulating_supply = tree.xpath("/html/body/div[@class='container main-section']/div[@class='row']/div[@class='col-lg-10']/div[@class='row bottom-margin-2x']/div[@class='col-sm-8 col-sm-push-4']/div[@class='coin-summary-item col-xs-6 col-md-3'][3]/div[@class='coin-summary-item-detail details-text-medium']/span/text()")
                 hour_info['circulating_supply'] = clean_text(circulating_supply[0]) if circulating_supply else None
-                pdb.set_trace()
             except Exception as e:
                 print str(e)
 
         if hour_info:
             print (hour_info)
             hour_info['coin_id'] = coin.id
+            hour_info['date_of_entry'] = current_time
             CoinHourlyInfo.objects.create(**hour_info)
 
         if locale_info:
