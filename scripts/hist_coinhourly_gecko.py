@@ -34,9 +34,10 @@ def main():
                 url_ = 'https://api.coingecko.com/api/v3/coins/{}/history?date={}&localization=false'.format(cg_coin.uid, single_date.strftime("%d-%m-%Y"))
                 info = requests.get(url_).json()
                 print (url_, '-----------------------')
+                # pdb.set_trace()
                 if not info.get('community_data'):
                     continue
-                print (coin.id, coin.symbol, single_date, '----------------')
+                print (coin.id, coin.symbol, single_date, '$$$$$$$$$$$$$$$$$$$$$')
                 hour_info['facebook_likes'] = info.get('community_data')['facebook_likes']
                 hour_info['twitter_followers'] = info.get('community_data')['twitter_followers']
                 hour_info['reddit_subscribers'] = info.get('community_data')['reddit_subscribers']
@@ -56,10 +57,10 @@ def main():
                 hour_info['bing_matches'] = info.get('public_interest_stats')['bing_matches']
                 hour_info['date_of_entry'] = single_date
 
-            if hour_info:
-                print (hour_info)
-                hour_info['coin_id'] = coin.id
-                CoinHourlyInfo.objects.create(**hour_info)
+                if hour_info:
+                    print (hour_info)
+                    hour_info['coin_id'] = coin.id
+                    CoinHourlyInfo.objects.create(**hour_info)
 
 
 if __name__ == "__main__":
