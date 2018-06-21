@@ -45,6 +45,12 @@ def get_identifier(list1, list2):
                 result.append(ii.split(iii)[1].strip('/'))
     return result
 
+def clean_text(text):
+    try:
+        return int(text.strip().replace(',', ''))
+    except Exception as e:
+        pass
+
 def main():
     for coin in MasterCoin.objects.all():
         if coin.coinmarketcap:
@@ -60,6 +66,8 @@ def main():
                 coin.chat_discord_identifier = get_csv(coin.chat_discord_identifier, get_identifier(chats, ['discord.gg', 'discordapp.com/invite']))
                 coin.chat_telegram_identifier = get_csv(coin.chat_telegram_identifier, get_identifier(chats, ['t.me']))
                 coin.cmc_tags = get_tags(lis)
+                max_supply = tree.xpath("/html/body/div[@class='container main-section']/div[@class='row']/div[@class='col-lg-10']/div[@class='row bottom-margin-2x']/div[@class='col-sm-8 col-sm-push-4']/div[@class='coin-summary-item col-xs-6  col-md-3 ']/div[@class='coin-summary-item-detail details-text-medium']/span/text()") or tree.xpath("/html/body/div[@class='container main-section']/div[@class='row']/div[@class='col-lg-10']/div[@class='row bottom-margin-2x']/div[@class='col-sm-8 col-sm-push-4']/div[@class='coin-summary-item col-xs-6 col-md-3 col-xs-offset-6 col-md-offset-9']/div[@class='coin-summary-item-detail details-text-medium']/span/text()")
+                coin.max_supply = clean_text(max_supply) if max_supply else None
                 coin.save()
             except Exception as e:
                 print str(e)
