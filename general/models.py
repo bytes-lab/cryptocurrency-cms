@@ -46,6 +46,7 @@ class MasterCoin(models.Model):
     coingecko_category = models.CharField(max_length=500, null=True, blank=True)
     cmc_tags = models.CharField(max_length=500, null=True, blank=True)
 
+    max_supply = models.IntegerField(null=True, blank=True)
     launch_date = models.DateField(null=True, blank=True)
     proof_type = models.CharField(max_length=255, null=True, blank=True)
     algorithm = models.CharField(max_length=255, null=True, blank=True)
