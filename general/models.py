@@ -34,6 +34,7 @@ class MasterCoin(models.Model):
     coinmarketcap = models.IntegerField(null=True, blank=True)
     cryptocompare = models.IntegerField(null=True, blank=True)
     coingecko = models.IntegerField(null=True, blank=True)
+    coinmarketcal = models.IntegerField(null=True, blank=True)
     cryptocompare_name = models.CharField(max_length=255, null=True, blank=True)
     coinapi = models.IntegerField(null=True, blank=True)        # 
     supported_exchanges = models.CharField(max_length=255, null=True, blank=True)
@@ -206,6 +207,19 @@ class CoingeckoCoin(models.Model):
 
     class Meta:
         db_table = 'coingecko_coin_xref'
+
+    def __str__(self):
+        return self.symbol
+
+
+class CoinmarketcalCoin(models.Model):
+    uid = models.CharField(max_length=255)
+    symbol = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'coinmarketcal_coin_xref'
 
     def __str__(self):
         return self.symbol
