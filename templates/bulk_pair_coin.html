@@ -16,34 +16,40 @@
                 <form action="" method="POST">
                     {% csrf_token %}
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <p class="f-500 m-b-15 c-black f-16 pull-right">Coin</p>
                         </div>
-                        <div class="col-md-10">
-                            <div class="col-sm-3 m-b-15">
+                        <div class="col-md-11">
+                            <div class="col-sm-2 m-b-15">
                                 <p class="f-500 m-b-15 c-black f-16">Cryptocompare</p>
                             </div>
-                            <div class="col-sm-3 m-b-15">
+                            <div class="col-sm-2 m-b-15">
                                 <p class="f-500 m-b-15 c-black f-16">Coinmarketcap</p>
                             </div>
-                            <div class="col-sm-3 m-b-15">
+                            <div class="col-sm-2 m-b-15">
                                 <p class="f-500 m-b-15 c-black f-16">Coinapi</p>
                             </div>
-                            <div class="col-sm-3 m-b-15">
+                            <div class="col-sm-2 m-b-15">
                                 <p class="f-500 m-b-15 c-black f-16">Coingecko</p>
+                            </div>
+                            <div class="col-sm-2 m-b-15">
+                                <p class="f-500 m-b-15 c-black f-16">Coinmarketcal</p>
                             </div>
                         </div>
                     </div>
                     {% for coin in coins %}
                     <div class="row">
-                        <div class="col-md-2 p-t-10">
+                        <div class="col-md-1 p-t-10">
                             <p class="f-500 m-b-15 c-black f-15 pull-right">
-                                <a target="_blank" href="/attach_coin/{{ coin.id }}">{{ coin.coinlocale_set.first.name }} ( {{ coin.symbol }} )</a>
+                                <a target="_blank" href="/attach_coin/{{ coin.id }}">
+                                    <p class="pull-right f-15 m-b-5">{{ coin.coinlocale_set.first.name }}</p>
+                                    <p class="pull-right f-15 m-b-5">( {{ coin.symbol }} )</p>
+                                </a>
                             </p>
                             <input type="hidden" name="coin{{forloop.counter}}" value="{{ coin.id }}">
                         </div>
-                        <div class="col-md-10 p-t-10">
-                            <div class="col-sm-3 m-b-15">
+                        <div class="col-md-11 p-t-10">
+                            <div class="col-sm-2 m-b-15">
                                 <p class="f-400 m-b-15 c-black f-15">
                                     {% if coin.cryptocompare != None %}
                                         <span class="text-success">Connected ({{coin.cryptocompare}})</span>
@@ -70,7 +76,7 @@
                                 {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-sm-3 m-b-15">
+                            <div class="col-sm-2 m-b-15">
                                 <p class="f-400 m-b-15 c-black f-15">
                                     {% if coin.coinmarketcap != None %}
                                         <span class="text-success">Connected ({{coin.coinmarketcap}})</span>
@@ -97,7 +103,7 @@
                                 {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-sm-3 m-b-15">
+                            <div class="col-sm-2 m-b-15">
                                 <p class="f-400 m-b-15 c-black f-15">
                                     {% if coin.coinapi != None %}
                                         <span class="text-success">Connected ({{coin.coinapi}})</span>
@@ -124,7 +130,7 @@
                                 {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-sm-3 m-b-15">
+                            <div class="col-sm-2 m-b-15">
                                 <p class="f-400 m-b-15 c-black f-15">
                                     {% if coin.coingecko != None %}
                                         <span class="text-success">Connected ({{coin.coingecko}})</span>
@@ -139,6 +145,33 @@
                                 {% for ii in cg_coins %}
                                     {% if coin.coingecko > -1 %}
                                         {% if coin.coingecko == ii.id %}
+                                            <option selected value="{{ ii.id }}">
+                                                {{ ii.name }} ( {{ ii.symbol }} )
+                                            </option>
+                                        {% endif %}
+                                    {% else %}
+                                        <option {% if ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
+                                            {{ ii.name }} ( {{ ii.symbol }} )
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-2 m-b-15">
+                                <p class="f-400 m-b-15 c-black f-15">
+                                    {% if coin.coinmarketcal != None %}
+                                        <span class="text-success">Connected ({{coin.coinmarketcal}})</span>
+                                    {% else %}
+                                        <span class="text-warning">Not Connected</span>
+                                    {% endif %}
+                                </p>
+                                
+                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cml_coin{{forloop.counter}}" data-size="10">
+                                <option value="">NULL</option>
+                                <option value="0" {% if coin.coinmarketcal == 0%} selected {% endif %} >---</option>
+                                {% for ii in cml_coins %}
+                                    {% if coin.coinmarketcal > -1 %}
+                                        {% if coin.coinmarketcal == ii.id %}
                                             <option selected value="{{ ii.id }}">
                                                 {{ ii.name }} ( {{ ii.symbol }} )
                                             </option>

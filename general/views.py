@@ -277,6 +277,7 @@ def bulk_pair_coin(request):
     cmc_coins = CoinmarketcapCoin.objects.all()
     cp_coins = CoinapiCoin.objects.all()
     cg_coins = CoingeckoCoin.objects.all()
+    cml_coins = CoinmarketcalCoin.objects.all()
 
     if request.method == 'POST':
         for idx in range(page_size):
@@ -286,10 +287,13 @@ def bulk_pair_coin(request):
                 cmc_coin = request.POST.get('cmc_coin'+str(idx+1)) or None
                 cp_coin = request.POST.get('cp_coin'+str(idx+1)) or None
                 cg_coin = request.POST.get('cg_coin'+str(idx+1)) or None
+                cml_coin = request.POST.get('cml_coin'+str(idx+1)) or None
+
                 MasterCoin.objects.filter(id=coin).update(cryptocompare=cc_coin,
                                                           coinmarketcap=cmc_coin,
                                                           coinapi=cp_coin,
-                                                          coingecko=cg_coin)
+                                                          coingecko=cg_coin,
+                                                          coinmarketcal=cml_coin)
 
     return render(request, 'bulk_pair_coin.html', locals())
 
