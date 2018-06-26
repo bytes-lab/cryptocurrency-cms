@@ -265,7 +265,11 @@ def bulk_pair_coin(request):
     page = int(request.GET.get('page', 1))
     prev_page = page - 1 if page > 1 else 1
     page_size = 10
-    coins = MasterCoin.objects.all().order_by('symbol')
+    coins = MasterCoin.objects.all().exclude(cryptocompare__isnull=False, 
+                                             coinmarketcap__isnull=False,
+                                             coinapi__isnull=False,
+                                             coingecko__isnull=False,
+                                             coinmarketcal__isnull=False).order_by('symbol')
     total_number = coins.count()
     max_page = int((total_number+page_size-1) / page_size)
     next_page = page + 1 if max_page > page else max_page
