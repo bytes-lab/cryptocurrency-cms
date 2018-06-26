@@ -53,6 +53,20 @@ class CoinmarketcapSupportFilter(SimpleListFilter):
             return queryset.filter(coinmarketcap__isnull=True)
 
 
+class CoinmarketcalSupportFilter(SimpleListFilter):
+    title = 'coinmarketcal'
+    parameter_name = 'coinmarketcal'
+
+    def lookups(self, request, model_admin):
+        return (('True', _('Yes')), ('False', _('No')))
+
+    def queryset(self, request, queryset):
+        if self.value() == 'True':
+            return queryset.exclude(coinmarketcal__isnull=True)
+        if self.value() == 'False':
+            return queryset.filter(coinmarketcal__isnull=True)
+
+
 class CoingeckoSupportFilter(SimpleListFilter):
     title = 'coingecko'
     parameter_name = 'coingecko'
@@ -69,9 +83,9 @@ class CoingeckoSupportFilter(SimpleListFilter):
 
 class MasterCoinAdmin(admin.ModelAdmin):
     inlines = [CoinLocaleTabularInline]
-    list_display = ['symbol', 'alias', 'cryptocompare_support', 'coinapi_support', 'coinmarketcap_support', 'coingecko_support']
+    list_display = ['symbol', 'alias', 'cryptocompare_support', 'coinapi_support', 'coinmarketcap_support', 'coingecko_support', 'coinmarketcal_support']
     search_fields = ['symbol']
-    list_filter = [CoingeckoSupportFilter, CoinmarketcapSupportFilter, CoinapiSupportFilter, CryptocompareSupportFilter, 'supported', 'is_master']
+    list_filter = [CoinmarketcalSupportFilter, CoingeckoSupportFilter, CoinmarketcapSupportFilter, CoinapiSupportFilter, CryptocompareSupportFilter, 'supported', 'is_master']
 
     def cryptocompare_support(self, obj):
         return obj.cryptocompare != None
@@ -81,7 +95,12 @@ class MasterCoinAdmin(admin.ModelAdmin):
     def coingecko_support(self, obj):
         return obj.coingecko != None
     coingecko_support.boolean = True
-    coingecko_support.short_description = 'Cryptocompare'
+    coingecko_support.short_description = 'Coingecko'
+
+    def coinmarketcal_support(self, obj):
+        return obj.coinmarketcal != None
+    coinmarketcal_support.boolean = True
+    coinmarketcal_support.short_description = 'Coinmarketcal'
 
     def coinapi_support(self, obj):
         return obj.coinapi != None
