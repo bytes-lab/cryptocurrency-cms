@@ -406,6 +406,11 @@ def supported_exchanges_(request):
         coins = [pair.base_coin.symbol for pair in pairs]
         num_pairs = pairs.count()
 
+        # try:
+        #     num_pairs = len(requests.get(exchange.api_link).json()['data'])
+        # except Exception as e:
+        #     num_pairs = 0
+
         num_new_pairs = TempPair.objects.filter(exchange=exchange.name).count()
         exchange_ = {
             'id': exchange.id,
