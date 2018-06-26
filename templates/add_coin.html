@@ -22,7 +22,8 @@
                         <form action="" method="POST">
                             {% csrf_token %}
                             <div class="col-sm-4 col-20 m-b-25">
-                                <p class="f-400 m-b-15 c-black f-15">Cryptocompare: 
+                                <p class="f-400 m-b-15 c-black f-15">Cryptocompare</p>
+                                <p class="f-400 m-b-15 c-black f-15">
                                     {% if coin.cryptocompare != None %}
                                         <span class="text-success">Connected ({{coin.cryptocompare}})</span>
                                     {% else %}
@@ -52,7 +53,8 @@
                                 </p>
                             </div>
                             <div class="col-sm-4 col-20 m-b-25">
-                                <p class="f-500 m-b-15 c-black f-15">Coinmarketcap:
+                                <p class="f-500 m-b-15 c-black f-15">Coinmarketcap</p>
+                                <p class="f-500 m-b-15 c-black f-15">
                                     {% if coin.coinmarketcap != None %}
                                         <span class="text-success">Connected ({{coin.coinmarketcap}})</span>
                                     {% else %}
@@ -82,7 +84,8 @@
                                 </p>
                             </div>
                             <div class="col-sm-4 col-20 m-b-25">
-                                <p class="f-500 m-b-15 c-black f-15">Coinapi:
+                                <p class="f-500 m-b-15 c-black f-15">Coinapi</p>
+                                <p class="f-500 m-b-15 c-black f-15">
                                     {% if coin.coinapi != None %}
                                         <span class="text-success">Connected ({{coin.coinapi}})</span>
                                     {% else %}
@@ -111,8 +114,70 @@
                                     {% endif %}
                                 </p>
                             </div>
+                            <div class="col-sm-4 col-20 m-b-25">
+                                <p class="f-500 m-b-15 c-black f-15">Coingecko</p>
+                                <p class="f-500 m-b-15 c-black f-15">
+                                    {% if coin.coingecko != None %}
+                                        <span class="text-success">Connected ({{coin.coingecko}})</span>
+                                    {% else %}
+                                        <span class="text-warning">Not Connected</span>
+                                    {% endif %}
+                                </p>
+                                
+                                <select class="selectpicker m-t-15" data-live-search="true" name="cg_coin">
+                                <option value="">NULL</option>
+                                <option value="0" {% if coin.coingecko == 0 %} selected {% endif %} >---</option>
+                                {% for ii in cg_coins %}
+                                    {% if coin.is_master and coin.coingecko %}
+                                        <option {% if ii.id == coin.coingecko %} selected {% endif %} value="{{ ii.id }}">
+                                            {{ ii.name }} ( {{ ii.symbol }} )
+                                        </option>
+                                    {% else %}
+                                    <option {% if ii.symbol == coin or ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
+                                        {{ ii.name }} ( {{ ii.symbol }} )
+                                    </option>
+                                    {% endif %}
+                                {% endfor %}
+                                </select>
+                                <p class="m-t-15">
+                                    {% if cgd_coins %}
+                                    <span class="c-red f-15">** Duplicates ({{ cgd_coins }})</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="col-sm-4 col-20 m-b-25">
+                                <p class="f-500 m-b-15 c-black f-15">Coinmarketcal</p>
+                                <p class="f-500 m-b-15 c-black f-15">
+                                    {% if coin.coinmarketcal != None %}
+                                        <span class="text-success">Connected ({{coin.coinmarketcal}})</span>
+                                    {% else %}
+                                        <span class="text-warning">Not Connected</span>
+                                    {% endif %}
+                                </p>
+                                
+                                <select class="selectpicker m-t-15" data-live-search="true" name="cml_coin">
+                                <option value="">NULL</option>
+                                <option value="0" {% if coin.coinmarketcal == 0 %} selected {% endif %} >---</option>
+                                {% for ii in cml_coins %}
+                                    {% if coin.is_master and coin.coinmarketcal %}
+                                        <option {% if ii.id == coin.coinmarketcal %} selected {% endif %} value="{{ ii.id }}">
+                                            {{ ii.name }} ( {{ ii.symbol }} )
+                                        </option>
+                                    {% else %}
+                                    <option {% if ii.symbol == coin or ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
+                                        {{ ii.name }} ( {{ ii.symbol }} )
+                                    </option>
+                                    {% endif %}
+                                {% endfor %}
+                                </select>
+                                <p class="m-t-15">
+                                    {% if cmld_coins %}
+                                    <span class="c-red f-15">** Duplicates ({{ cmld_coins }})</span>
+                                    {% endif %}
+                                </p>
+                            </div>
                             <div class="clearfix"></div>
-                            <div class="col-md-4 m-b-25">
+                            <div class="col-md-3 m-b-25">
                                 <p class="f-500 m-b-15 c-black f-15">Alias</p>
                                 <select class="selectpicker m-t-15" data-live-search="true" name="alias">
                                     <option value="">---</option>
@@ -142,7 +207,11 @@
                                 </div>
                                 <div class="col-md-6 p-l-25 p-t-25 m-t-10">
                                     <button class="btn btn-info waves-effect m-l-10">Add Coin</button>
-                                    <a class="btn btn-default waves-effect m-l-10" href="/exchanges/{{ exchange.id }}">Back</a>
+                                    {% if exchange %}
+                                        <a class="btn btn-default waves-effect m-l-10" href="/exchanges/{{ exchange.id }}">Back</a>
+                                    {% else %}
+                                        <a class="btn btn-default waves-effect m-l-10" href="/master_coins">Back</a>
+                                    {% endif %}
                                     {% if culture %}
                                         <a class="btn bgm-green waves-effect m-l-10 download-icon" data-id="{{ coin.id }}">Download Icon</a>
                                     {% endif %}

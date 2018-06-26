@@ -172,9 +172,12 @@ def import_all_pairs(request, id):
 def add_coin(request, coin, exchange):
     exchange = Exchange.objects.get(id=exchange)
 
+    coins = MasterCoin.objects.all().order_by('symbol')
     cc_coins = CryptocompareCoin.objects.all()
     cmc_coins = CoinmarketcapCoin.objects.all()
     cp_coins = CoinapiCoin.objects.all()
+    cg_coins = CoingeckoCoin.objects.all()
+    cml_coins = CoinmarketcalCoin.objects.all()
 
     coin__ = coin.replace('*', '')
     ccd_coins = [ii.symbol for ii in CryptocompareCoin.objects.filter(symbol__startswith=coin__)]
@@ -183,7 +186,10 @@ def add_coin(request, coin, exchange):
     cmcd_coins = ', '.join(cmcd_coins) if len(cmcd_coins) > 1 else ''
     cpd_coins = [ii.symbol for ii in CoinapiCoin.objects.filter(symbol__startswith=coin__)]
     cpd_coins = ', '.join(cpd_coins) if len(cpd_coins) > 1 else ''
-    coins = MasterCoin.objects.all().order_by('symbol')
+    cgd_coins = [ii.symbol for ii in CoingeckoCoin.objects.filter(symbol__startswith=coin__)]
+    cgd_coins = ', '.join(cgd_coins) if len(cgd_coins) > 1 else ''
+    cmld_coins = [ii.symbol for ii in CoinmarketcalCoin.objects.filter(symbol__startswith=coin__)]
+    cmld_coins = ', '.join(cmld_coins) if len(cmld_coins) > 1 else ''
 
     # for coin's name
     full_name = CoinapiCoin.objects.filter(symbol=coin).first()
@@ -193,6 +199,8 @@ def add_coin(request, coin, exchange):
         cc = request.POST.get('cc_coin') or None
         cmc = request.POST.get('cmc_coin') or None
         cp = request.POST.get('cp_coin') or None
+        cg = request.POST.get('cg_coin') or None
+        cml = request.POST.get('cml_coin') or None
         alias = request.POST.get('alias') or None
         new_symbol = request.POST.get('new_symbol') or None
         full_name = request.POST.get('full_name', '')
@@ -202,6 +210,8 @@ def add_coin(request, coin, exchange):
         coin = MasterCoin(cryptocompare=cc,
                           coinmarketcap=cmc,
                           coinapi=cp,
+                          coingecko=cg,
+                          coinmarketcal=cml,
                           cryptocompare_name=cc_name,
                           symbol=new_symbol,
                           original_symbol=coin,
@@ -220,9 +230,13 @@ def add_coin(request, coin, exchange):
 @login_required(login_url='/login')
 def attach_coin(request, coin):
     coin = MasterCoin.objects.get(id=coin)
+  
+    coins = MasterCoin.objects.all().order_by('symbol')
     cc_coins = CryptocompareCoin.objects.all()
     cmc_coins = CoinmarketcapCoin.objects.all()
     cp_coins = CoinapiCoin.objects.all()
+    cg_coins = CoingeckoCoin.objects.all()
+    cml_coins = CoinmarketcalCoin.objects.all()
 
     coin__ = coin.symbol.replace('*', '')
     ccd_coins = [ii.symbol for ii in CryptocompareCoin.objects.filter(symbol__startswith=coin__)]
@@ -231,7 +245,10 @@ def attach_coin(request, coin):
     cmcd_coins = ', '.join(cmcd_coins) if len(cmcd_coins) > 1 else ''
     cpd_coins = [ii.symbol for ii in CoinapiCoin.objects.filter(symbol__startswith=coin__)]
     cpd_coins = ', '.join(cpd_coins) if len(cpd_coins) > 1 else ''
-    coins = MasterCoin.objects.all().order_by('symbol')
+    cgd_coins = [ii.symbol for ii in CoingeckoCoin.objects.filter(symbol__startswith=coin__)]
+    cgd_coins = ', '.join(cgd_coins) if len(cgd_coins) > 1 else ''
+    cmld_coins = [ii.symbol for ii in CoinmarketcalCoin.objects.filter(symbol__startswith=coin__)]
+    cmld_coins = ', '.join(cmld_coins) if len(cmld_coins) > 1 else ''
 
     # for coin's name
     culture = Culture.objects.filter(name='en_US').first()
@@ -246,6 +263,8 @@ def attach_coin(request, coin):
         coin.cryptocompare = request.POST.get('cc_coin') or None
         coin.coinmarketcap = request.POST.get('cmc_coin') or None
         coin.coinapi = request.POST.get('cp_coin') or None
+        coin.coingecko = request.POST.get('cg_coin') or None
+        coin.coinmarketcal = request.POST.get('cml_coin') or None        
         coin.alias_id = request.POST.get('alias') or None
         coin.is_master = False if coin.alias_id else True
         coin.symbol = request.POST.get('new_symbol') or None
