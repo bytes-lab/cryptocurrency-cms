@@ -171,8 +171,6 @@ def import_all_pairs(request, id):
 @login_required(login_url='/login')
 def add_coin(request, coin, exchange):
     exchange = Exchange.objects.get(id=exchange)
-    cc_pairs = CryptocomparePair.objects.filter(Q(exchange__iexact=exchange.cryptocompare) & (Q(base_coin=coin)|Q(quote_coin=coin)))
-    cp_pairs = CoinapiPair.objects.filter(Q(exchange__iexact=exchange.coinapi) & (Q(base_coin=coin)|Q(quote_coin=coin)))
 
     cc_coins = CryptocompareCoin.objects.all()
     cmc_coins = CoinmarketcapCoin.objects.all()

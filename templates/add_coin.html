@@ -18,10 +18,10 @@
             
             <div class="card-body card-padding">
                 <div class="row">
-                    <div class="col-md-9 p-t-10">
+                    <div class="col-md-12 p-t-10">
                         <form action="" method="POST">
                             {% csrf_token %}
-                            <div class="col-sm-4 m-b-25">
+                            <div class="col-sm-4 col-20 m-b-25">
                                 <p class="f-400 m-b-15 c-black f-15">Cryptocompare: 
                                     {% if coin.is_master and coin.cryptocompare %}
                                         <span class="text-success">Connected ({{coin.cryptocompare}})</span>
@@ -31,7 +31,8 @@
                                 </p>
                                 
                                 <select class="selectpicker m-t-15" data-live-search="true" name="cc_coin">
-                                <option value="">---</option>
+                                <option value="">NULL</option>
+                                <option value="0" {% if coin.cryptocompare == 0 %} selected {% endif %} >---</option>
                                 {% for ii in cc_coins %}
                                     {% if coin.is_master and coin.cryptocompare %}
                                         <option {% if ii.id == coin.cryptocompare %} selected {% endif %} value="{{ ii.id }}">
@@ -50,7 +51,7 @@
                                     {% endif %}
                                 </p>
                             </div>
-                            <div class="col-sm-4 m-b-25">
+                            <div class="col-sm-4 col-20 m-b-25">
                                 <p class="f-500 m-b-15 c-black f-15">Coinmarketcap:
                                     {% if coin.is_master and coin.coinmarketcap %}
                                         <span class="text-success">Connected ({{coin.coinmarketcap}})</span>
@@ -60,7 +61,8 @@
                                 </p>
                                 
                                 <select class="selectpicker m-t-15" data-live-search="true" name="cmc_coin">
-                                <option value="">---</option>
+                                <option value="">NULL</option>
+                                <option value="0" {% if coin.coinmarketcap == 0 %} selected {% endif %} >---</option>
                                 {% for ii in cmc_coins %}
                                     {% if coin.is_master and coin.coinmarketcap %}
                                         <option {% if ii.id == coin.coinmarketcap %} selected {% endif %} value="{{ ii.id }}">
@@ -79,7 +81,7 @@
                                     {% endif %}
                                 </p>
                             </div>
-                            <div class="col-sm-4 m-b-25">
+                            <div class="col-sm-4 col-20 m-b-25">
                                 <p class="f-500 m-b-15 c-black f-15">Coinapi:
                                     {% if coin.is_master and coin.coinapi %}
                                         <span class="text-success">Connected ({{coin.coinapi}})</span>
@@ -89,7 +91,8 @@
                                 </p>
                                 
                                 <select class="selectpicker m-t-15" data-live-search="true" name="cp_coin">
-                                <option value="">---</option>
+                                <option value="">NULL</option>
+                                <option value="0" {% if coin.coinapi == 0 %} selected {% endif %} >---</option>
                                 {% for ii in cp_coins %}
                                     {% if coin.is_master and coin.coinapi %}
                                         <option {% if ii.id == coin.coinapi %} selected {% endif %} value="{{ ii.id }}">
@@ -147,34 +150,9 @@
                             </div>
                         </form>
                     </div>
-                    {% if exchange %}
-                    <div class="col-md-3 p-b-10">
-                        <h4>Coinapi</h4>
-                        {% if cp_pairs %}
-                            <div class="pair-list">
-                                {% for ii in cp_pairs %}
-                                    <div>{{ ii.base_coin }} - {{ ii.quote_coin }}</div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <span class="text-warning">Not supported</span>
-                        {% endif %}
-                        <h4 class="m-t-15">Cryptocompare</h4>
-                        {% if cc_pairs %}
-                            <div class="pair-list">
-                                {% for ii in cc_pairs %}
-                                    <div>{{ ii.base_coin }} - {{ ii.quote_coin }}</div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <span class="text-warning">Not supported</span>
-                        {% endif %}
-                    </div>
-                    {% endif %}
                 </div>
             </div>
         </div>
-        
     </div>
 </section>
 {% endblock %}
