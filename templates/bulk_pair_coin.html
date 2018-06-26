@@ -59,8 +59,8 @@
                                 </p>
                                 
                                 <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cc_coin{{forloop.counter}}" data-size="10">
-                                <option value="">NULL</option>
                                 <option value="0" {% if coin.cryptocompare == 0%} selected {% endif %} >---</option>
+                                <option value="">NULL</option>
                                 {% for ii in cc_coins %}
                                     {% if coin.cryptocompare > -1 %}
                                         {% if coin.cryptocompare == ii.id %}
@@ -86,8 +86,8 @@
                                 </p>
                                 
                                 <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cmc_coin{{forloop.counter}}" data-size="10">
-                                <option value="">NULL</option>
                                 <option value="0" {% if coin.coinmarketcap == 0%} selected {% endif %} >---</option>
+                                <option value="">NULL</option>
                                 {% for ii in cmc_coins %}
                                     {% if coin.coinmarketcap > -1 %}
                                         {% if coin.coinmarketcap == ii.id %}
@@ -113,8 +113,8 @@
                                 </p>
                                 
                                 <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cp_coin{{forloop.counter}}" data-size="10">
-                                <option value="">NULL</option>
                                 <option value="0" {% if coin.coinapi == 0%} selected {% endif %} >---</option>
+                                <option value="">NULL</option>
                                 {% for ii in cp_coins %}
                                     {% if coin.coinapi > -1 %}
                                         {% if coin.coinapi == ii.id %}
@@ -140,8 +140,8 @@
                                 </p>
                                 
                                 <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cg_coin{{forloop.counter}}" data-size="10">
-                                <option value="">NULL</option>
                                 <option value="0" {% if coin.coingecko == 0%} selected {% endif %} >---</option>
+                                <option value="">NULL</option>
                                 {% for ii in cg_coins %}
                                     {% if coin.coingecko > -1 %}
                                         {% if coin.coingecko == ii.id %}
@@ -167,8 +167,8 @@
                                 </p>
                                 
                                 <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cml_coin{{forloop.counter}}" data-size="10">
-                                <option value="">NULL</option>
                                 <option value="0" {% if coin.coinmarketcal == 0%} selected {% endif %} >---</option>
+                                <option value="">NULL</option>
                                 {% for ii in cml_coins %}
                                     {% if coin.coinmarketcal > -1 %}
                                         {% if coin.coinmarketcal == ii.id %}
