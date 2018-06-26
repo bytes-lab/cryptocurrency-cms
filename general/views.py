@@ -198,7 +198,7 @@ def add_coin(request, coin, exchange):
         full_name = request.POST.get('full_name', '')
         is_master = False if alias else True
 
-        cc_name = CryptocompareCoin.objects.get(id=cc).name if cc else ''
+        cc_name = CryptocompareCoin.objects.get(id=cc).name if cc and cc != '0' else ''
         coin = MasterCoin(cryptocompare=cc,
                           coinmarketcap=cmc,
                           coinapi=cp,
@@ -251,7 +251,7 @@ def attach_coin(request, coin):
         coin.symbol = request.POST.get('new_symbol') or None
         full_name = request.POST.get('full_name', '')
 
-        if coin.cryptocompare:
+        if coin.cryptocompare and coin.cryptocompare != '0':
             coin.cryptocompare_name = CryptocompareCoin.objects.get(id=coin.cryptocompare).name
         coin.save()
         coin = MasterCoin.objects.get(id=coin.id) # weird
