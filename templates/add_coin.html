@@ -32,10 +32,10 @@
                                 </p>
                                 
                                 <select class="selectpicker m-t-15" data-live-search="true" name="cc_coin">
-                                <option value="">NULL</option>
                                 <option value="0" {% if coin.cryptocompare == 0 %} selected {% endif %} >---</option>
+                                <option value="">NULL</option>
                                 {% for ii in cc_coins %}
-                                    {% if coin.is_master and coin.cryptocompare %}
+                                    {% if coin.cryptocompare != None %}
                                         <option {% if ii.id == coin.cryptocompare %} selected {% endif %} value="{{ ii.id }}">
                                             {{ ii.coinname }} ( {{ ii.symbol }} )
                                         </option>
@@ -63,10 +63,10 @@
                                 </p>
                                 
                                 <select class="selectpicker m-t-15" data-live-search="true" name="cmc_coin">
-                                <option value="">NULL</option>
                                 <option value="0" {% if coin.coinmarketcap == 0 %} selected {% endif %} >---</option>
+                                <option value="">NULL</option>
                                 {% for ii in cmc_coins %}
-                                    {% if coin.is_master and coin.coinmarketcap %}
+                                    {% if coin.coinmarketcap != None %}
                                         <option {% if ii.id == coin.coinmarketcap %} selected {% endif %} value="{{ ii.id }}">
                                             {{ ii.token }} ( {{ ii.symbol }} )
                                         </option>
@@ -94,10 +94,10 @@
                                 </p>
                                 
                                 <select class="selectpicker m-t-15" data-live-search="true" name="cp_coin">
-                                <option value="">NULL</option>
                                 <option value="0" {% if coin.coinapi == 0 %} selected {% endif %} >---</option>
+                                <option value="">NULL</option>
                                 {% for ii in cp_coins %}
-                                    {% if coin.is_master and coin.coinapi %}
+                                    {% if coin.coinapi != None %}
                                         <option {% if ii.id == coin.coinapi %} selected {% endif %} value="{{ ii.id }}">
                                             {{ ii.name }} ( {{ ii.symbol }} )
                                         </option>
@@ -125,10 +125,10 @@
                                 </p>
                                 
                                 <select class="selectpicker m-t-15" data-live-search="true" name="cg_coin">
-                                <option value="">NULL</option>
                                 <option value="0" {% if coin.coingecko == 0 %} selected {% endif %} >---</option>
+                                <option value="">NULL</option>
                                 {% for ii in cg_coins %}
-                                    {% if coin.is_master and coin.coingecko %}
+                                    {% if coin.coingecko != None %}
                                         <option {% if ii.id == coin.coingecko %} selected {% endif %} value="{{ ii.id }}">
                                             {{ ii.name }} ( {{ ii.symbol }} )
                                         </option>
@@ -156,10 +156,10 @@
                                 </p>
                                 
                                 <select class="selectpicker m-t-15" data-live-search="true" name="cml_coin">
-                                <option value="">NULL</option>
                                 <option value="0" {% if coin.coinmarketcal == 0 %} selected {% endif %} >---</option>
+                                <option value="">NULL</option>
                                 {% for ii in cml_coins %}
-                                    {% if coin.is_master and coin.coinmarketcal %}
+                                    {% if coin.coinmarketcal != None %}
                                         <option {% if ii.id == coin.coinmarketcal %} selected {% endif %} value="{{ ii.id }}">
                                             {{ ii.name }} ( {{ ii.symbol }} )
                                         </option>

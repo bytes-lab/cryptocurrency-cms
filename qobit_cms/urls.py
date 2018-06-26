@@ -29,10 +29,6 @@ urlpatterns = [
     url(r"^logout", user_logout, name="logout"),
 
     url(r"^$", home, name="home"),
-    url(r"^world_of_coins$", world_of_coins, name="world_of_coins"),
-    url(r"^coins$", all_coins, name="all_coins"),
-    url(r"^all_coins_$", all_coins_, name="all_coins_"),
-    url(r"^coins_$", coins_, name="coins_"),
     url(r"^master_coins$", master_coins, name="master_coins"),
     url(r"^supported_coins_$", supported_coins_, name="supported_coins_"),
     url(r"^exchanges$", exchanges, name="exchanges"),
@@ -46,7 +42,6 @@ urlpatterns = [
     url(r"^add_pair/(?P<exchange>\d+)/(?P<pair>.+)", add_pair, name="add_pair"),
     url(r"^add_coin/(?P<coin>.+)/(?P<exchange>\d+)", add_coin, name="add_coin"),
     url(r"^attach_coin/(?P<coin>\d+)", attach_coin, name="attach_coin"),
-    url(r"^add_to_world/(?P<id>\d+)", add_to_world, name="add_to_world"),
     url(r"^download_icon/(?P<id>\d+)", download_icon, name="download_icon"),
     url(r"^bulk_pair_coin", bulk_pair_coin, name="bulk_pair_coin"),    
 ]

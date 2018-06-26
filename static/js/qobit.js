@@ -1,30 +1,9 @@
 $(document).ready(function(){
-    load_coins();
-    load_all_coins();
     load_master_coins();
 	load_exchanges();
 	load_exchange_detail();
 	load_supported_exchanges();
 });
-
-function load_coins() {
-    $("#data-table-coins").bootgrid({
-        formatters: {
-            "commands": function(column, row) {
-                return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"#" + row.id + "\"><span class=\"zmdi zmdi-plus\"></span></a>";
-            }
-        },
-        templates: {
-            header: '<div id="{{ctx.id}}" class="{{css.header}}"><div class="row m-t-15"><div class="col-sm-6 p-0"><p class="{{css.search}}"></p></div>',
-            footer: '<div id="{{ctx.id}}" class="{{css.footer}}"><div class="row m-t-15"><div class="col-sm-6"><p class="{{css.pagination}}"></p></div><div class="col-sm-6 infoBar"><p class="{{css.infos}}"></p></div></div></div>'
-        },
-        rowCount: [30],
-        ajaxSettings: {
-            method: "POST",
-            cache: false
-        },
-    });
-}
 
 function load_master_coins() {
     $("#data-table-master-coins").bootgrid({
@@ -32,36 +11,6 @@ function load_master_coins() {
             "commands": function(column, row) {
                 return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/attach_coin/" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></a>"+
                     "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/admin/general/mastercoin/" + row.id + "/change\"><span class=\"zmdi zmdi-assignment\"></span></a>";
-            }
-        },
-        templates: {
-            header: '<div id="{{ctx.id}}" class="{{css.header}}"><div class="row m-t-15"><div class="col-sm-6 p-0"><p class="{{css.search}}"></p></div>',
-            footer: '<div id="{{ctx.id}}" class="{{css.footer}}"><div class="row m-t-15"><div class="col-sm-6"><p class="{{css.pagination}}"></p></div><div class="col-sm-6 infoBar"><p class="{{css.infos}}"></p></div></div></div>'
-        },
-        rowCount: [30],
-        ajaxSettings: {
-            method: "POST",
-            cache: false
-        },
-    });
-}
-
-function load_all_coins() {
-    $("#data-table-all-coins").bootgrid({
-        formatters: {
-            "status": function(column, row) {
-                if (row.status == 'NEW') {
-                    return '<span class="text-primary">'+row.status+'</span>';
-                } else {
-                    return row.status;
-                }
-            },
-            "commands": function(column, row) {
-                if (row.status == 'NEW') {
-                    return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/add_to_world/" + row.id + "\"><span class=\"zmdi zmdi-plus\"></span></a>";
-                } else {
-                    return '<div class="text-success m-5 f-500 f-15">N/A</div>';
-                }
             }
         },
         templates: {

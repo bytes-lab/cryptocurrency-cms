@@ -45,16 +45,6 @@ def home(request):
 
 
 @login_required(login_url='/login')
-def world_of_coins(request):
-    return render(request, 'world_of_coins.html', {})
-
-
-@login_required(login_url='/login')
-def all_coins(request):
-    return render(request, 'all_coins.html', {})
-
-
-@login_required(login_url='/login')
 def master_coins(request):
     return render(request, 'master_coins.html', {})
 
@@ -318,28 +308,12 @@ def bulk_pair_coin(request):
 
     return render(request, 'bulk_pair_coin.html', locals())
 
-@login_required(login_url='/login')
-def add_to_world(request, id):
-    coin = MasterCoin.objects.get(id=id)
-    coin.supported = True
-    coin.save()
-    return HttpResponseRedirect(reverse('all_coins'))
-
-
-@csrf_exempt
-def coins_(request):
-    q = Q(is_master=True)
-    return _coins(request, q)
 
 @csrf_exempt
 def supported_coins_(request):
     q = Q(supported=True)
     return _coins(request, q)
 
-@csrf_exempt
-def all_coins_(request):
-    q = Q()
-    return _coins(request, q)
 
 def _coins(request, q):
     limit = int(request.POST.get('rowCount'))
