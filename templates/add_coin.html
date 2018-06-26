@@ -23,7 +23,7 @@
                             {% csrf_token %}
                             <div class="col-sm-4 col-20 m-b-25">
                                 <p class="f-400 m-b-15 c-black f-15">Cryptocompare: 
-                                    {% if coin.is_master and coin.cryptocompare %}
+                                    {% if coin.cryptocompare != None %}
                                         <span class="text-success">Connected ({{coin.cryptocompare}})</span>
                                     {% else %}
                                         <span class="text-warning">Not Connected</span>
@@ -53,7 +53,7 @@
                             </div>
                             <div class="col-sm-4 col-20 m-b-25">
                                 <p class="f-500 m-b-15 c-black f-15">Coinmarketcap:
-                                    {% if coin.is_master and coin.coinmarketcap %}
+                                    {% if coin.coinmarketcap != None %}
                                         <span class="text-success">Connected ({{coin.coinmarketcap}})</span>
                                     {% else %}
                                         <span class="text-warning">Not Connected</span>
@@ -83,7 +83,7 @@
                             </div>
                             <div class="col-sm-4 col-20 m-b-25">
                                 <p class="f-500 m-b-15 c-black f-15">Coinapi:
-                                    {% if coin.is_master and coin.coinapi %}
+                                    {% if coin.coinapi != None %}
                                         <span class="text-success">Connected ({{coin.coinapi}})</span>
                                     {% else %}
                                         <span class="text-warning">Not Connected</span>
