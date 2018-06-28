@@ -401,6 +401,8 @@ def supported_exchanges_(request):
     lstart = (page - 1) * limit
     lend = lstart + limit
 
+    master_coins = [ii.original_symbol for ii in MasterCoin.objects.all()]
+
     for exchange in qs[lstart:lend]:
         pairs = exchange.pairs.all()
         coins = [pair.base_coin.symbol for pair in pairs]
@@ -411,13 +413,22 @@ def supported_exchanges_(request):
         # except Exception as e:
         #     num_pairs = 0
 
-        num_new_pairs = TempPair.objects.filter(exchange=exchange.name).count()
+        num_new_pairs = 0
+        num_new_coins = 0
+
+        for ii in TempPair.objects.filter(exchange=exchange.name):
+            num_new_pairs += 1
+            [base, quote] = ii.pair.split('-')
+            if base not in master_coins:
+                num_new_coins += 1
+                
         exchange_ = {
             'id': exchange.id,
             'exchange': exchange.name,
             'num_coins': len(set(coins)),
             'num_pairs': num_pairs,
-            'num_new_pairs': num_new_pairs
+            'num_new_pairs': num_new_pairs,
+            'num_new_coins': num_new_coins
         }
         exchanges.append(exchange_)
 

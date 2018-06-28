@@ -112,7 +112,14 @@ function load_supported_exchanges() {
                 } else {
                     return '<div class="text-success m-5 f-500 f-15">N/A</div>';
                 }
-            }
+            },
+            "new_coins": function(column, row) {
+                if (row.num_new_coins > 0) {
+                    return "<a class='btn bgm-red btn-xs waves-effect' href='#' title='Add a coin'>"+row.num_new_coins+"</a>";
+                } else {
+                    return '<div class="text-success m-5 f-500 f-15">N/A</div>';
+                }
+            },
         },
         templates: {
             header: '<div id="{{ctx.id}}" class="{{css.header}}"><div class="row m-t-15"><div class="col-sm-6 p-0"><p class="{{css.search}}"></p></div>',
