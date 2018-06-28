@@ -315,6 +315,9 @@ def supported_coins_(request):
     return _coins(request, q)
 
 
+def get_support_title(cid):
+    return 'YES' if cid > 0 else 'NO' if cid == 0 else 'Not Specified'
+
 def _coins(request, q):
     limit = int(request.POST.get('rowCount'))
     page = int(request.POST.get('current'))
@@ -337,10 +340,12 @@ def _coins(request, q):
             'id': coin.id,
             'symbol': coin.symbol,
             'alias': coin.alias.symbol if coin.alias else '-',
-            'cryptocompare': 'YES' if coin.cryptocompare > 0 else 'NO',
-            'coinapi': 'YES' if coin.coinapi > 0  else 'NO',
-            'cmc': 'YES' if coin.coinmarketcap > 0 else 'NO',
-            'supported': 'YES' if coin.supported else 'NO',
+            'cryptocompare': get_support_title(coin.cryptocompare),
+            'coinapi': get_support_title(coin.coinapi),
+            'cmc': get_support_title(coin.coinmarketcap),
+            'gecko': get_support_title(coin.coingecko),
+            'cml': get_support_title(coin.coinmarketcal),
+            'supported': get_support_title(coin.supported),
             'status': status
         }
         coins.append(coin_)
