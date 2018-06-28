@@ -416,12 +416,15 @@ def supported_exchanges_(request):
         num_new_pairs = 0
         num_new_coins = 0
 
+        coins = []
         for ii in TempPair.objects.filter(exchange=exchange.name):
             num_new_pairs += 1
-            [base, quote] = ii.pair.split('-')
-            if base not in master_coins:
+            coins += ii.pair.strip().split('-')
+
+        for ii in set(coins):
+            if ii not in master_coins:
                 num_new_coins += 1
-                
+
         exchange_ = {
             'id': exchange.id,
             'exchange': exchange.name,
