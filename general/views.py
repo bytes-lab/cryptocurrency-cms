@@ -603,6 +603,7 @@ def get_pairs_info(request):
     query = """
         select * from binance_rates order by open_time desc limit 361;
     """
+    # check duplicate with list
     with connection.cursor() as cursor:
         cursor.execute(query, [])
 
