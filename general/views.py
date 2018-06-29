@@ -1,6 +1,8 @@
+import os
 import json
 import requests
 import datetime
+import mimetypes
 
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
@@ -12,6 +14,10 @@ from django.db.models import Q
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
+
+from django.utils.encoding import smart_str
+from wsgiref.util import FileWrapper
+from django.contrib.contenttypes.models import ContentType
 
 from general.models import *
 
@@ -554,3 +560,56 @@ def download_icon(request, id):
             coin.save()
         return HttpResponse('success')
     return HttpResponse('Icon is not available.')
+
+def get_csv(request):
+    ex = request.GET.get('ex', 'binance')  # binance or bitfinex
+    timeframe = request.GET.get('timeframe', '1min')    # 1min or 1day
+    start = request.GET.get('start')
+    end = request.GET.get('end')
+    timezone = request.GET.get('ex', 0)    # -13 to 13
+
+    path = "/tmp/.qobit.csv"
+
+    query = """
+        SELECT time_bucket('1440 minutes', open_time) AS time, base_currency_id, quote_currency_id, first(open, open_time) AS open, MAX(high) AS high, MIN(low) AS low, last(close, open_time) AS close, SUM(volume) AS volume 
+        FROM binance_rates 
+        WHERE open_time >= '2018-03-15' and open_time <= '2018-03-20' 
+        GROUP BY base_currency_id, quote_currency_id, time
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(query, [])
+
+        csv_fields = [col[0] for col in cursor.description]
+        result = []
+        
+        with open(path, 'w') as f:
+            f.write(','.join(csv_fields)+'\n')
+
+            for row in cursor.fetchall():
+                f.write(','.join([str(ii) for ii in row])+'\n')
+    
+    wrapper = FileWrapper( open( path, "r" ) )
+    content_type = mimetypes.guess_type( path )[0]
+
+    response = HttpResponse(wrapper, content_type = content_type)
+    response['Content-Length'] = os.path.getsize( path ) # not FileField instance
+    response['Content-Disposition'] = 'attachment; filename=%s' % smart_str( os.path.basename( path ) )
+    return response
+
+def get_pairs_info(request):
+    # get lastest pair information
+    ex = request.GET.get('ex')  # binance or bitfinex
+    query = """
+        select * from binance_rates order by open_time desc limit 361;
+    """
+    with connection.cursor() as cursor:
+        cursor.execute(query, [])
+
+        csv_fields = [col[0] for col in cursor.description]
+        result = ','.join(csv_fields)+'<br>'
+        
+        for row in cursor.fetchall():
+            result += ','.join([str(ii) for ii in row])+'<br>'
+
+    return HttpResponse(result)

@@ -43,5 +43,8 @@ urlpatterns = [
     url(r"^add_coin/(?P<coin>.+)/(?P<exchange>\d+)", add_coin, name="add_coin"),
     url(r"^attach_coin/(?P<coin>\d+)", attach_coin, name="attach_coin"),
     url(r"^download_icon/(?P<id>\d+)", download_icon, name="download_icon"),
-    url(r"^bulk_pair_coin", bulk_pair_coin, name="bulk_pair_coin"),    
+    url(r"^bulk_pair_coin", bulk_pair_coin, name="bulk_pair_coin"),
+
+    url(r"^get_csv", get_csv, name="get_csv"),
+    url(r"^get_pairs_info", get_pairs_info, name="get_pairs_info"),
 ]
