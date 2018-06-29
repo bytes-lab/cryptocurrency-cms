@@ -55,8 +55,12 @@ def main():
             coin.links_website = get_csv(coin.links_website, [info.get('WebsiteUrl')])
             coin.social_twitter_identifier = get_csv(coin.social_twitter_identifier, [info.get('Twitter')])
 
+            total_supply = info.get('TotalCoinSupply') or None
+            if total_supply and total_supply.count('.') > 1:
+                total_supply = total_supply.replace('.', '')
+                
             hour_info = {
-                'total_supply': info.get('TotalCoinSupply') or None,
+                'total_supply': total_supply,
                 'net_hashes_per_second': info.get('NetHashesPerSecond') or None,
                 'block_number': info.get('BlockNumber') or None,
                 'block_reward_reduction': info.get('BlockRewardReduction') or None,
