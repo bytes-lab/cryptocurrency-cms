@@ -145,6 +145,7 @@ def import_all_pairs(request, id):
                     # segmentation
                     if len(pairs__) > 50:
                         break
+        return render(request, 'add_all_pair.html', locals())
     else:
         num_pairs = request.POST.get('num_pairs', 0)
 
@@ -161,7 +162,6 @@ def import_all_pairs(request, id):
                                 supported_at=datetime.datetime.now())
             pair.save()
         return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': id }))
-    return render(request, 'add_all_pair.html', locals())
 
 
 @login_required(login_url='/login')
@@ -466,7 +466,7 @@ def exchange_detail_(request, id):
                              | Q(quote_coin__symbol__icontains=keyword))
     s_pairs = {}
     for ii in qs:
-        pair = ii.base_coin.symbol + ' / ' + ii.quote_coin.symbol
+        pair = ii.base_coin.original_symbol + ' / ' + ii.quote_coin.original_symbol
         s_pairs[pair] = str(ii.supported_at) if ii.supported_at else ''
 
     master_coins = [ii.symbol for ii in MasterCoin.objects.all()]
