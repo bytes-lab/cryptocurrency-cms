@@ -480,7 +480,7 @@ def exchange_detail_(request, id):
     try:
         pairs = requests.get(exchange.api_link).json()['data']
         for ii in pairs:
-            base = ii['baseCurrency']
+            base = ii['baseCurrency'].strip()
             quote = ii['quoteCurrency']
             pair = base + ' / ' + quote
             if keyword.lower() not in pair.lower():
