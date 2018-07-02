@@ -203,21 +203,25 @@ def add_coin(request, coin, exchange):
         is_master = False if alias else True
 
         cc_name = CryptocompareCoin.objects.get(id=cc).name if cc and cc != '0' else ''
-        coin = MasterCoin(cryptocompare=cc,
-                          coinmarketcap=cmc,
-                          coinapi=cp,
-                          coingecko=cg,
-                          coinmarketcal=cml,
-                          cryptocompare_name=cc_name,
-                          symbol=new_symbol,
-                          original_symbol=coin,
-                          alias_id=alias,
-                          supported=True,
-                          is_master=is_master,
-                          is_trading=True)
-        coin.save()
-        coin = MasterCoin.objects.get(id=coin.id) # weird
 
+        defaults = {
+            'cryptocompare': cc,
+            'coinmarketcap': cmc,
+            'coinapi': cp,
+            'coingecko': cg,
+            'coinmarketcal': cml,
+            'cryptocompare_name': cc_name,        
+            'supported': True,
+            'is_master': is_master,
+            'is_trading': True
+        }
+
+        coin, _ = MasterCoin.objects.update_or_create(symbol=new_symbol,
+                                                      original_symbol=coin,
+                                                      alias_id=alias,
+                                                      defaults=defaults)
+
+        coin = MasterCoin.objects.get(id=coin.id) # weird
         culture = Culture.objects.filter(name='en_US').first()
         CoinLocale.objects.update_or_create(coin=coin, culture=culture, defaults={ 'name': full_name })
 
