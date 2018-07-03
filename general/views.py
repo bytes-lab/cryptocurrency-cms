@@ -3,6 +3,7 @@ import json
 import requests
 import datetime
 import mimetypes
+from pytz import timezone
 
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
@@ -566,55 +567,64 @@ def download_icon(request, id):
     return HttpResponse('Icon is not available.')
 
 def get_csv(request):
-    ex = request.GET.get('ex', 'binance')  # binance or bitfinex
-    timeframe = request.GET.get('timeframe', '1min')    # 1min or 1day
-    start = request.GET.get('start')
-    end = request.GET.get('end')
-    timezone = request.GET.get('ex', 0)    # -13 to 13
+    try:
+        ex = request.GET.get('ex', 'binance')  # binance or bitfinex
+        vol = 'volume' if ex == 'binance' else 'base_volume'
+        timeframe = request.GET.get('timeframe', '1min')    # 1min or 1day
+        resolution = '1' if timeframe == '1min' else '1440'
+        start = request.GET.get('start')
+        end = request.GET.get('end')
+        tz = request.GET.get('tz', 0)    # -13 to 13
 
-    path = "/tmp/.qobit.csv"
+        path = "/tmp/.{}-{}.csv".format(ex, start)
 
-    query = """
-        SELECT time_bucket('1440 minutes', open_time) AS time, base_currency_id, quote_currency_id, first(open, open_time) AS open, MAX(high) AS high, MIN(low) AS low, last(close, open_time) AS close, SUM(volume) AS volume 
-        FROM binance_rates 
-        WHERE open_time >= '2018-03-15' and open_time <= '2018-03-20' 
-        GROUP BY base_currency_id, quote_currency_id, time
-    """
+        query = """
+            SELECT time_bucket('{} minutes', open_time) AS last_traded, base_currency_id, quote_currency_id, first(open, open_time) AS open, MAX(high) AS high, MIN(low) AS low, last(close, open_time) AS close, SUM({}) AS volume 
+            FROM {}_rates 
+            WHERE open_time >= '{}' and open_time <= '{}' 
+            GROUP BY base_currency_id, quote_currency_id, last_traded
+        """
 
-    with connection.cursor() as cursor:
-        cursor.execute(query, [])
+        query = query.format(resolution, vol, ex, 
+                             datetime.datetime.fromtimestamp(int(start)).replace(tzinfo=timezone('UTC')),
+                             datetime.datetime.fromtimestamp(int(end)).replace(tzinfo=timezone('UTC')))
 
-        csv_fields = [col[0] for col in cursor.description]
-        result = []
+        coins_dict = {}
+        for ii in MasterCoin.objects.all():
+            coins_dict[ii.id] = ii.symbol
+
+        with connection.cursor() as cursor:
+            cursor.execute(query, [])
+
+            result = []
+            
+            with open(path, 'w') as f:
+                f.write('last_traded, base_currency, quote_currency, open, high, low, close, volume\n')
+
+                for row in cursor.fetchall():
+                    row_ = list(row)
+                    row_[1] = coins_dict[row[1]]
+                    row_[2] = coins_dict[row[2]]
+                    f.write(','.join([str(ii) for ii in row_])+'\n')
         
-        with open(path, 'w') as f:
-            f.write(','.join(csv_fields)+'\n')
+        wrapper = FileWrapper( open( path, "r" ) )
+        content_type = mimetypes.guess_type( path )[0]
 
-            for row in cursor.fetchall():
-                f.write(','.join([str(ii) for ii in row])+'\n')
-    
-    wrapper = FileWrapper( open( path, "r" ) )
-    content_type = mimetypes.guess_type( path )[0]
-
-    response = HttpResponse(wrapper, content_type = content_type)
-    response['Content-Length'] = os.path.getsize( path ) # not FileField instance
-    response['Content-Disposition'] = 'attachment; filename=%s' % smart_str( os.path.basename( path ) )
-    return response
+        response = HttpResponse(wrapper, content_type = content_type)
+        response['Content-Length'] = os.path.getsize( path ) # not FileField instance
+        response['Content-Disposition'] = 'attachment; filename=%s' % smart_str( os.path.basename( path ) )
+        return response
+    except Exception as e:
+        print e
+        return HttpResponse('Please provide valid parameters')
 
 def get_pairs_info(request):
-    # get lastest pair information
-    ex = request.GET.get('ex')  # binance or bitfinex
-    query = """
-        select * from binance_rates order by open_time desc limit 361;
-    """
-    # check duplicate with list
-    with connection.cursor() as cursor:
-        cursor.execute(query, [])
-
-        csv_fields = [col[0] for col in cursor.description]
-        result = ','.join(csv_fields)+'<br>'
-        
-        for row in cursor.fetchall():
-            result += ','.join([str(ii) for ii in row])+'<br>'
-
+    ex = request.GET.get('ex', '')  # binance or bitfinex
+    exchange = Exchange.objects.filter(name=ex.upper()).first()
+    result = ''
+    if exchange:
+        for pair in  exchange.pairs.all().order_by('base_coin__symbol', 'quote_coin__symbol'):
+            result += '{}-{}<br>'.format(pair.base_coin.symbol, pair.quote_coin.symbol)
+    else:
+        result = 'Please provide a valid exchange.'
     return HttpResponse(result)
