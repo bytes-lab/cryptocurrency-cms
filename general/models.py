@@ -225,6 +225,79 @@ class CoinmarketcalCoin(models.Model):
         return self.symbol
 
 
+class CoinmarketcalCategory(models.Model):
+    uid = models.IntegerField()
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name = 'Cml Category'
+        verbose_name_plural = 'Cml Categories'
+
+    def __str__(self):
+        return self.name
+
+
+class CoinmarketcalEvent(models.Model):
+    uid = models.IntegerField()
+    title = models.CharField(max_length=255)
+    coins = models.CharField(max_length=1255)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    proof = models.CharField(max_length=555, null=True, blank=True)
+    source = models.CharField(max_length=555, null=True, blank=True)
+    is_hot = models.BooleanField(default=False)
+    vote_count = models.IntegerField()
+    positive_vote_count = models.IntegerField()
+    percentage = models.IntegerField()
+    categories = models.CharField(max_length=255)
+    tip_symbol = models.CharField(max_length=255, null=True, blank=True)
+    tip_adress = models.CharField(max_length=255, null=True, blank=True)
+    twitter_account = models.CharField(max_length=255, null=True, blank=True)
+    can_occur_before = models.BooleanField(default=False)
+    date_event = models.DateTimeField(blank=True, null=True)
+    created_date = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'coinmarketcal_coin_event'
+
+    def __str__(self):
+        return self.title
+
+
+EVENT_STATUS = (
+    ('draft', 'DRAFT'),
+    ('published', 'PUBLISHED'),
+    ('unpublished', 'UNPUBLISHED')
+)
+
+class CoinEvent(models.Model):
+    title = models.CharField(max_length=255)
+    coins = models.CharField(max_length=1255, blank=True, null=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    proof = models.CharField(max_length=555, null=True, blank=True)
+    source = models.CharField(max_length=555, null=True, blank=True)
+    is_hot = models.BooleanField(default=False)
+    vote_count = models.IntegerField(blank=True, null=True)
+    positive_vote_count = models.IntegerField(blank=True, null=True)
+    percentage = models.IntegerField(blank=True, null=True)
+    categories = models.CharField(max_length=255, blank=True, null=True)
+    tip_symbol = models.CharField(max_length=255, null=True, blank=True)
+    tip_adress = models.CharField(max_length=255, null=True, blank=True)
+    twitter_account = models.CharField(max_length=255, null=True, blank=True)
+    can_occur_before = models.BooleanField(default=False)
+    date_event = models.DateTimeField(blank=True, null=True)
+    created_date = models.DateTimeField(blank=True, null=True)
+
+    status = models.CharField(max_length=55, choices=EVENT_STATUS, default='published')
+    locale = models.ForeignKey(Culture)
+    source = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'coin_event'
+
+    def __str__(self):
+        return self.title
+
+
 class CoinapiCoin(models.Model):
     symbol = models.CharField(max_length=255)
     name = models.CharField(max_length=255)

@@ -158,11 +158,19 @@ class CMCCoinAdmin(admin.ModelAdmin):
     search_fields = ['symbol', 'token']
 
 
+class CoinmarketcalEventAdmin(admin.ModelAdmin):
+    list_display = ['title', 'date_event', 'created_date']
+    search_fields = ['title', 'date_event', 'created_date']
+
+
 admin.site.register(MasterCoin, MasterCoinAdmin)
 admin.site.register(Exchange, ExchangeAdmin)
 admin.site.register(ExchangePair, ExchangePairAdmin)
 admin.site.register(DataProvider)
 admin.site.register(Culture)
+admin.site.register(CoinmarketcalCategory)
+admin.site.register(CoinmarketcalEvent, CoinmarketcalEventAdmin)
+admin.site.register(CoinEvent, CoinmarketcalEventAdmin)
 admin.site.register(CryptocompareCoin, CCCoinAdmin)
 admin.site.register(CoinmarketcapCoin, CMCCoinAdmin)
 admin.site.register(CoingeckoCoin, GKCoinAdmin)
