@@ -232,6 +232,7 @@ class CoinmarketcalCategory(models.Model):
     class Meta:
         verbose_name = 'Cml Category'
         verbose_name_plural = 'Cml Categories'
+        db_table = 'coinmarketcal_category'
 
     def __str__(self):
         return self.name
@@ -290,6 +291,7 @@ class CoinEvent(models.Model):
     status = models.CharField(max_length=55, choices=EVENT_STATUS, default='published')
     locale = models.ForeignKey(Culture)
     cml = models.ForeignKey(CoinmarketcalEvent, blank=True, null=True)
+    friend = models.ForeignKey("CoinEvent", blank=True, null=True)
 
     class Meta:
         db_table = 'coin_event'

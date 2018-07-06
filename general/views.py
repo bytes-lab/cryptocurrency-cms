@@ -387,9 +387,13 @@ def events_(request):
 
     for ii in qs[lstart:lend]:
         result.append({
+            'id': ii.id,
             'title': ii.title,
             'date_event': str(ii.date_event.date()),
-            'created_date': str(ii.created_date),
+            'created_date': str(ii.created_date).split('+')[0],
+            'friend_id': ii.friend.id if ii.friend else None,
+            'friend': ii.friend.title if ii.friend else None,
+            'locale': ii.locale_id
         })
 
     return JsonResponse({
@@ -397,7 +401,7 @@ def events_(request):
         "rowCount": limit,
         "rows": result,
         "total": total
-        }, safe=False)
+    }, safe=False)
 
 @csrf_exempt
 def exchanges_(request):

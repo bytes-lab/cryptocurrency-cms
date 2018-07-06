@@ -29,9 +29,24 @@ function load_master_coins() {
 function load_events() {
     $("#data-table-events").bootgrid({
         formatters: {
+            "detail": function(column, row) {
+                return "<a href='/evnets/"+row.id+"'>"+row.title+"</a>"
+            },
+            "friend": function(column, row) {
+                if (row.friend) {
+                    return "<a href='/evnets/"+row.friend_id+"'>"+row.friend+"</a>"
+                } else {
+                    return ''
+                }
+            },
             "commands": function(column, row) {
-                return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/attach_coin/" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></a>"+
-                    "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/admin/general/mastercoin/" + row.id + "/change\"><span class=\"zmdi zmdi-assignment\"></span></a>";
+                if (row.locale == 1 && !row.friend) {
+                    return "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit c-orange f-500 waves-effect waves-circle\" href=\"/admin/general/mastercoin/" + row.id + "/change\">+Zh</a>";
+                } else if (row.locale == 2 && !row.friend) {
+                    return "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit c-purple f-500 waves-effect waves-circle\" href=\"/admin/general/mastercoin/" + row.id + "/change\">+En</a>";
+                } else {
+                    return '<div class="text-success m-5 f-500 f-15">N/A</div>'; 
+                }
             }
         },
         templates: {
