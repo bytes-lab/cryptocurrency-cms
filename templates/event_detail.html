@@ -75,7 +75,7 @@
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" name="friend" value="{{ form.friend.value }}">
+                    <input type="hidden" name="friend" value="{% if form.friend.value %}{{ form.friend.value }}{% endif %}">
                     <div class="form-group m-t-25 p-t-10">
                         <div class="col-sm-offset-1 col-sm-6">
                             <button type="submit" class="btn btn-primary btn-sm m-r-15">{% if id %}Update Event {% else %} Add Event {% endif %}</button>
