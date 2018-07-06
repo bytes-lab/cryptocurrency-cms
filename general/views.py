@@ -80,12 +80,17 @@ def exchange_detail(request, id):
 
 @login_required(login_url='/login')
 def event_detail(request, id):
-    event = CoinEvent.objects.get(id=id)
-    if request.method == 'POST':
+    event = CoinEvent.objects.get(id=id) if id else None
+    if request.method == 'GET':
+        form = EventForm(instance=event)
+    else:
         form = EventForm(request.POST, instance=event)
         if form.is_valid():
             event = form.save()
-    form = EventForm(instance=event)
+            if not event.created_date:  # for brand new
+                event.created_date = datetime.datetime.now()
+                event.save()
+            return HttpResponseRedirect(reverse('event_detail', kwargs={ 'id': event.id }))
 
     locales = Culture.objects.all()
     status = EVENT_STATUS
@@ -405,7 +410,7 @@ def events_(request):
             'id': ii.id,
             'title': ii.title,
             'date_event': str(ii.date_event.date()),
-            'created_date': str(ii.created_date).split('+')[0],
+            'created_date': str(ii.created_date).split('+')[0].split('.')[0],
             'friend_id': ii.friend.id if ii.friend else None,
             'friend': ii.friend.title if ii.friend else None,
             'locale': ii.locale_id
