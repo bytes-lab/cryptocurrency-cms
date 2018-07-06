@@ -81,7 +81,12 @@ def exchange_detail(request, id):
 @login_required(login_url='/login')
 def event_detail(request, id):
     event = CoinEvent.objects.get(id=id)
+    if request.method == 'POST':
+        form = EventForm(request.POST, instance=event)
+        if form.is_valid():
+            event = form.save()
     form = EventForm(instance=event)
+
     locales = Culture.objects.all()
     status = EVENT_STATUS
     return render(request, 'event_detail.html', locals())
