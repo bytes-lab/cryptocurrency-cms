@@ -53,7 +53,7 @@ def main():
                 item.save()
                 ii.pop('uid')
                 ii['locale_id'] = 1
-                ii['source_id'] = item.id
+                ii['cml_id'] = item.id
                 CoinEvent.objects.create(**ii)
             else:
                 return

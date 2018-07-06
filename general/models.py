@@ -259,7 +259,7 @@ class CoinmarketcalEvent(models.Model):
     class Meta:
         db_table = 'coinmarketcal_coin_event'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.title
 
 
@@ -289,12 +289,12 @@ class CoinEvent(models.Model):
 
     status = models.CharField(max_length=55, choices=EVENT_STATUS, default='published')
     locale = models.ForeignKey(Culture)
-    source = models.ForeignKey(CoinmarketcalEvent, blank=True, null=True)
+    cml = models.ForeignKey(CoinmarketcalEvent, blank=True, null=True)
 
     class Meta:
         db_table = 'coin_event'
 
-    def __str__(self):
+    def __unicode__(self):
         return self.title
 
 
