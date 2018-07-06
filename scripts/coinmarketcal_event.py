@@ -32,7 +32,7 @@ def main():
     page = 1
     max_page = 10
     last_created_at = CoinmarketcalEvent.objects.all().order_by('-created_date').first()
-    last_created_at = last_created_at.created_date if last_created_at else datetime.datetime(2016, 12, 12)
+    last_created_at = last_created_at.created_date.replace(tzinfo=None) if last_created_at else datetime.datetime(2016, 12, 12)
 
     while page < max_page:
         url = 'https://api.coinmarketcal.com/v1/events?access_token={}&page={}&max=150&dateRangeStart=22%2F12%2F2016&sortBy=created_desc&showMetadata=true'.format(access_token, page)
@@ -51,6 +51,12 @@ def main():
 
             if item.created_date > last_created_at:
                 item.save()
+                ii.pop('uid')
+                ii['locale_id'] = 1
+                ii['source_id'] = item.id
+                CoinEvent.objects.create(**ii)
+            else:
+                return
 
 
 if __name__ == "__main__":

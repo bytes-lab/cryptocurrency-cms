@@ -289,7 +289,7 @@ class CoinEvent(models.Model):
 
     status = models.CharField(max_length=55, choices=EVENT_STATUS, default='published')
     locale = models.ForeignKey(Culture)
-    source = models.IntegerField(default=0)
+    source = models.ForeignKey(CoinmarketcalEvent, blank=True, null=True)
 
     class Meta:
         db_table = 'coin_event'
