@@ -30,11 +30,11 @@ function load_events() {
     $("#data-table-events").bootgrid({
         formatters: {
             "detail": function(column, row) {
-                return "<a href='/evnets/"+row.id+"'>"+row.title+"</a>"
+                return "<a href='/events/"+row.id+"'>"+row.title+"</a>"
             },
             "friend": function(column, row) {
                 if (row.friend) {
-                    return "<a href='/evnets/"+row.friend_id+"'>"+row.friend+"</a>"
+                    return "<a href='/events/"+row.friend_id+"'>"+row.friend+"</a>"
                 } else {
                     return ''
                 }

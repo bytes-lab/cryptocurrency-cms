@@ -21,6 +21,7 @@ from wsgiref.util import FileWrapper
 from django.contrib.contenttypes.models import ContentType
 
 from general.models import *
+from general.forms import *
 
 
 def user_login(request):
@@ -75,6 +76,13 @@ def supported_exchanges(request):
 def exchange_detail(request, id):
     exchange = Exchange.objects.get(id=id)
     return render(request, 'exchange_detail.html', { "exchange": exchange })
+
+
+@login_required(login_url='/login')
+def event_detail(request, id):
+    event = CoinEvent.objects.get(id=id)
+    form = EventForm(instance=event)
+    return render(request, 'event_detail.html', locals())
 
 
 @login_required(login_url='/login')
