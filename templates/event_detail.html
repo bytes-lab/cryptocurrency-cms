@@ -23,6 +23,7 @@
                             <div class="fg-line">
                                 <input type="text" class="form-control f-15" required="" name="title" value="{% if form.title.value %} {{ form.title.value }} {% endif %}">
                             </div>
+                            {% if fid %}<p class="help-block">{{ event.title }}</p>{% endif %}
                         </div>
                     </div>
                     <div class="form-group">
@@ -31,6 +32,7 @@
                             <div class="fg-line">
                                 <input type="text" class="form-control f-15" name="description" value="{% if form.description.value %} {{ form.description.value }} {% endif %}">
                             </div>
+                            {% if fid %}<p class="help-block">{{ event.description }}</p>{% endif %}
                         </div>
                     </div>
                     <div class="form-group">
@@ -73,6 +75,7 @@
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" name="friend" value="{{ form.friend.value }}">
                     <div class="form-group m-t-25 p-t-10">
                         <div class="col-sm-offset-1 col-sm-6">
                             <button type="submit" class="btn btn-primary btn-sm m-r-15">{% if id %}Update Event {% else %} Add Event {% endif %}</button>

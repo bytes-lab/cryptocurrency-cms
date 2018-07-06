@@ -41,9 +41,9 @@ function load_events() {
             },
             "commands": function(column, row) {
                 if (row.locale == 1 && !row.friend) {
-                    return "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit c-orange f-500 waves-effect waves-circle\" href=\"/admin/general/mastercoin/" + row.id + "/change\">+Zh</a>";
+                    return "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit c-orange f-500 waves-effect waves-circle\" href=\"/events/" + row.id + "/2\">+Zh</a>";
                 } else if (row.locale == 2 && !row.friend) {
-                    return "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit c-purple f-500 waves-effect waves-circle\" href=\"/admin/general/mastercoin/" + row.id + "/change\">+En</a>";
+                    return "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit c-purple f-500 waves-effect waves-circle\" href=\"/events/" + row.id + "/1\">+En</a>";
                 } else {
                     return '<div class="text-success m-5 f-500 f-15">N/A</div>'; 
                 }

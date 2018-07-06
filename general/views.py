@@ -22,7 +22,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from general.models import *
 from general.forms import *
-
+from general.utils import *
 
 def user_login(request):
     if request.method == 'GET':
@@ -96,6 +96,33 @@ def event_detail(request, id):
     status = EVENT_STATUS
     return render(request, 'event_detail.html', locals())
 
+@login_required(login_url='/login')
+def friend_event_add(request, fid, lid):
+    event = CoinEvent.objects.get(id=fid)
+
+    if request.method == 'GET':
+        t_text = translate(event.title+'\n'+event.description)
+        form = EventForm(initial={
+            'title': t_text[0],
+            'description': t_text[1],
+            'friend': fid,
+            'date_event': event.date_event,
+            'locale': int(lid)
+        })
+    else:
+        form = EventForm(request.POST)
+        if form.is_valid():
+            revent = form.save()
+            if not revent.created_date:  # for brand new
+                revent.created_date = datetime.datetime.now()
+                revent.save()
+                event.friend = revent
+                event.save()
+            return HttpResponseRedirect(reverse('event_detail', kwargs={ 'id': revent.id }))
+
+    locales = Culture.objects.all()
+    status = EVENT_STATUS
+    return render(request, 'event_detail.html', locals())
 
 @login_required(login_url='/login')
 def exchange_support(request, id):
