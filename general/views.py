@@ -57,6 +57,11 @@ def master_coins(request):
 
 
 @login_required(login_url='/login')
+def events(request):
+    return render(request, 'events.html', {})
+
+
+@login_required(login_url='/login')
 def exchanges(request):
     return render(request, 'exchanges.html', {})
 
@@ -365,6 +370,32 @@ def _coins(request, q):
         "current": page,
         "rowCount": limit,
         "rows": coins,
+        "total": total
+        }, safe=False)
+
+@csrf_exempt
+def events_(request):
+    limit = int(request.POST.get('rowCount'))
+    page = int(request.POST.get('current'))
+    keyword = request.POST.get('searchPhrase')
+    lstart = (page - 1) * limit
+    lend = lstart + limit
+
+    result = []
+    qs = CoinEvent.objects.filter(Q(title__icontains=keyword) | Q(description__icontains=keyword))
+    total = qs.count()
+
+    for ii in qs[lstart:lend]:
+        result.append({
+            'title': ii.title,
+            'date_event': str(ii.date_event.date()),
+            'created_date': str(ii.created_date),
+        })
+
+    return JsonResponse({
+        "current": page,
+        "rowCount": limit,
+        "rows": result,
         "total": total
         }, safe=False)
 

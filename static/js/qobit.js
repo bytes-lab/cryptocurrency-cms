@@ -1,12 +1,33 @@
 $(document).ready(function(){
     load_master_coins();
 	load_exchanges();
+    load_events();
 	load_exchange_detail();
 	load_supported_exchanges();
 });
 
 function load_master_coins() {
     $("#data-table-master-coins").bootgrid({
+        formatters: {
+            "commands": function(column, row) {
+                return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/attach_coin/" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></a>"+
+                    "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/admin/general/mastercoin/" + row.id + "/change\"><span class=\"zmdi zmdi-assignment\"></span></a>";
+            }
+        },
+        templates: {
+            header: '<div id="{{ctx.id}}" class="{{css.header}}"><div class="row m-t-15"><div class="col-sm-6 p-0"><p class="{{css.search}}"></p></div>',
+            footer: '<div id="{{ctx.id}}" class="{{css.footer}}"><div class="row m-t-15"><div class="col-sm-6"><p class="{{css.pagination}}"></p></div><div class="col-sm-6 infoBar"><p class="{{css.infos}}"></p></div></div></div>'
+        },
+        rowCount: [30],
+        ajaxSettings: {
+            method: "POST",
+            cache: false
+        },
+    });
+}
+
+function load_events() {
+    $("#data-table-events").bootgrid({
         formatters: {
             "commands": function(column, row) {
                 return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/attach_coin/" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></a>"+
