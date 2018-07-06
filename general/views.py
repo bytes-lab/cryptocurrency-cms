@@ -82,6 +82,8 @@ def exchange_detail(request, id):
 def event_detail(request, id):
     event = CoinEvent.objects.get(id=id)
     form = EventForm(instance=event)
+    locales = Culture.objects.all()
+    status = EVENT_STATUS
     return render(request, 'event_detail.html', locals())
 
 

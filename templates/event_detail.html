@@ -13,27 +13,64 @@
             </div>
             
             <div class="card-body card-padding">
-                <form class="form-horizontal" method="POST">
+                <form class="form-horizontal f-15" method="POST">
                     {% csrf_token %}
                     <div class="form-group">
                         <label class="col-sm-1 control-label">Title</label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             <div class="fg-line">
-                                <input type="text" class="form-control input-sm" name="title" value="{% if form.title.value %} {{ form.title.value }} {% endif %}">
+                                <input type="text" class="form-control f-15" name="title" value="{% if form.title.value %} {{ form.title.value }} {% endif %}">
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1 control-label">Description</label>
-                        <div class="col-sm-8">
+                        <div class="col-lg-9 col-sm-11">
                             <div class="fg-line">
-                                <input type="text" class="form-control input-sm" name="description" value="{% if form.description.value %} {{ form.description.value }} {% endif %}">
+                                <input type="text" class="form-control f-15" name="description" value="{% if form.description.value %} {{ form.description.value }} {% endif %}">
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-9">
-                            <button type="submit" class="btn btn-primary btn-sm">{% if form.id.value %}Update Event {% else %} Add Event {% endif %}</button>
+                        <label class="col-sm-1 control-label">Date Event</label>
+                        <div class="col-sm-6">
+                            <div class="fg-line">
+                                <input type="text" class="form-control f-15" name="date_event" value="{% if form.date_event.value %} {{ form.date_event.value }} {% endif %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Status</label>
+                        <div class="col-sm-2">
+                            <div class="fg-line">
+                                <select class="selectpicker" data-live-search="true" name="status" required="">
+                                    {% for ii in status %}
+                                        <option {% if ii.0 == form.status.value %} selected {% endif %} value="{{ ii.0 }}">
+                                            {{ ii.1 }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Locale</label>
+                        <div class="col-sm-2">
+                            <div class="fg-line">
+                                <select class="selectpicker" data-live-search="true" name="locale" required="">
+                                    {% for ii in locales %}
+                                        <option {% if ii.id == form.locale.value %} selected {% endif %} value="{{ ii.id }}">
+                                            {{ ii.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group m-t-25">
+                        <div class="col-sm-offset-1 col-sm-6">
+                            <button type="submit" class="btn btn-primary btn-sm m-r-15">{% if form.id.value %}Update Event {% else %} Add Event {% endif %}</button>
+                            <a href="/events" class="btn btn-default btn-sm">Cancel</a>
                         </div>
                     </div>
                     <div class="clearfix"></div>
