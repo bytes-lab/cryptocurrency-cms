@@ -17,6 +17,12 @@ class CoinEventCategoryLocaleTabularInline(admin.TabularInline):
     fields = ['name', 'locale']
 
 
+class CoinEventLocaleTabularInline(admin.TabularInline):
+    model = CoinEventLocale
+    extra = 0
+    fields = ['culture', 'title', 'description']
+
+
 class CryptocompareSupportFilter(SimpleListFilter):
     title = 'cryptocompare'
     parameter_name = 'cryptocompare'
@@ -170,8 +176,9 @@ class CoinmarketcalEventAdmin(admin.ModelAdmin):
 
 
 class CoinEventAdmin(admin.ModelAdmin):
-    list_display = ['date_event_start', 'created_date']
-    search_fields = ['date_event_start', 'created_date']
+    inlines = [CoinEventLocaleTabularInline]
+    list_display = ['title', 'date_event_start', 'created_date']
+    search_fields = ['title', 'date_event_start', 'created_date']
 
 
 class CoinEventCategoryAdmin(admin.ModelAdmin):

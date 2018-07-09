@@ -295,6 +295,8 @@ EVENT_STATUS = (
 )
 
 class CoinEvent(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.CharField(max_length=255, null=True, blank=True)    
     coins = models.ManyToManyField(MasterCoin, blank=True)
     cml_coins = models.CharField(max_length=1255, blank=True, null=True)
     proof = models.CharField(max_length=555, null=True, blank=True)
@@ -315,7 +317,6 @@ class CoinEvent(models.Model):
     created_date = models.DateTimeField(blank=True, null=True)
 
     status = models.CharField(max_length=55, choices=EVENT_STATUS, default='published')
-    locale = models.ForeignKey(Culture)
     cml = models.ForeignKey(CoinmarketcalEvent, blank=True, null=True)
 
     class Meta:
@@ -325,11 +326,14 @@ class CoinEvent(models.Model):
         return self.title
 
 
-class EventLocale(models.Model):
+class CoinEventLocale(models.Model):
     event = models.ForeignKey(CoinEvent)
     culture = models.ForeignKey(Culture)
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        db_table = 'coin_event_locale'
 
 
 class CoinapiCoin(models.Model):
