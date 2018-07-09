@@ -283,7 +283,7 @@ EVENT_STATUS = (
 )
 
 class CoinEvent(models.Model):
-    coins = models.ManyToManyFields(MasterCoin, blank=True, null=True)
+    coins = models.ManyToManyField(MasterCoin, blank=True)
     cml_coins = models.CharField(max_length=1255, blank=True, null=True)
     proof = models.CharField(max_length=555, null=True, blank=True)
     source = models.CharField(max_length=555, null=True, blank=True)
@@ -296,7 +296,7 @@ class CoinEvent(models.Model):
     tip_adress = models.CharField(max_length=255, null=True, blank=True)
     twitter_account = models.CharField(max_length=255, null=True, blank=True)
     
-    categories = models.ManyToManyFields(blank=True, null=True)
+    categories = models.ManyToManyField(CoinEventCategory, blank=True)
     can_occur_before = models.BooleanField(default=False)
     date_event_start = models.DateTimeField(blank=True, null=True)
     date_event_end = models.DateTimeField(blank=True, null=True)
