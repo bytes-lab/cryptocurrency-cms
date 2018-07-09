@@ -331,8 +331,8 @@ class CoinEventLocale(models.Model):
     culture = models.ForeignKey(Culture)
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=255, null=True, blank=True)
-    status = models.CharField(max_length=55, choices=EVENT_STATUS, default='published')
-    
+    status = models.CharField(max_length=55, choices=EVENT_STATUS, default='draft')
+
     class Meta:
         db_table = 'coin_event_locale'
 

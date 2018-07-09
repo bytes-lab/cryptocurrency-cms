@@ -14,6 +14,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qobit_cms.settings")
 django.setup()
 
 from general.models import *
+from general.utils import *
 from utils import send_email
 
 CLIENT_ID = '917_4rbbdcjtwuqsskoo8goow88088wkg0w0cscgs08s488w84s40w'
@@ -24,11 +25,11 @@ def main():
     access_token = requests.get(url).json()['access_token']
 
     # get categories
-    url = 'https://api.coinmarketcal.com/v1/categories?access_token={}'.format(access_token)
-    info = requests.get(url).json()
+    # url = 'https://api.coinmarketcal.com/v1/categories?access_token={}'.format(access_token)
+    # info = requests.get(url).json()
 
-    for ii in info:
-        CoinmarketcalCategory.objects.update_or_create(uid=ii['id'], defaults={ 'name': ii['name'] })
+    # for ii in info:
+    #     CoinmarketcalCategory.objects.update_or_create(uid=ii['id'], defaults={ 'name': ii['name'] })
         
     # get events
     page = 1
@@ -45,6 +46,7 @@ def main():
         for ii in info['records']:
             ii['uid'] = ii.pop('id')
             ii['coins'] = ', '.join([iii['id'] for iii in ii['coins']])
+            categories = ii['categories']
             ii['categories'] = ', '.join([str(iii['id']) for iii in ii['categories']])
             ii['date_event'] = datetime.datetime.strptime(ii['date_event'][:-6], '%Y-%m-%dT%H:%M:%S')
             ii['created_date'] = datetime.datetime.strptime(ii['created_date'][:-6], '%Y-%m-%dT%H:%M:%S')
@@ -54,16 +56,24 @@ def main():
             if item.created_date > last_created_at:
                 item.save()
                 ii.pop('uid')
+                ii.pop('categories')
+                ii['date_event_start'] = ii.pop('date_event')
                 ii['locale_id'] = 1
                 ii['cml_id'] = item.id
                 # to get real source
-                if ii['source'].contains('coinmarketcal.com'):
+                if ii['source'].find('coinmarketcal.com') > -1:
                     response = urllib2.urlopen(ii['source'])
                     htmlparser = etree.HTMLParser()
                     tree = etree.parse(response, htmlparser)
                     xpath = "/html/body/main/div[@class='main showcase-page']/section[@id='event-detail']/div[@class='container'][4]/div[@class='row'][1]/div[@class='col-xs-12 col-sm-6 col-md-8 col-lg-9']/div[@class='mt-10']/a[@class='btn btn-border-b btn-circle btn-sm padding-h-30 source']/@href"
                     ii['source'] = tree.xpath(xpath)[0]
-                CoinEvent.objects.create(**ii)
+                ce = CoinEvent.objects.create(**ii)
+                for category in categories:
+                    cc = CoinEventCategory.objects.filter(name=category['name']).first()
+                    if cc:
+                        ce.categories.add(cc)
+
+                CoinEventLocale.objects.create(event=ce, culture_id=2, title=translate(ii['title']))
             else:
                 return
 
