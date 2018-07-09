@@ -27,19 +27,67 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-1 control-label">Mapped Coins</label>
+                        <div class="col-sm-6">
+                            <div class="fg-line">
+                                <input type="text" class="form-control f-15" required="" name="title" value="{% if form.title.value %} {{ form.title.value }} {% endif %}">
+                            </div>
+                            {% if fid %}<p class="help-block">{{ event.title }}</p>{% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">CML Coins</label>
+                        <div class="col-sm-6">
+                            <div class="fg-line">
+                                <input type="text" class="form-control f-15" name="cml_coins" value="{% if form.cml_coins.value %} {{ form.cml_coins.value }} {% endif %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-1 control-label">Description</label>
                         <div class="col-lg-9 col-sm-11">
                             <div class="fg-line">
-                                <input type="text" class="form-control f-15" name="description" value="{% if form.description.value %} {{ form.description.value }} {% endif %}">
+                                <textarea class="form-control f-15" name="description" rows="5">{% if form.description.value %} {{ form.description.value }} {% endif %}"></textarea>
                             </div>
                             {% if fid %}<p class="help-block">{{ event.description }}</p>{% endif %}
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-1 control-label">Proof</label>
+                        <div class="col-sm-6">
+                            <div class="fg-line">
+                                <input type="url" class="form-control f-15" name="proof" value="{% if form.proof.value %} {{ form.proof.value }} {% endif %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Source</label>
+                        <div class="col-sm-6">
+                            <div class="fg-line">
+                                <input type="url" class="form-control f-15" name="source" value="{% if form.source.value %} {{ form.source.value }} {% endif %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkbox m-b-15 col-sm-offset-1">
+                        <label>
+                            <input type="checkbox" value="1" {% if form.is_hot.value %} checked="" {% endif %}>
+                            <i class="input-helper"></i>
+                            Is Hot
+                        </label>
+                    </div>
+                    <div class="checkbox m-b-15 col-sm-offset-1">
+                        <label>
+                            <input type="checkbox" value="1" {% if form.can_occur_before.value %} checked="" {% endif %}>
+                            <i class="input-helper"></i>
+                            Can Occur before
+                        </label>
+                    </div>
+
+                    <div class="form-group">
                         <label class="col-sm-1 control-label">Date Event</label>
                         <div class="col-sm-2">
                             <div class="fg-line">
-                                <input type="text" class="form-control date-picker1 f-14 input-mask" name="date_event" data-mask="0000-00-00" placeholder="eg: 2014-05-23" required="" value="{% if form.date_event.value %} {{ form.date_event.value|date:'Y-m-d' }} {% endif %}">
+                                <input type="text" class="form-control date-picker f-14 input-mask" name="date_event" data-mask1="0000-00-00" placeholder="eg: 2014-05-23" required="" value="{% if form.date_event.value %} {{ form.date_event.value|date:'Y-m-d' }} {% endif %}">
                             </div>
                         </div>
                     </div>
@@ -72,6 +120,14 @@
                                         {% endif %}
                                     {% endfor %}
                                 </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Category</label>
+                        <div class="col-sm-6">
+                            <div class="fg-line">
+                                <input type="url" class="form-control f-15" name="category" value="{% if form.category.value %} {{ form.category.value }} {% endif %}">
                             </div>
                         </div>
                     </div>

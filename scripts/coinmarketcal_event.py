@@ -2,6 +2,8 @@ import json
 import time
 import requests
 import datetime
+import urllib2
+from lxml import etree
 
 import os
 from os import sys, path
@@ -54,6 +56,13 @@ def main():
                 ii.pop('uid')
                 ii['locale_id'] = 1
                 ii['cml_id'] = item.id
+                # to get real source
+                if ii['source'].contains('coinmarketcal.com'):
+                    response = urllib2.urlopen(ii['source'])
+                    htmlparser = etree.HTMLParser()
+                    tree = etree.parse(response, htmlparser)
+                    xpath = "/html/body/main/div[@class='main showcase-page']/section[@id='event-detail']/div[@class='container'][4]/div[@class='row'][1]/div[@class='col-xs-12 col-sm-6 col-md-8 col-lg-9']/div[@class='mt-10']/a[@class='btn btn-border-b btn-circle btn-sm padding-h-30 source']/@href"
+                    ii['source'] = tree.xpath(xpath)[0]
                 CoinEvent.objects.create(**ii)
             else:
                 return

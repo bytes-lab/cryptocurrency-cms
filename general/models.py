@@ -238,6 +238,18 @@ class CoinmarketcalCategory(models.Model):
         return self.name
 
 
+class CoinEventCategory(models.Model):
+    name = models.CharField(max_length=255)
+    locale = models.ForeignKey(Culture)
+
+    class Meta:
+        verbose_name_plural = 'Coin Event Categories'
+        db_table = 'coin_event_category'
+
+    def __str__(self):
+        return self.name
+
+
 class CoinmarketcalEvent(models.Model):
     uid = models.IntegerField()
     title = models.CharField(max_length=255)
@@ -271,33 +283,41 @@ EVENT_STATUS = (
 )
 
 class CoinEvent(models.Model):
-    title = models.CharField(max_length=255)
-    coins = models.CharField(max_length=1255, blank=True, null=True)
-    description = models.CharField(max_length=255, null=True, blank=True)
+    coins = models.ManyToManyFields(MasterCoin, blank=True, null=True)
+    cml_coins = models.CharField(max_length=1255, blank=True, null=True)
     proof = models.CharField(max_length=555, null=True, blank=True)
     source = models.CharField(max_length=555, null=True, blank=True)
     is_hot = models.BooleanField(default=False)
+
     vote_count = models.IntegerField(blank=True, null=True)
     positive_vote_count = models.IntegerField(blank=True, null=True)
     percentage = models.IntegerField(blank=True, null=True)
-    categories = models.CharField(max_length=255, blank=True, null=True)
     tip_symbol = models.CharField(max_length=255, null=True, blank=True)
     tip_adress = models.CharField(max_length=255, null=True, blank=True)
     twitter_account = models.CharField(max_length=255, null=True, blank=True)
+    
+    categories = models.ManyToManyFields(blank=True, null=True)
     can_occur_before = models.BooleanField(default=False)
-    date_event = models.DateTimeField(blank=True, null=True)
+    date_event_start = models.DateTimeField(blank=True, null=True)
+    date_event_end = models.DateTimeField(blank=True, null=True)
     created_date = models.DateTimeField(blank=True, null=True)
 
     status = models.CharField(max_length=55, choices=EVENT_STATUS, default='published')
     locale = models.ForeignKey(Culture)
     cml = models.ForeignKey(CoinmarketcalEvent, blank=True, null=True)
-    friend = models.ForeignKey("CoinEvent", blank=True, null=True)
 
     class Meta:
         db_table = 'coin_event'
 
     def __unicode__(self):
         return self.title
+
+
+class EventLocale(models.Model):
+    event = models.ForeignKey(CoinEvent)
+    culture = models.ForeignKey(Culture)
+    title = models.CharField(max_length=255)
+    description = models.CharField(max_length=255, null=True, blank=True)
 
 
 class CoinapiCoin(models.Model):
@@ -340,18 +360,18 @@ class CoinapiPair(models.Model):
         return '{} - {}'.format(self.base_coin, self.quote_coin)
 
 
-class TempPair(models.Model):
-    pair = models.CharField(max_length=255)
-    exchange = models.CharField(max_length=255)
-    declined = models.BooleanField(default=False)
-    added_at = models.DateTimeField(auto_now_add=True)
+# class TempPair(models.Model):
+#     pair = models.CharField(max_length=255)
+#     exchange = models.CharField(max_length=255)
+#     declined = models.BooleanField(default=False)
+#     added_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = 'tmp_pair'
-        unique_together = (("pair", "exchange"),)
+#     class Meta:
+#         db_table = 'tmp_pair'
+#         unique_together = (("pair", "exchange"),)
 
-    def __str__(self):
-        return '{} - {}'.format(self.exchange, self.pair)
+#     def __str__(self):
+#         return '{} - {}'.format(self.exchange, self.pair)
 
 
 class CoinHourlyInfo(models.Model):

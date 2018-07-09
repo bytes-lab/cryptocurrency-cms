@@ -16,15 +16,13 @@
         <link href="{% static 'vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css' %}" rel="stylesheet">        
         <link href="{% static 'vendors/bootgrid/jquery.bootgrid.min.css' %}" rel="stylesheet">
         <link href="{% static 'vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css' %}" rel="stylesheet">
+        {% block extra_css %}
+        {% endblock %}
                     
         <!-- CSS -->
         <link href="{% static 'css/app.min.1.css' %}" rel="stylesheet">
         <link href="{% static 'css/app.min.2.css' %}" rel="stylesheet">
         <link href="{% static 'css/extra.css' %}" rel="stylesheet">
-        
-        {% block extra_css %}
-        {% endblock %}
-       
     </head>
     <body class="sw-toggled">
         <header id="header" class="clearfix" data-current-skin="blue">
