@@ -58,7 +58,8 @@ def main():
                 ii.pop('uid')
                 ii.pop('categories')
                 ii['date_event_start'] = ii.pop('date_event')
-                ii['locale_id'] = 1
+                ii['cml_coins'] = ii.pop('coins')
+
                 ii['cml_id'] = item.id
                 # to get real source
                 if ii['source'].find('coinmarketcal.com') > -1:
@@ -68,12 +69,20 @@ def main():
                     xpath = "/html/body/main/div[@class='main showcase-page']/section[@id='event-detail']/div[@class='container'][4]/div[@class='row'][1]/div[@class='col-xs-12 col-sm-6 col-md-8 col-lg-9']/div[@class='mt-10']/a[@class='btn btn-border-b btn-circle btn-sm padding-h-30 source']/@href"
                     ii['source'] = tree.xpath(xpath)[0]
                 ce = CoinEvent.objects.create(**ii)
+                # add categories
                 for category in categories:
                     cc = CoinEventCategory.objects.filter(name=category['name']).first()
                     if cc:
                         ce.categories.add(cc)
+                # add coins
+                for coin in ii['cml_coins'].split(', '):
+                    co = CoinmarketcalCoin.objects.filter(uid=coin).first()
+                    if co:
+                        mc = MasterCoin.objects.filter(coinmarketcal=co.id).first()
+                        if mc:
+                            ce.coins.add(mc)
 
-                CoinEventLocale.objects.create(event=ce, culture_id=2, title=translate(ii['title']))
+                CoinEventLocale.objects.create(event=ce, culture_id=2, title=translate(ii['title'])[0])
             else:
                 return
 

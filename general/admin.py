@@ -20,7 +20,7 @@ class CoinEventCategoryLocaleTabularInline(admin.TabularInline):
 class CoinEventLocaleTabularInline(admin.TabularInline):
     model = CoinEventLocale
     extra = 0
-    fields = ['culture', 'title', 'description']
+    fields = ['culture', 'title', 'status', 'description']
 
 
 class CryptocompareSupportFilter(SimpleListFilter):
