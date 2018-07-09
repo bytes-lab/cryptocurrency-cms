@@ -46,11 +46,14 @@
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1 control-label">Description</label>
-                        <div class="col-lg-9 col-sm-11">
+                        <div class="col-lg-6 col-sm-8">
                             <div class="fg-line">
                                 <textarea class="form-control f-15" name="description" rows="5">{% if form.description.value %} {{ form.description.value }} {% endif %}</textarea>
                             </div>
                             {% if fid %}<p class="help-block">{{ event.description }}</p>{% endif %}
+                        </div>
+                        <div class="col-sm-1">
+                            <button class="btn btn-default bgm-cyan m-t-20"><i class="zmdi zmdi-translate"></i></button>
                         </div>
                     </div>
                     <div class="form-group">
@@ -126,8 +129,8 @@
                     <input type="hidden" name="friend" value="{% if form.friend.value %}{{ form.friend.value }}{% endif %}">
                     <div class="form-group m-t-25 p-t-10">
                         <div class="col-sm-offset-1 col-sm-6">
-                            <button type="submit" class="btn btn-primary btn-sm m-r-15">{% if id %}Update Event {% else %} Add Event {% endif %}</button>
-                            <a href="/events" class="btn btn-default btn-sm">Cancel</a>
+                            <button type="submit" class="btn btn-primary m-r-15">{% if id %}Update Event {% else %} Add Event {% endif %}</button>
+                            <a href="/events" class="btn btn-default">Cancel</a>
                         </div>
                     </div>
                     <div class="clearfix"></div>
