@@ -25,11 +25,11 @@ def main():
     access_token = requests.get(url).json()['access_token']
 
     # get categories
-    # url = 'https://api.coinmarketcal.com/v1/categories?access_token={}'.format(access_token)
-    # info = requests.get(url).json()
+    url = 'https://api.coinmarketcal.com/v1/categories?access_token={}'.format(access_token)
+    info = requests.get(url).json()
 
-    # for ii in info:
-    #     CoinmarketcalCategory.objects.update_or_create(uid=ii['id'], defaults={ 'name': ii['name'] })
+    for ii in info:
+        CoinmarketcalCategory.objects.update_or_create(uid=ii['id'], defaults={ 'name': ii['name'] })
         
     # get events
     page = 1
@@ -75,12 +75,17 @@ def main():
                     if cc:
                         ce.categories.add(cc)
                 # add coins
+                flag = False
                 for coin in ii['cml_coins'].split(', '):
                     co = CoinmarketcalCoin.objects.filter(uid=coin).first()
                     if co:
                         mc = MasterCoin.objects.filter(coinmarketcal=co.id).first()
                         if mc:
                             ce.coins.add(mc)
+                            flag = True
+                if not flag:
+                    ce.status = 'draft'
+                    ce.save()
 
                 CoinEventLocale.objects.create(event=ce, culture_id=2, title=translate(ii['title'])[0])
             else:

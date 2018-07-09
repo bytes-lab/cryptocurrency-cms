@@ -436,11 +436,10 @@ def events_(request):
         result.append({
             'id': ii.id,
             'title': ii.title,
-            'date_event': str(ii.date_event.date()),
+            'date_event': str(ii.date_event_start.date()),
             'created_date': str(ii.created_date).split('+')[0].split('.')[0],
-            'friend_id': ii.friend.id if ii.friend else None,
-            'friend': ii.friend.title if ii.friend else None,
-            'locale': ii.locale_id
+            'status': ii.status.upper(),
+            'mapped': 'YES' if ii.coins.all() else 'NO'
         })
 
     return JsonResponse({
