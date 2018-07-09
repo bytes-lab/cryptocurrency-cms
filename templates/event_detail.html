@@ -30,10 +30,12 @@
                         <label class="col-sm-1 control-label">Mapped Coins</label>
                         <div class="col-sm-2">
                             <div class="fg-line">                                
-                                <select class="selectpicker" data-live-search="true" name="locale" required="">
+                                <select class="selectpicker" data-live-search="true" multiple name="coins"  data-max-options="5" data-size="12">
+                                    {% for coin in coins %}
+                                    <option value="{{ coin.id }}">{{ coin.cryptocompare_name }} ({{ coin.symbol }})</option>
+                                    {% endfor %}
                                 </select>
                             </div>
-                            {% if fid %}<p class="help-block">{{ event.title }}</p>{% endif %}
                         </div>
                     </div>
                     <div class="form-group">
@@ -91,7 +93,7 @@
                         <label class="col-sm-1 control-label">Date Event</label>
                         <div class="col-sm-2">
                             <div class="fg-line">
-                                <input type="text" class="form-control date-picker f-14 input-mask" name="date_event" data-mask1="0000-00-00" placeholder="eg: 2014-05-23" required="" value="{% if form.date_event.value %} {{ form.date_event.value|date:'Y-m-d' }} {% endif %}">
+                                <input type="text" class="form-control date-time-picker f-14 input-mask" name="date_event" data-mask1="0000-00-00" placeholder="eg: 2014-05-23" required="" value="{% if form.date_event.value %} {{ form.date_event.value|date:'Y-m-d' }} {% endif %}">
                             </div>
                         </div>
                     </div>
@@ -121,7 +123,10 @@
                         <label class="col-sm-1 control-label">Category</label>
                         <div class="col-sm-2">
                             <div class="fg-line">                                
-                                <select class="selectpicker" data-live-search="true" name="category" required="">
+                                <select class="selectpicker" data-live-search="true" multiple name="categories"  data-max-options="5" data-size="12">
+                                    {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>

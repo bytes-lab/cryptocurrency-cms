@@ -94,6 +94,8 @@ def event_detail(request, id):
 
     locales = Culture.objects.all()
     status = EVENT_STATUS
+    coins = MasterCoin.objects.all()
+    categories = CoinEventCategory.objects.all()
     return render(request, 'event_detail.html', locals())
 
 @login_required(login_url='/login')
