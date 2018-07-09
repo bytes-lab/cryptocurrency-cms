@@ -28,9 +28,10 @@
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1 control-label">Mapped Coins</label>
-                        <div class="col-sm-6">
-                            <div class="fg-line">
-                                <input type="text" class="form-control f-15" required="" name="title" value="{% if form.title.value %} {{ form.title.value }} {% endif %}">
+                        <div class="col-sm-2">
+                            <div class="fg-line">                                
+                                <select class="selectpicker" data-live-search="true" name="locale" required="">
+                                </select>
                             </div>
                             {% if fid %}<p class="help-block">{{ event.title }}</p>{% endif %}
                         </div>
@@ -47,7 +48,7 @@
                         <label class="col-sm-1 control-label">Description</label>
                         <div class="col-lg-9 col-sm-11">
                             <div class="fg-line">
-                                <textarea class="form-control f-15" name="description" rows="5">{% if form.description.value %} {{ form.description.value }} {% endif %}"></textarea>
+                                <textarea class="form-control f-15" name="description" rows="5">{% if form.description.value %} {{ form.description.value }} {% endif %}</textarea>
                             </div>
                             {% if fid %}<p class="help-block">{{ event.description }}</p>{% endif %}
                         </div>
@@ -109,25 +110,16 @@
                         <label class="col-sm-1 control-label">Locale</label>
                         <div class="col-sm-2">
                             <div class="fg-line">
-                                <select class="selectpicker" data-live-search="true" name="locale" required="">
-                                    {% for ii in locales %}
-                                        {% if form.locale.value %}
-                                            {% if ii.id == form.locale.value %}
-                                                <option  selected  value="{{ ii.id }}">{{ ii.name }}</option>
-                                            {% endif %}
-                                        {% else %}
-                                            <option value="{{ ii.id }}">{{ ii.name }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
+                                <input type="url" class="form-control f-15" name="category" value="{% if form.category.value %} {{ form.category.value }} {% endif %}" readonly="">
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1 control-label">Category</label>
-                        <div class="col-sm-6">
-                            <div class="fg-line">
-                                <input type="url" class="form-control f-15" name="category" value="{% if form.category.value %} {{ form.category.value }} {% endif %}">
+                        <div class="col-sm-2">
+                            <div class="fg-line">                                
+                                <select class="selectpicker" data-live-search="true" name="category" required="">
+                                </select>
                             </div>
                         </div>
                     </div>

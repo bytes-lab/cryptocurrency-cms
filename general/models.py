@@ -240,11 +240,23 @@ class CoinmarketcalCategory(models.Model):
 
 class CoinEventCategory(models.Model):
     name = models.CharField(max_length=255)
-    locale = models.ForeignKey(Culture)
 
     class Meta:
         verbose_name_plural = 'Coin Event Categories'
         db_table = 'coin_event_category'
+
+    def __str__(self):
+        return self.name
+
+
+class CoinEventCategoryLocale(models.Model):
+    event = models.ForeignKey(CoinEventCategory)
+    name = models.CharField(max_length=255)
+    locale = models.ForeignKey(Culture)
+
+    class Meta:
+        verbose_name_plural = 'Coin Event Categories Locale'
+        db_table = 'coin_event_category_locale'
 
     def __str__(self):
         return self.name
