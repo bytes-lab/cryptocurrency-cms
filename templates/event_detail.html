@@ -95,7 +95,7 @@
                         <label class="col-sm-1 control-label">Date Event</label>
                         <div class="col-sm-2">
                             <div class="fg-line">
-                                <input type="text" class="form-control date-time-picker f-14 input-mask" name="date_event" data-mask1="0000-00-00" placeholder="eg: 2014-05-23" required="" value="{% if form.date_event.value %} {{ form.date_event.value|date:'Y-m-d' }} {% endif %}">
+                                <input type="text" class="form-control f-14" id="id-event-date-start" name="date_event_start" placeholder="eg: 05/23/2014" required="" >
                             </div>
                         </div>
                     </div>
@@ -105,9 +105,13 @@
                             <div class="fg-line">
                                 <select class="selectpicker" data-live-search="true" name="status" required="">
                                     {% for ii in status %}
-                                        <option {% if ii.0 == form.status.value %} selected {% endif %} value="{{ ii.0 }}">
-                                            {{ ii.1 }}
-                                        </option>
+                                        {% if form.status.value %}
+                                            {% if ii.0 == form.status.value %}
+                                                <option  selected  value="{{ ii.0 }}">{{ ii.1 }}</option>
+                                            {% endif %}
+                                        {% else %}
+                                            <option value="{{ ii.0 }}">{{ ii.1 }}</option>
+                                        {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>
@@ -117,7 +121,17 @@
                         <label class="col-sm-1 control-label">Locale</label>
                         <div class="col-sm-2">
                             <div class="fg-line">
-                                <input type="url" class="form-control f-15" name="category" value="{% if form.category.value %} {{ form.category.value }} {% endif %}" readonly="">
+                                <select class="selectpicker" data-live-search="true" name="locale" required="">
+                                    {% for ii in locales %}
+                                        {% if form.locale.value %}
+                                            {% if ii.id == form.locale.value %}
+                                                <option  selected  value="{{ ii.id }}">{{ ii.name }}</option>
+                                            {% endif %}
+                                        {% else %}
+                                            <option value="{{ ii.id }}">{{ ii.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -161,4 +175,15 @@
     <script src="{% static 'vendors/input-mask/input-mask.min.js' %}"></script>
     <script src="{% static 'js/qobit.js' %}"></script>
     <script src="{% static 'js/common.js' %}"></script>
+    <script type="text/javascript">
+    $(function () {
+        $('#id-event-date-start').datetimepicker({
+            useCurrent: false
+        });
+    });
+
+    {% if form.date_event_start.value %} 
+        $('#id-event-date-start').val("{{ form.date_event_start.value|date:'m/d/Y H:i A' }}"); 
+    {% endif %}
+    </script>
 {% endblock %}
