@@ -123,8 +123,8 @@
                             <div class="fg-line">
                                 <select class="selectpicker" data-live-search="true" name="locale" required="">
                                     {% for ii in locales %}
-                                        {% if form.locale.value %}
-                                            {% if ii.id == form.locale.value %}
+                                        {% if form.culture.value %}
+                                            {% if ii.id == form.culture.value %}
                                                 <option  selected  value="{{ ii.id }}">{{ ii.name }}</option>
                                             {% endif %}
                                         {% else %}

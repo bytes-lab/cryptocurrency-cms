@@ -101,15 +101,12 @@ def event_detail(request, id):
 @login_required(login_url='/login')
 def locale_event_add(request, eid, lid):
     event = CoinEvent.objects.get(id=eid)
-
     if request.method == 'GET':
-        form = EventForm(initial={
-            'title': translate(event.title)[0],
-            'description': event.description,
-            'friend': eid,
-            'date_event_start': event.date_event_start,
-            'locale': int(lid)
-        })
+        event_ = model_to_dict(event)
+        event_['title'] = translate(event.title)[0]
+        event_['culture'] = int(lid)
+        print (event_)
+        form = EventForm(initial=event_)
     else:
         form = EventForm(request.POST)
         if form.is_valid():
@@ -123,6 +120,8 @@ def locale_event_add(request, eid, lid):
 
     locales = Culture.objects.all()
     status = EVENT_STATUS
+    coins = MasterCoin.objects.all()
+    categories = CoinEventCategory.objects.all()    
     return render(request, 'event_detail.html', locals())
 
 @login_required(login_url='/login')
