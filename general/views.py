@@ -103,9 +103,11 @@ def locale_event_add(request, eid, lid):
     event = CoinEvent.objects.get(id=eid)
     if request.method == 'GET':
         event_ = model_to_dict(event)
-        event_['title'] = translate(event.title)[0]
-        event_['culture'] = int(lid)
-        print (event_)
+        levent = event.coineventlocale_set.filter(culture_id=int(lid)).first()
+        event_['title'] = levent.title
+        event_['description'] = levent.description
+        event_['status'] = levent.status
+        event_['culture'] = levent.culture
         form = EventForm(initial=event_)
     else:
         form = EventForm(request.POST)
@@ -113,10 +115,9 @@ def locale_event_add(request, eid, lid):
             revent = form.save()
             if not revent.created_date:  # for brand new
                 revent.created_date = datetime.datetime.now()
-                revent.save()
-                event.friend = revent
-                event.save()
-            return HttpResponseRedirect(reverse('event_detail', kwargs={ 'id': revent.id }))
+                # revent.save()
+                # event.save()
+            # return HttpResponseRedirect(reverse('event_detail', kwargs={ 'id': revent.id }))
 
     locales = Culture.objects.all()
     status = EVENT_STATUS

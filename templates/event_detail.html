@@ -137,7 +137,7 @@
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1 control-label">Category</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-4">
                             <div class="fg-line">                                
                                 <select class="selectpicker" data-live-search="true" multiple name="categories"  data-max-options="5" data-size="12">
                                     {% for category in categories %}
@@ -150,15 +150,14 @@
                     <input type="hidden" name="friend" value="{% if form.friend.value %}{{ form.friend.value }}{% endif %}">
                     <div class="form-group m-t-25 p-t-10">
                         <div class="col-sm-offset-1 col-sm-6">
+                            <button type="submit" class="btn btn-primary m-r-15">{% if id %}Update Event {% else %} Add Event {% endif %}</button>
+                            <a href="/events" class="btn btn-default m-r-15">Cancel</a>
                             {% if not form.status.value or form.status.value == 'draft' %}
                                 <button type="submit" class="btn btn-primary btm-cyan m-r-15">Publish </button>
                             {% endif %}
                             {% if form.status.value == 'published' %}
                                 <button type="submit" class="btn btn-primary bgm-cyan m-r-15">Unpublish </button>
                             {% endif %}
-
-                            <button type="submit" class="btn btn-primary m-r-15">{% if id %}Update Event {% else %} Add Event {% endif %}</button>
-                            <a href="/events" class="btn btn-default">Cancel</a>
                         </div>
                     </div>
                     <div class="clearfix"></div>

@@ -59,8 +59,10 @@ def main():
                 ii.pop('categories')
                 ii['date_event_start'] = ii.pop('date_event')
                 ii['cml_coins'] = ii.pop('coins')
+                ii['description'] = ii['description'].strip('"')
 
                 ii['cml_id'] = item.id
+                ii['culture_id'] = 1
                 # to get real source
                 if ii['source'].find('coinmarketcal.com') > -1:
                     response = urllib2.urlopen(ii['source'])
@@ -87,7 +89,7 @@ def main():
                     ce.status = 'draft'
                     ce.save()
 
-                CoinEventLocale.objects.create(event=ce, culture_id=2, title=translate(ii['title'])[0])
+                CoinEventLocale.objects.create(event=ce, culture_id=2, title=translate(ii['title'])[0], description=ii['description'])
             else:
                 return
 
