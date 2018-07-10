@@ -98,6 +98,11 @@ def event_detail(request, id):
     categories = CoinEventCategory.objects.all()
     return render(request, 'event_detail.html', locals())
 
+@csrf_exempt
+def desc_translate(request):
+    desc = request.POST.get('desc')
+    return HttpResponse(translate(desc)[0])
+
 @login_required(login_url='/login')
 def locale_event_add(request, eid, lid):
     event = CoinEvent.objects.get(id=eid)

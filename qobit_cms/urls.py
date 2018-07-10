@@ -33,6 +33,7 @@ urlpatterns = [
     url(r"^events_$", events_, name="events_"),
     url(r"^events/(?P<id>\d*)$", event_detail, name="event_detail"),
     url(r"^events/(?P<eid>\d+)/(?P<lid>\d+)$", locale_event_add, name="locale_event_add"),
+    url(r"^desc_translate$", desc_translate, name="desc_translate"),    
     url(r"^master_coins$", master_coins, name="master_coins"),
     url(r"^supported_coins_$", supported_coins_, name="supported_coins_"),
     url(r"^exchanges$", exchanges, name="exchanges"),

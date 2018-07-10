@@ -50,13 +50,13 @@
                         <label class="col-sm-1 control-label">Description</label>
                         <div class="col-lg-6 col-sm-8">
                             <div class="fg-line">
-                                <textarea class="form-control f-15" name="description" rows="5">{% if form.description.value %} {{ form.description.value }} {% endif %}</textarea>
+                                <textarea class="form-control f-15" id="id-description" name="description" rows="5">{% if form.description.value %} {{ form.description.value }} {% endif %}</textarea>
                             </div>
                             {% if fid %}<p class="help-block">{{ event.description }}</p>{% endif %}
                         </div>
                         {% if lid %}
                         <div class="col-sm-1">
-                            <button class="btn btn-default bgm-cyan m-t-20"><i class="zmdi zmdi-translate"></i></button>
+                            <a href="javascript:translate()" class="btn btn-default bgm-cyan m-t-20"><i class="zmdi zmdi-translate"></i></a>
                         </div>
                         {% endif %}
                     </div>
@@ -175,15 +175,21 @@
     <script src="{% static 'js/qobit.js' %}"></script>
     <script src="{% static 'js/common.js' %}"></script>
     <script type="text/javascript">
-    $(function () {
-        $('#id-event-date-start').datetimepicker({
-            useCurrent: false,
-            format:'MM/DD/YYYY HH:mm'
+        $(function () {
+            $('#id-event-date-start').datetimepicker({
+                useCurrent: false,
+                format:'MM/DD/YYYY HH:mm'
+            });
         });
-    });
 
-    {% if form.date_event_start.value %} 
-        $('#id-event-date-start').val("{{ form.date_event_start.value|date:'m/d/Y H:i' }}"); 
-    {% endif %}
+        {% if form.date_event_start.value %} 
+            $('#id-event-date-start').val("{{ form.date_event_start.value|date:'m/d/Y H:i' }}"); 
+        {% endif %}
+
+        function translate() {
+            $.post('/desc_translate', { desc: $('#id-description').html() }, function(data) {
+                $('#id-description').html(data);
+            })
+        }
     </script>
 {% endblock %}
