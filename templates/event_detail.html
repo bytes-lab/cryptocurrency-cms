@@ -178,12 +178,13 @@
     <script type="text/javascript">
     $(function () {
         $('#id-event-date-start').datetimepicker({
-            useCurrent: false
+            useCurrent: false,
+            format:'MM/DD/YYYY HH:mm'
         });
     });
 
     {% if form.date_event_start.value %} 
-        $('#id-event-date-start').val("{{ form.date_event_start.value|date:'m/d/Y H:i A' }}"); 
+        $('#id-event-date-start').val("{{ form.date_event_start.value|date:'m/d/Y H:i' }}"); 
     {% endif %}
     </script>
 {% endblock %}
