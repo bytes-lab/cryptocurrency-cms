@@ -30,8 +30,7 @@ function load_events() {
     $("#data-table-events").bootgrid({
         formatters: {
             "commands": function(column, row) {
-                return "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit c-orange f-500 waves-effect waves-circle\" href=\"/events/" + row.id + "/2\">Zh</a>"
-                + "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit c-purple f-500 waves-effect waves-circle\" href=\"/events/" + row.id + "/1\">En</a>";
+                return "<a type=\"button\" class=\"btn btn-icon command-edit c-purple f-500 waves-effect waves-circle\" href=\"/events/" + row.id + "\">En</a>"+"<a type=\"button\" class=\"btn btn-icon command-edit c-orange f-500 waves-effect waves-circle\" href=\"/events/" + row.id + "/2\">Zh</a>";
             }
         },
         templates: {

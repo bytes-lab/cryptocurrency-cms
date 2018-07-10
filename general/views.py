@@ -99,15 +99,15 @@ def event_detail(request, id):
     return render(request, 'event_detail.html', locals())
 
 @login_required(login_url='/login')
-def friend_event_add(request, fid, lid):
-    event = CoinEvent.objects.get(id=fid)
+def locale_event_add(request, eid, lid):
+    event = CoinEvent.objects.get(id=eid)
 
     if request.method == 'GET':
         t_text = translate(event.title+'\n'+event.description)
         form = EventForm(initial={
             'title': t_text[0],
             'description': t_text[1],
-            'friend': fid,
+            'friend': eid,
             'date_event': event.date_event,
             'locale': int(lid)
         })
