@@ -54,7 +54,7 @@
                             </div>
                             {% if fid %}<p class="help-block">{{ event.description }}</p>{% endif %}
                         </div>
-                        {% if lid == 2 %}
+                        {% if lid %}
                         <div class="col-sm-1">
                             <button class="btn btn-default bgm-cyan m-t-20"><i class="zmdi zmdi-translate"></i></button>
                         </div>
@@ -78,14 +78,14 @@
                     </div>
                     <div class="checkbox m-b-15 col-sm-offset-1">
                         <label>
-                            <input type="checkbox" value="1" {% if form.is_hot.value %} checked="" {% endif %}>
+                            <input type="checkbox" name="is_hot" value="1" {% if form.is_hot.value %} checked="" {% endif %}>
                             <i class="input-helper"></i>
                             Is Hot
                         </label>
                     </div>
                     <div class="checkbox m-b-15 col-sm-offset-1">
                         <label>
-                            <input type="checkbox" value="1" {% if form.can_occur_before.value %} checked="" {% endif %}>
+                            <input type="checkbox" name="can_occur_before" value="1" {% if form.can_occur_before.value %} checked="" {% endif %}>
                             <i class="input-helper"></i>
                             Can Occur before
                         </label>

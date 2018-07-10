@@ -103,12 +103,11 @@ def locale_event_add(request, eid, lid):
     event = CoinEvent.objects.get(id=eid)
 
     if request.method == 'GET':
-        t_text = translate(event.title+'\n'+event.description)
         form = EventForm(initial={
-            'title': t_text[0],
-            'description': t_text[1],
+            'title': translate(event.title)[0],
+            'description': event.description,
             'friend': eid,
-            'date_event': event.date_event,
+            'date_event_start': event.date_event_start,
             'locale': int(lid)
         })
     else:
