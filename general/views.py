@@ -106,9 +106,10 @@ def desc_translate(request):
 @login_required(login_url='/login')
 def locale_event_add(request, eid, lid):
     event = CoinEvent.objects.get(id=eid)
+    levent = event.coineventlocale_set.filter(culture_id=int(lid)).first()
+
     if request.method == 'GET':
         event_ = model_to_dict(event)
-        levent = event.coineventlocale_set.filter(culture_id=int(lid)).first()
         event_['title'] = levent.title
         event_['description'] = levent.description
         event_['status'] = levent.status
@@ -116,13 +117,22 @@ def locale_event_add(request, eid, lid):
         form = EventForm(initial=event_)
     else:
         form = EventForm(request.POST)
-        # if form.is_valid():
-        #     # revent = form.save()
-        #     if not revent.created_date:  # for brand new
-        #         revent.created_date = datetime.datetime.now()
-                # revent.save()
-                # event.save()
-            # return HttpResponseRedirect(reverse('event_detail', kwargs={ 'id': revent.id }))
+        if form.is_valid():
+            event.coins = form.cleaned_data['coins']
+            event.cml_coins = form.cleaned_data['cml_coins']
+            event.proof = form.cleaned_data['proof']
+            event.source = form.cleaned_data['source']
+            event.is_hot = form.cleaned_data['is_hot']
+            event.categories = form.cleaned_data['categories']
+            event.can_occur_before = form.cleaned_data['can_occur_before']
+            event.date_event_start = form.cleaned_data['date_event_start']
+            event.save()
+
+            levent.title = form.cleaned_data['title']
+            levent.description = form.cleaned_data['description']
+            levent.status = form.cleaned_data['status']
+            levent.save()
+            return HttpResponseRedirect(reverse('locale_event_add', kwargs={ 'eid': eid, 'lid': lid }))
 
     locales = Culture.objects.all()
     status = EVENT_STATUS
