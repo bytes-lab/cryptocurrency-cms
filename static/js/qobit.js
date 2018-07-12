@@ -10,8 +10,11 @@ function load_master_coins() {
     $("#data-table-master-coins").bootgrid({
         formatters: {
             "commands": function(column, row) {
-                return "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/attach_coin/" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></a>"+
-                    "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/admin/general/mastercoin/" + row.id + "/change\"><span class=\"zmdi zmdi-assignment\"></span></a>";
+                var edit = "<a type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/attach_coin/" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></a>"+
+                       "<a type=\"button\" target=\"_blank\" class=\"btn btn-icon command-edit waves-effect waves-circle\" href=\"/admin/general/mastercoin/" + row.id + "/change\"><span class=\"zmdi zmdi-assignment\"></span></a>",
+                    locale = "<a type=\"button\" class=\"btn btn-icon command-edit c-purple f-500 waves-effect waves-circle\" href=\"/events/" + row.id + "\">En</a>"+
+                        "<a type=\"button\" class=\"btn btn-icon command-edit c-orange f-500 waves-effect waves-circle\" href=\"/events/" + row.id + "/2\">Zh</a>";
+                return permitted == 'True' ? locale+edit : locale; 
             }
         },
         templates: {

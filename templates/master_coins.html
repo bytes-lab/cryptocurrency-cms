@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load extra_tag %}
 
 {% block extra_css %}
 {% endblock %}
@@ -39,4 +40,8 @@
 {% block extra_js %}
     <script src="{% static 'js/qobit.js' %}"></script>
     <script src="{% static 'js/common.js' %}"></script>
+    <script type="text/javascript">
+        var permitted = '{{ request.user|permitted }}';
+        console.log(permitted);
+    </script>
 {% endblock %}
