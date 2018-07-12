@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load extra_tag %}
 <!DOCTYPE html>
 <!--[if IE 9 ]><html class="ie9"><![endif]-->
     <head>
@@ -64,11 +65,11 @@
                             <a href="profile-about.html"><i class="zmdi zmdi-account"></i> View Profile</a>
                         </li>
  -->                    
-                        <li>
+<!--                         <li>
                             <a href="/change_password/"><i class="zmdi zmdi-account"></i> Change Password</a>
                         </li>
-
-                        {% if request.user %} 
+ -->
+                        {% if request.user|permitted %} 
                         <li>
                             <a href="/admin"><i class="zmdi zmdi-settings"></i> Admin</a>
                         </li>
@@ -84,11 +85,12 @@
                         <a href="/"><i class="zmdi zmdi-home"></i> Dashboard</a>
                     </li>
                     <li><a href="/master_coins"><i class="zmdi zmdi-money"></i> Master Coins</a></li>
+                    {% if request.user|permitted %} 
                     <li><a href="/supported_exchanges"><i class="zmdi zmdi-camera-switch"></i> Exchanges</a></li>
-                    <li><a href="/events"><i class="zmdi zmdi-calendar"></i> Events</a></li>
-                    {% if not request.user %}
-                    <li><a href="/accounts"><i class="zmdi zmdi-receipt"></i> Accounts</a></li>
                     {% endif %}
+                    <li><a href="/events"><i class="zmdi zmdi-calendar"></i> Events</a></li>
+                    <!-- <li><a href="/accounts"><i class="zmdi zmdi-receipt"></i> Accounts</a></li> -->
+                    {% if request.user|permitted %} 
                     <li><a href="/exchanges"><i class="zmdi zmdi-cloud-outline"></i> All Exchanges</a></li>
                     <li class="sub-menu">
                         <a href=""><i class="zmdi zmdi-equalizer"></i> Misc</a>
@@ -97,6 +99,7 @@
                             <!-- <li><a href="/exchanges">All Exchanges</a></li> -->
                         </ul>
                     </li>
+                    {% endif %}
                 </ul>
             </aside>
             
