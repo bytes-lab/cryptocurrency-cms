@@ -116,10 +116,10 @@ def locale_event_add(request, eid, lid):
         form = EventForm(initial=event_)
     else:
         form = EventForm(request.POST)
-        if form.is_valid():
-            revent = form.save()
-            if not revent.created_date:  # for brand new
-                revent.created_date = datetime.datetime.now()
+        # if form.is_valid():
+        #     # revent = form.save()
+        #     if not revent.created_date:  # for brand new
+        #         revent.created_date = datetime.datetime.now()
                 # revent.save()
                 # event.save()
             # return HttpResponseRedirect(reverse('event_detail', kwargs={ 'id': revent.id }))

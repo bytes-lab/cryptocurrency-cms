@@ -56,7 +56,9 @@
                         </div>
                         {% if lid %}
                         <div class="col-sm-1">
-                            <a href="javascript:translate()" class="btn btn-default bgm-cyan m-t-20"><i class="zmdi zmdi-translate"></i></a>
+                            <a href="javascript:translate()" class="btn btn-default bgm-cyan m-t-20">
+                                <i class="zmdi zmdi-translate"></i>
+                            </a>
                         </div>
                         {% endif %}
                     </div>
@@ -151,7 +153,7 @@
                     <input type="hidden" name="friend" value="{% if form.friend.value %}{{ form.friend.value }}{% endif %}">
                     <div class="form-group m-t-25 p-t-10">
                         <div class="col-sm-offset-1 col-sm-6">
-                            <button type="submit" class="btn btn-primary m-r-15">{% if id %}Update Event {% else %} Add Event {% endif %}</button>
+                            <button type="submit" class="btn btn-primary m-r-15">{% if id or eid %}Update Event {% else %} Add Event {% endif %}</button>
                             <a href="/events" class="btn btn-default m-r-15">Cancel</a>
                             {% if not form.status.value or form.status.value == 'draft' %}
                                 <a href="javascript: publish('published');" class="btn btn-primary btm-cyan m-r-15">Publish </a>
@@ -187,10 +189,14 @@
             $('#id-event-date-start').val("{{ form.date_event_start.value|date:'m/d/Y H:i' }}"); 
         {% endif %}
 
+        var translated = false;
         function translate() {
-            $.post('/desc_translate', { desc: $('#id-description').html() }, function(data) {
-                $('#id-description').html(data);
-            })
+            if (!translated) {
+                translated = true;                
+                $.post('/desc_translate', { desc: $('#id-description').html() }, function(data) {
+                    $('#id-description').html(data);
+                })
+            }
         }
 
         function publish(status) {
