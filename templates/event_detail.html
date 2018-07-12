@@ -14,7 +14,7 @@
             </div>
             
             <div class="card-body card-padding">
-                <form class="form-horizontal f-14" method="POST">
+                <form class="form-horizontal f-14" id="id-event-form" method="POST">
                     {{ form.errors }}
                     {% csrf_token %}
                     <div class="form-group">
@@ -103,7 +103,7 @@
                         <label class="col-sm-1 control-label">Status</label>
                         <div class="col-sm-2">
                             <div class="fg-line">
-                                <select class="selectpicker" data-live-search="true" name="status" required="">
+                                <select class="selectpicker" data-live-search="true" id="id-status" name="status" required="">
                                     {% for ii in status %}
                                         {% if form.status.value %}
                                             {% if ii.0 == form.status.value %}
@@ -114,6 +114,7 @@
                                         {% endif %}
                                     {% endfor %}
                                 </select>
+                                <input type="hidden" name="pre-status" id="id-pre-status">
                             </div>
                         </div>
                     </div>
@@ -153,10 +154,10 @@
                             <button type="submit" class="btn btn-primary m-r-15">{% if id %}Update Event {% else %} Add Event {% endif %}</button>
                             <a href="/events" class="btn btn-default m-r-15">Cancel</a>
                             {% if not form.status.value or form.status.value == 'draft' %}
-                                <button type="submit" class="btn btn-primary btm-cyan m-r-15">Publish </button>
+                                <a href="javascript: publish('published');" class="btn btn-primary btm-cyan m-r-15">Publish </a>
                             {% endif %}
                             {% if form.status.value == 'published' %}
-                                <button type="submit" class="btn btn-primary bgm-cyan m-r-15">Unpublish </button>
+                                <a href="javascript: publish('unpublished');" class="btn btn-primary bgm-cyan m-r-15">Unpublish </a>
                             {% endif %}
                         </div>
                     </div>
@@ -190,6 +191,13 @@
             $.post('/desc_translate', { desc: $('#id-description').html() }, function(data) {
                 $('#id-description').html(data);
             })
+        }
+
+        function publish(status) {
+            $('#id-status').attr('name', 'whatever');
+            $('#id-pre-status').attr('name', 'status');
+            $('#id-pre-status').val(status);
+            $('#id-event-form').submit();
         }
     </script>
 {% endblock %}
