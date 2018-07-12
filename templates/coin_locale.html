@@ -2,7 +2,6 @@
 {% load staticfiles %}
 
 {% block extra_css %}
-    <link href="{% static 'vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block page_body %}
@@ -91,8 +90,6 @@
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
-    <script src="{% static 'vendors/input-mask/input-mask.min.js' %}"></script>
     <script src="{% static 'js/qobit.js' %}"></script>
     <script src="{% static 'js/common.js' %}"></script>
     <script type="text/javascript">
