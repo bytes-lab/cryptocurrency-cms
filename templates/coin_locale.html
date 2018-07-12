@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block extra_css %}
+    <link href="{% static 'vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block page_body %}
+<section id="content">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="c-purple f-500 f-20">Coin Locale ( {{ coin.symbol }} )</h2>
+            </div>
+            
+            <div class="card-body card-padding">
+                <form class="form-horizontal f-14" id="id-event-form" method="POST">
+                    {{ form.errors }}
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Name</label>
+                        <div class="col-sm-6">
+                            <div class="fg-line">
+                                <input type="text" class="form-control f-15" required="" name="name" value="{% if form.name.value %} {{ form.name.value }} {% endif %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Description</label>
+                        <div class="col-lg-6 col-sm-8">
+                            <div class="fg-line">
+                                <textarea class="form-control f-15" id="id-description" name="description" rows="5">{% if form.description.value %} {{ form.description.value }} {% endif %}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Short Description</label>
+                        <div class="col-lg-6 col-sm-8">
+                            <div class="fg-line">
+                                <textarea class="form-control f-15" id="id-short-description" name="short_description" rows="5">{% if form.short_description.value %} {{ form.short_description.value }} {% endif %}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Feature</label>
+                        <div class="col-lg-6 col-sm-8">
+                            <div class="fg-line">
+                                <textarea class="form-control f-15" id="id-feature" name="feature" rows="5">{% if form.feature.value %} {{ form.feature.value }} {% endif %}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Technology</label>
+                        <div class="col-lg-6 col-sm-8">
+                            <div class="fg-line">
+                                <textarea class="form-control f-15" id="id-technology" name="technology" rows="5">{% if form.technology.value %} {{ form.technology.value }} {% endif %}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Locale</label>
+                        <div class="col-sm-2">
+                            <div class="fg-line">
+                                <select class="selectpicker" data-live-search="true" name="locale" required="">
+                                    {% for ii in locales %}
+                                        {% if form.culture.value %}
+                                            {% if ii.id == form.culture.value %}
+                                                <option  selected  value="{{ ii.id }}">{{ ii.name }}</option>
+                                            {% endif %}
+                                        {% else %}
+                                            <option value="{{ ii.id }}">{{ ii.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group m-t-25 p-t-10">
+                        <div class="col-sm-offset-1 col-sm-6">
+                            <button type="submit" class="btn btn-primary m-r-15">{% if id or eid %}Update Coin Locale {% else %} Add Coin Locale {% endif %}</button>
+                            <a href="/master_coins" class="btn btn-default m-r-15">Cancel</a>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="{% static 'vendors/input-mask/input-mask.min.js' %}"></script>
+    <script src="{% static 'js/qobit.js' %}"></script>
+    <script src="{% static 'js/common.js' %}"></script>
+    <script type="text/javascript">
+    </script>
+{% endblock %}

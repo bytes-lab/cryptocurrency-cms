@@ -141,6 +141,23 @@ def locale_event_add(request, eid, lid):
     return render(request, 'event_detail.html', locals())
 
 @login_required(login_url='/login')
+def locale_coin(request, cid, lid):
+    coin = MasterCoin.objects.get(id=cid)
+    lcoin = coin.coinlocale_set.filter(culture_id=int(lid)).first()
+
+    if request.method == 'GET':
+        form = CoinLocaleForm(instance=lcoin)
+    else:
+        form = CoinLocaleForm(request.POST)
+        if form.is_valid():
+            lcoin.title = form.cleaned_data['title']
+            lcoin.save()
+            return HttpResponseRedirect(reverse('locale_coin', kwargs={ 'cid': cid, 'lid': lid }))
+
+    locales = Culture.objects.all()
+    return render(request, 'coin_locale.html', locals())
+
+@login_required(login_url='/login')
 def exchange_support(request, id):
     exchange = Exchange.objects.get(id=id)
     exchange.supported = True
