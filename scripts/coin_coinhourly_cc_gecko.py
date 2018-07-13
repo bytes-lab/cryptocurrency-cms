@@ -14,6 +14,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qobit_cms.settings")
 django.setup()
 
 from general.models import *
+from general import html2text
 import pdb
 
 def get_csv(str1, list2):
@@ -39,7 +40,7 @@ def clean_text(text):
 
 def main():
     current_time = datetime.datetime.now()
-    for coin in MasterCoin.objects.all():
+    for coin in MasterCoin.objects.filter(id__gt=0).order_by('id'):
         hour_info = {}
         locale_info = {}
 
@@ -71,14 +72,15 @@ def main():
             }
 
             locale_info = {
-                'description': info.get('Description'),
-                'feature': info.get('Features'),
-                'technology': info.get('Technology')
+                'description': html2text.html2text(info.get('Description')) if info.get('Description') else None,
+                'feature': html2text.html2text(info.get('Features')) if info.get('Features') else None,
+                'technology': html2text.html2text(info.get('Technology')) if info.get('Technology') else None,
             }
 
         if coin.coingecko:
             cg_coin = CoingeckoCoin.objects.get(id=coin.coingecko)
             url_ = 'https://api.coingecko.com/api/v3/coins/{}'.format(cg_coin.uid)
+            print (url_, '$$$$$$$$$$$$$$$$$$')
             info = requests.get(url_).json()
 
             coin.coingecko_category = get_csv('', info.get('categories'))
@@ -150,16 +152,19 @@ def main():
                 if cl:
                     if not cl.edited:
                         updated = False
-                        if not cl.description and locale_info.get('description'):
+                        # if not cl.description and locale_info.get('description'):
+                        if locale_info.get('description'):
                             cl.description = locale_info['description']
                             updated = True
-                        if not cl.feature and locale_info.get('feature'):
+                        # if not cl.feature and locale_info.get('feature'):
+                        if locale_info.get('feature'):
                             cl.feature = locale_info['feature']
                             updated = True
-                        if not cl.technology and locale_info.get('technology'):
+                        # if not cl.technology and locale_info.get('technology'):
+                        if locale_info.get('technology'):
                             cl.technology = locale_info['technology']
                             updated = True
-                            
+
                         if updated:
                             cl.save()
                 else:
