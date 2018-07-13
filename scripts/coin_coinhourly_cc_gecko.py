@@ -70,6 +70,7 @@ def main():
             }
 
             locale_info = {
+                'description': info.get('Description'),
                 'feature': info.get('Features'),
                 'technology': info.get('Technology')
             }

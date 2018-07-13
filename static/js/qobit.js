@@ -29,11 +29,22 @@ function load_master_coins() {
     });
 }
 
+function getCls_ (status) {
+    if (status == 'draft') {
+        return 'c-purple';
+    } else if (status == 'published') {
+        return 'bgm-lightgreen c-white';
+    } else {
+        return 'bgm-gray c-white';
+    }
+}
+
 function load_events() {
     $("#data-table-events").bootgrid({
         formatters: {
             "commands": function(column, row) {
-                return "<a type=\"button\" class=\"btn btn-icon command-edit c-purple f-500 waves-effect waves-circle\" href=\"/events/" + row.id + "\">En</a>"+"<a type=\"button\" class=\"btn btn-icon command-edit c-orange f-500 waves-effect waves-circle\" href=\"/events/" + row.id + "/2\">Zh</a>";
+                return "<a type=\"button\" class=\"btn btn-icon command-edit "+getCls_(row.status_en)+" f-500 waves-effect waves-circle\" href=\"/events/" + row.id + "\">En</a>"+
+                       "<a type=\"button\" class=\"btn btn-icon command-edit "+getCls_(row.status_zh)+" f-500 waves-effect waves-circle\" href=\"/events/" + row.id + "/2\">Zh</a>";
             }
         },
         templates: {
