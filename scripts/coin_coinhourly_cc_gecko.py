@@ -142,20 +142,26 @@ def main():
             print (hour_info)
             hour_info['coin_id'] = coin.id
             hour_info['date_of_entry'] = current_time
-            CoinHourlyInfo.objects.create(**hour_info)
+            # CoinHourlyInfo.objects.create(**hour_info)
 
         if locale_info:
             for culture in Culture.objects.all():
                 cl = coin.coinlocale_set.filter(culture=culture).first()
                 if cl:
                     if not cl.edited:
-                        if not cl.description:
+                        updated = False
+                        if not cl.description and locale_info.get('description'):
                             cl.description = locale_info['description']
-                        if not cl.feature:
+                            updated = True
+                        if not cl.feature and locale_info.get('feature'):
                             cl.feature = locale_info['feature']
-                        if not cl.technology:
+                            updated = True
+                        if not cl.technology and locale_info.get('technology'):
                             cl.technology = locale_info['technology']
-                        cl.save()
+                            updated = True
+                            
+                        if updated:
+                            cl.save()
                 else:
                     CoinLocale.objects.update_or_create(coin=coin, culture=culture, defaults=locale_info)        
 
