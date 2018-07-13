@@ -40,7 +40,7 @@ def clean_text(text):
 
 def main():
     current_time = datetime.datetime.now()
-    for coin in MasterCoin.objects.filter(id__gt=0).order_by('id'):
+    for coin in MasterCoin.objects.filter(id__gt=1035).order_by('id'):
         hour_info = {}
         cl = CoinLocale.objects.filter(coin=coin, culture_id=1).first()
 
@@ -52,35 +52,39 @@ def main():
         if coin.cryptocompare:
             cc_coin = CryptocompareCoin.objects.get(id=coin.cryptocompare)
             url_ = 'https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id={}'.format(cc_coin.uid)
-            info = requests.get(url_).json()['Data']['General']
 
-            coin.launch_date = datetime.datetime.strptime(info['StartDate'], '%d/%m/%Y') if info.get('StartDate') and info.get('StartDate') != '01/01/0001' else None
-            coin.algorithm = info.get('Algorithm')
-            coin.proof_type = info.get('ProofType')
-            coin.links_website = get_csv(coin.links_website, [info.get('WebsiteUrl')])
-            coin.social_twitter_identifier = get_csv(coin.social_twitter_identifier, [info.get('Twitter')])
+            try:
+                info = requests.get(url_).json()['Data']['General']
 
-            total_supply = info.get('TotalCoinSupply') or None
-            # error handling
-            if total_supply and total_supply.count('.') > 1:
-                total_supply = total_supply.replace('.', '')
-                
-            hour_info = {
-                'total_supply': total_supply,
-                'net_hashes_per_second': info.get('NetHashesPerSecond') or None,
-                'block_number': info.get('BlockNumber') or None,
-                'block_reward_reduction': info.get('BlockRewardReduction') or None,
-                'difficulty_adjustment': info.get('DifficultyAdjustment') or None,
-                'block_time': info.get('BlockTime') or None,
-                'block_reward': info.get('BlockReward') or None
-            }
+                coin.launch_date = datetime.datetime.strptime(info['StartDate'], '%d/%m/%Y') if info.get('StartDate') and info.get('StartDate') != '01/01/0001' else None
+                coin.algorithm = info.get('Algorithm')
+                coin.proof_type = info.get('ProofType')
+                coin.links_website = get_csv(coin.links_website, [info.get('WebsiteUrl')])
+                coin.social_twitter_identifier = get_csv(coin.social_twitter_identifier, [info.get('Twitter')])
 
-            locale_info = {
-                'name': locale_info['name'],
-                'description': html2text.html2text(info.get('Description')) if info.get('Description') else None,
-                'feature': html2text.html2text(info.get('Features')) if info.get('Features') else None,
-                'technology': html2text.html2text(info.get('Technology')) if info.get('Technology') else None,
-            }
+                total_supply = info.get('TotalCoinSupply') or None
+                # error handling
+                if total_supply and total_supply.count('.') > 1:
+                    total_supply = total_supply.replace('.', '')
+                    
+                hour_info = {
+                    'total_supply': total_supply,
+                    'net_hashes_per_second': info.get('NetHashesPerSecond') or None,
+                    'block_number': info.get('BlockNumber') or None,
+                    'block_reward_reduction': info.get('BlockRewardReduction') or None,
+                    'difficulty_adjustment': info.get('DifficultyAdjustment') or None,
+                    'block_time': info.get('BlockTime') or None,
+                    'block_reward': info.get('BlockReward') or None
+                }
+
+                locale_info = {
+                    'name': locale_info['name'],
+                    'description': html2text.html2text(info.get('Description')) if info.get('Description') else None,
+                    'feature': html2text.html2text(info.get('Features')) if info.get('Features') else None,
+                    'technology': html2text.html2text(info.get('Technology')) if info.get('Technology') else None,
+                }
+            except Exception as e:
+                pass
 
         if coin.coingecko:
             cg_coin = CoingeckoCoin.objects.get(id=coin.coingecko)

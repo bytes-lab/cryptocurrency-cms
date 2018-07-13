@@ -132,7 +132,6 @@
         function translate(id) {
             txt = $('#'+id).html() || $('#'+id).val();
             if (txt && !translated[id]) {
-                console.log(txt);
                 translated[id] = true;
                 $.post('/desc_translate', { desc: txt }, function(data) {
                     $('#'+id).val(data);
