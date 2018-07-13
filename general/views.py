@@ -146,7 +146,7 @@ def locale_coin(request, cid, lid):
     lcoin = coin.coinlocale_set.filter(culture_id=int(lid)).first()
 
     if request.method == 'GET':
-        form = CoinLocaleForm(instance=lcoin)
+        form = CoinLocaleForm(instance=lcoin, initial={ 'culture': int(lid) })
     else:
         form = CoinLocaleForm(request.POST)
         if form.is_valid():

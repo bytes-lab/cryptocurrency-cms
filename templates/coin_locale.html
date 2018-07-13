@@ -20,9 +20,16 @@
                         <label class="col-sm-1 control-label">Name</label>
                         <div class="col-sm-6">
                             <div class="fg-line">
-                                <input type="text" class="form-control f-15" required="" name="name" value="{% if form.name.value %} {{ form.name.value }} {% endif %}">
+                                <input type="text" class="form-control f-15" id="id-name" required="" name="name" value="{% if form.name.value %} {{ form.name.value }} {% endif %}">
                             </div>
                         </div>
+                        {% if lid == '2' %}
+                        <div class="col-sm-1">
+                            <a href="javascript:translate('id-name')" class="btn btn-default bgm-cyan btn-sm">
+                                <i class="zmdi zmdi-translate"></i>
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1 control-label">Description</label>
@@ -31,6 +38,13 @@
                                 <textarea class="form-control f-15" id="id-description" name="description" rows="5">{% if form.description.value %} {{ form.description.value }} {% endif %}</textarea>
                             </div>
                         </div>
+                        {% if lid == '2' %}
+                        <div class="col-sm-1">
+                            <a href="javascript:translate('id-description')" class="btn btn-default bgm-cyan m-t-20 btn-sm">
+                                <i class="zmdi zmdi-translate"></i>
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1 control-label">Short Description</label>
@@ -39,6 +53,13 @@
                                 <textarea class="form-control f-15" id="id-short-description" name="short_description" rows="5">{% if form.short_description.value %} {{ form.short_description.value }} {% endif %}</textarea>
                             </div>
                         </div>
+                        {% if lid == '2' %}
+                        <div class="col-sm-1">
+                            <a href="javascript:translate('id-short-description')" class="btn btn-default bgm-cyan m-t-20 btn-sm">
+                                <i class="zmdi zmdi-translate"></i>
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1 control-label">Feature</label>
@@ -47,6 +68,13 @@
                                 <textarea class="form-control f-15" id="id-feature" name="feature" rows="5">{% if form.feature.value %} {{ form.feature.value }} {% endif %}</textarea>
                             </div>
                         </div>
+                        {% if lid == '2' %}
+                        <div class="col-sm-1">
+                            <a href="javascript:translate('id-feature')" class="btn btn-default bgm-cyan m-t-20 btn-sm">
+                                <i class="zmdi zmdi-translate"></i>
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1 control-label">Technology</label>
@@ -55,6 +83,13 @@
                                 <textarea class="form-control f-15" id="id-technology" name="technology" rows="5">{% if form.technology.value %} {{ form.technology.value }} {% endif %}</textarea>
                             </div>
                         </div>
+                        {% if lid == '2' %}
+                        <div class="col-sm-1">
+                            <a href="javascript:translate('id-technology')" class="btn btn-default bgm-cyan m-t-20 btn-sm">
+                                <i class="zmdi zmdi-translate"></i>
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1 control-label">Locale</label>
@@ -93,5 +128,15 @@
     <script src="{% static 'js/qobit.js' %}"></script>
     <script src="{% static 'js/common.js' %}"></script>
     <script type="text/javascript">
+        var translated = {};
+        function translate(id) {
+            txt = $('#'+id).html() || $('#'+id).val();
+            if (txt && !translated[id]) {
+                translated[id] = true;
+                $.post('/desc_translate', { desc: txt }, function(data) {
+                    $('#'+id).val(data);
+                })
+            }
+        }        
     </script>
 {% endblock %}

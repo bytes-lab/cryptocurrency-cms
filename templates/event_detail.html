@@ -192,7 +192,7 @@
         var translated = false;
         function translate() {
             if (!translated) {
-                translated = true;                
+                translated = true;
                 $.post('/desc_translate', { desc: $('#id-description').html() }, function(data) {
                     $('#id-description').html(data);
                 })
