@@ -56,6 +56,7 @@ def main():
             coin.social_twitter_identifier = get_csv(coin.social_twitter_identifier, [info.get('Twitter')])
 
             total_supply = info.get('TotalCoinSupply') or None
+            # error handling
             if total_supply and total_supply.count('.') > 1:
                 total_supply = total_supply.replace('.', '')
                 
@@ -119,6 +120,8 @@ def main():
             hour_info['alexa_rank'] = info.get('public_interest_stats')['alexa_rank']
             hour_info['bing_matches'] = info.get('public_interest_stats')['bing_matches']
 
+            if not locale_info.get('description'):
+                locale_info['description'] = info.get('description', {}).get('en')
         coin.save()
 
         if coin.coinmarketcap:
@@ -142,8 +145,19 @@ def main():
             CoinHourlyInfo.objects.create(**hour_info)
 
         if locale_info:
-            culture = Culture.objects.filter(name='en_US').first()
-            CoinLocale.objects.update_or_create(coin=coin, culture=culture, defaults=locale_info)
+            for culture in Culture.objects.all():
+                cl = coin.coinlocale_set.filter(culture=culture).first()
+                if cl:
+                    if not cl.edited:
+                        if not cl.description:
+                            cl.description = locale_info['description']
+                        if not cl.feature:
+                            cl.feature = locale_info['feature']
+                        if not cl.technology:
+                            cl.technology = locale_info['technology']
+                        cl.save()
+                else:
+                    CoinLocale.objects.update_or_create(coin=coin, culture=culture, defaults=locale_info)        
 
 
 if __name__ == "__main__":

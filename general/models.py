@@ -437,7 +437,8 @@ class CoinLocale(models.Model):
     short_description = models.TextField(null=True, blank=True)
     feature = models.TextField(null=True, blank=True)
     technology = models.TextField(null=True, blank=True)
-
+    edited = models.BooleanField(default=False)
+    
     class Meta:
         db_table = 'coin_locale'
         unique_together = ('coin', 'culture',)
