@@ -17,7 +17,6 @@ def translate(q, fromLang='EN', toLang='zh-CHS'):
      
     try:
         info = requests.get(url).json()
-        return info['translation'][0].encode('utf-8').split('\n')
+        return info['translation'][0].encode('utf-8')
     except:
-        pass
-    return ['', '']
+        return ''

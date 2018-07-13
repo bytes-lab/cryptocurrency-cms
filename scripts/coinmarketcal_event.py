@@ -89,7 +89,7 @@ def main():
                     ce.status = 'draft'
                     ce.save()
 
-                CoinEventLocale.objects.create(event=ce, culture_id=2, title=translate(ii['title'])[0], description=ii['description'])
+                CoinEventLocale.objects.create(event=ce, culture_id=2, title=translate(ii['title']), description=ii['description'])
             else:
                 return
 

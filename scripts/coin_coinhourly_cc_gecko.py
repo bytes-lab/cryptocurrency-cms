@@ -88,47 +88,48 @@ def main():
             print (url_, '$$$$$$$$$$$$$$$$$$')
             info = requests.get(url_).json()
 
-            coin.coingecko_category = get_csv('', info.get('categories'))
-            coin.ico_data = json.dumps(info.get('ico_data', {}))
-            
-            coin.chat_telegram_identifier = get_csv(coin.chat_telegram_identifier, [info.get('links')['telegram_channel_identifier']])
-            coin.chat_discord_identifier = get_csv(coin.chat_discord_identifier, get_identifier(info.get('links').get('chat_url', []), ['discord.gg', 'discordapp.com/invite']))
-            coin.chat_slack_identifier = get_csv(coin.chat_slack_identifier, [info.get('ico_data', {}).get('links', {}).get('slack')])
+            if not 'error' in info:
+                coin.coingecko_category = get_csv('', info.get('categories'))
+                coin.ico_data = json.dumps(info.get('ico_data', {}))
+                
+                coin.chat_telegram_identifier = get_csv(coin.chat_telegram_identifier, [info.get('links')['telegram_channel_identifier']])
+                coin.chat_discord_identifier = get_csv(coin.chat_discord_identifier, get_identifier(info.get('links').get('chat_url', []), ['discord.gg', 'discordapp.com/invite']))
+                coin.chat_slack_identifier = get_csv(coin.chat_slack_identifier, [info.get('ico_data', {}).get('links', {}).get('slack')])
 
-            # coin.social_reddit_identifier = get_csv(coin.social_reddit_identifier, info.get('WebsiteUrl'))
-            coin.social_twitter_identifier = get_csv(coin.social_twitter_identifier, [info.get('links')['twitter_screen_name']])
-            coin.social_facebook_identifier = info.get('links')['facebook_username']
-            coin.social_btt_identifier = info.get('links')['bitcointalk_thread_identifier']
-            
-            coin.links_website = get_csv(coin.links_website, info.get('links')['homepage'])
-            coin.links_whitepaper = get_csv(coin.links_whitepaper, [info.get('ico_data', {}).get('links', {}).get('whitepaper')])
-            coin.links_ann = get_csv(coin.links_ann, info.get('links')['announcement_url'])
-            coin.links_explorer = get_csv(coin.links_explorer, info.get('links')['blockchain_site'])
-            coin.links_source_code = get_csv(coin.links_source_code, [info.get('ico_data', {}).get('links', {}).get('github')])
-            coin.links_forum = get_csv(coin.links_forum, info.get('links')['official_forum_url'])
-            coin.links_blog = get_csv(coin.links_blog, [info.get('ico_data', {}).get('links', {}).get('blog')])
+                # coin.social_reddit_identifier = get_csv(coin.social_reddit_identifier, info.get('WebsiteUrl'))
+                coin.social_twitter_identifier = get_csv(coin.social_twitter_identifier, [info.get('links')['twitter_screen_name']])
+                coin.social_facebook_identifier = info.get('links')['facebook_username']
+                coin.social_btt_identifier = info.get('links')['bitcointalk_thread_identifier']
+                
+                coin.links_website = get_csv(coin.links_website, info.get('links')['homepage'])
+                coin.links_whitepaper = get_csv(coin.links_whitepaper, [info.get('ico_data', {}).get('links', {}).get('whitepaper')])
+                coin.links_ann = get_csv(coin.links_ann, info.get('links')['announcement_url'])
+                coin.links_explorer = get_csv(coin.links_explorer, info.get('links')['blockchain_site'])
+                coin.links_source_code = get_csv(coin.links_source_code, [info.get('ico_data', {}).get('links', {}).get('github')])
+                coin.links_forum = get_csv(coin.links_forum, info.get('links')['official_forum_url'])
+                coin.links_blog = get_csv(coin.links_blog, [info.get('ico_data', {}).get('links', {}).get('blog')])
 
-            hour_info['circulating_supply'] = info.get('market_data').get('circulating_supply')
-            hour_info['facebook_likes'] = info.get('community_data')['facebook_likes']
-            hour_info['twitter_followers'] = info.get('community_data')['twitter_followers']
-            hour_info['reddit_subscribers'] = info.get('community_data')['reddit_subscribers']
-            hour_info['reddit_average_posts_48h'] = info.get('community_data')['reddit_average_posts_48h']
-            hour_info['reddit_average_comments_48h'] = info.get('community_data')['reddit_average_comments_48h']
-            hour_info['reddit_accounts_active_48h'] = info.get('community_data')['reddit_accounts_active_48h']
+                hour_info['circulating_supply'] = info.get('market_data').get('circulating_supply')
+                hour_info['facebook_likes'] = info.get('community_data')['facebook_likes']
+                hour_info['twitter_followers'] = info.get('community_data')['twitter_followers']
+                hour_info['reddit_subscribers'] = info.get('community_data')['reddit_subscribers']
+                hour_info['reddit_average_posts_48h'] = info.get('community_data')['reddit_average_posts_48h']
+                hour_info['reddit_average_comments_48h'] = info.get('community_data')['reddit_average_comments_48h']
+                hour_info['reddit_accounts_active_48h'] = info.get('community_data')['reddit_accounts_active_48h']
 
-            hour_info['repo_forks'] = info.get('developer_data')['forks']
-            hour_info['repo_stars'] = info.get('developer_data')['stars']
-            hour_info['repo_subscribers'] = info.get('developer_data')['subscribers']
-            hour_info['repo_total_issues'] = info.get('developer_data')['total_issues']
-            hour_info['repo_closed_issues'] = info.get('developer_data')['closed_issues']
-            hour_info['repo_pull_requests_merged'] = info.get('developer_data')['pull_requests_merged']
-            hour_info['repo_pull_request_contributors'] = info.get('developer_data')['pull_request_contributors']
-            hour_info['repo_commit_count_4_weeks'] = info.get('developer_data')['commit_count_4_weeks']
-            hour_info['alexa_rank'] = info.get('public_interest_stats')['alexa_rank']
-            hour_info['bing_matches'] = info.get('public_interest_stats')['bing_matches']
+                hour_info['repo_forks'] = info.get('developer_data')['forks']
+                hour_info['repo_stars'] = info.get('developer_data')['stars']
+                hour_info['repo_subscribers'] = info.get('developer_data')['subscribers']
+                hour_info['repo_total_issues'] = info.get('developer_data')['total_issues']
+                hour_info['repo_closed_issues'] = info.get('developer_data')['closed_issues']
+                hour_info['repo_pull_requests_merged'] = info.get('developer_data')['pull_requests_merged']
+                hour_info['repo_pull_request_contributors'] = info.get('developer_data')['pull_request_contributors']
+                hour_info['repo_commit_count_4_weeks'] = info.get('developer_data')['commit_count_4_weeks']
+                hour_info['alexa_rank'] = info.get('public_interest_stats')['alexa_rank']
+                hour_info['bing_matches'] = info.get('public_interest_stats')['bing_matches']
 
-            if not locale_info.get('description'):
-                locale_info['description'] = info.get('description', {}).get('en')
+                if not locale_info.get('description'):
+                    locale_info['description'] = info.get('description', {}).get('en')
         coin.save()
 
         if coin.coinmarketcap:

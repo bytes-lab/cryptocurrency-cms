@@ -35,7 +35,7 @@
                         <label class="col-sm-1 control-label">Description</label>
                         <div class="col-lg-6 col-sm-8">
                             <div class="fg-line">
-                                <textarea class="form-control f-15" id="id-description" name="description" rows="5">{% if form.description.value %} {{ form.description.value }} {% endif %}</textarea>
+                                <textarea class="form-control f-15" id="id-description" name="description" rows="10">{% if form.description.value %} {{ form.description.value }} {% endif %}</textarea>
                             </div>
                         </div>
                         {% if lid == '2' %}
@@ -50,12 +50,12 @@
                         <label class="col-sm-1 control-label">Short Description</label>
                         <div class="col-lg-6 col-sm-8">
                             <div class="fg-line">
-                                <textarea class="form-control f-15" id="id-short-description" name="short_description" rows="5">{% if form.short_description.value %} {{ form.short_description.value }} {% endif %}</textarea>
+                                <textarea class="form-control f-15" id="id-short-description" name="short_description" rows="3">{% if form.short_description.value %} {{ form.short_description.value }} {% endif %}</textarea>
                             </div>
                         </div>
                         {% if lid == '2' %}
                         <div class="col-sm-1">
-                            <a href="javascript:translate('id-short-description')" class="btn btn-default bgm-cyan m-t-20 btn-sm">
+                            <a href="javascript:translate('id-short-description')" class="btn btn-default bgm-cyan btn-sm">
                                 <i class="zmdi zmdi-translate"></i>
                             </a>
                         </div>
@@ -65,7 +65,7 @@
                         <label class="col-sm-1 control-label">Feature</label>
                         <div class="col-lg-6 col-sm-8">
                             <div class="fg-line">
-                                <textarea class="form-control f-15" id="id-feature" name="feature" rows="5">{% if form.feature.value %} {{ form.feature.value }} {% endif %}</textarea>
+                                <textarea class="form-control f-15" id="id-feature" name="feature" rows="7">{% if form.feature.value %} {{ form.feature.value }} {% endif %}</textarea>
                             </div>
                         </div>
                         {% if lid == '2' %}
@@ -80,7 +80,7 @@
                         <label class="col-sm-1 control-label">Technology</label>
                         <div class="col-lg-6 col-sm-8">
                             <div class="fg-line">
-                                <textarea class="form-control f-15" id="id-technology" name="technology" rows="5">{% if form.technology.value %} {{ form.technology.value }} {% endif %}</textarea>
+                                <textarea class="form-control f-15" id="id-technology" name="technology" rows="7">{% if form.technology.value %} {{ form.technology.value }} {% endif %}</textarea>
                             </div>
                         </div>
                         {% if lid == '2' %}
@@ -132,6 +132,7 @@
         function translate(id) {
             txt = $('#'+id).html() || $('#'+id).val();
             if (txt && !translated[id]) {
+                console.log(txt);
                 translated[id] = true;
                 $.post('/desc_translate', { desc: txt }, function(data) {
                     $('#'+id).val(data);

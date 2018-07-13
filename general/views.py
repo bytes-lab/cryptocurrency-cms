@@ -100,8 +100,8 @@ def event_detail(request, id):
 
 @csrf_exempt
 def desc_translate(request):
-    desc = request.POST.get('desc')
-    return HttpResponse(translate(desc)[0])
+    desc = request.POST.get('desc').encode('ascii', 'ignore')
+    return HttpResponse(translate(desc))
 
 @login_required(login_url='/login')
 def locale_event_add(request, eid, lid):
