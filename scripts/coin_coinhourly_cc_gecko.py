@@ -42,7 +42,11 @@ def main():
     current_time = datetime.datetime.now()
     for coin in MasterCoin.objects.filter(id__gt=0).order_by('id'):
         hour_info = {}
-        locale_info = {}
+        cl = CoinLocale.objects.filter(coin=coin, culture_id=1).first()
+
+        locale_info = {
+            'name': cl.name if cl else ''
+        }
 
         print (coin.id, coin.symbol, '----------------')
         if coin.cryptocompare:
@@ -72,6 +76,7 @@ def main():
             }
 
             locale_info = {
+                'name': locale_info['name'],
                 'description': html2text.html2text(info.get('Description')) if info.get('Description') else None,
                 'feature': html2text.html2text(info.get('Features')) if info.get('Features') else None,
                 'technology': html2text.html2text(info.get('Technology')) if info.get('Technology') else None,
