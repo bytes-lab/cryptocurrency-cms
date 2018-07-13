@@ -40,7 +40,7 @@ def clean_text(text):
 
 def main():
     current_time = datetime.datetime.now()
-    for coin in MasterCoin.objects.filter(id__gt=1035).order_by('id'):
+    for coin in MasterCoin.objects.filter(id__gt=0).order_by('id'):
         hour_info = {}
         cl = CoinLocale.objects.filter(coin=coin, culture_id=1).first()
 
@@ -52,7 +52,7 @@ def main():
         if coin.cryptocompare:
             cc_coin = CryptocompareCoin.objects.get(id=coin.cryptocompare)
             url_ = 'https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id={}'.format(cc_coin.uid)
-
+            
             try:
                 info = requests.get(url_).json()['Data']['General']
 
@@ -154,7 +154,7 @@ def main():
             print (hour_info)
             hour_info['coin_id'] = coin.id
             hour_info['date_of_entry'] = current_time
-            # CoinHourlyInfo.objects.create(**hour_info)
+            CoinHourlyInfo.objects.create(**hour_info)
 
         if locale_info:
             for culture in Culture.objects.all():
@@ -162,16 +162,16 @@ def main():
                 if cl:
                     if not cl.edited:
                         updated = False
-                        # if not cl.description and locale_info.get('description'):
-                        if locale_info.get('description'):
+                        if not cl.description and locale_info.get('description'):
+                        # if locale_info.get('description'):
                             cl.description = locale_info['description']
                             updated = True
-                        # if not cl.feature and locale_info.get('feature'):
-                        if locale_info.get('feature'):
+                        if not cl.feature and locale_info.get('feature'):
+                        # if locale_info.get('feature'):
                             cl.feature = locale_info['feature']
                             updated = True
-                        # if not cl.technology and locale_info.get('technology'):
-                        if locale_info.get('technology'):
+                        if not cl.technology and locale_info.get('technology'):
+                        # if locale_info.get('technology'):
                             cl.technology = locale_info['technology']
                             updated = True
 
