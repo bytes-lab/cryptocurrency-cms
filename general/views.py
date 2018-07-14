@@ -148,10 +148,9 @@ def locale_coin(request, cid, lid):
     if request.method == 'GET':
         form = CoinLocaleForm(instance=lcoin, initial={ 'culture': int(lid), 'edited': True })
     else:
-        form = CoinLocaleForm(request.POST)
+        form = CoinLocaleForm(request.POST, instance=lcoin)
         if form.is_valid():
-            lcoin.title = form.cleaned_data['title']
-            lcoin.save()
+            form.save()
             return HttpResponseRedirect(reverse('locale_coin', kwargs={ 'cid': cid, 'lid': lid }))
 
     locales = Culture.objects.all()

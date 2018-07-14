@@ -95,7 +95,7 @@
                         <label class="col-sm-1 control-label">Locale</label>
                         <div class="col-sm-2">
                             <div class="fg-line">
-                                <select class="selectpicker" data-live-search="true" name="locale" required="">
+                                <select class="selectpicker" data-live-search="true" name="culture" required="">
                                     {% for ii in locales %}
                                         {% if form.culture.value %}
                                             {% if ii.id == form.culture.value %}
@@ -109,6 +109,8 @@
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" name="coin" value="{{ form.coin.value }}">
+                    <input type="hidden" name="edited" value="1">
                     <div class="form-group m-t-25 p-t-10">
                         <div class="col-sm-offset-1 col-sm-6">
                             <button type="submit" class="btn btn-primary m-r-15">{% if id or eid %}Update Coin Locale {% else %} Add Coin Locale {% endif %}</button>
