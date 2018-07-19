@@ -401,11 +401,11 @@ QBTAGG_SOURCE = (
 class QBTAGGXref(models.Model):
     base_coin = models.ForeignKey(MasterCoin, related_name="qbtagg_with_base")
     quote_coin = models.ForeignKey(MasterCoin, related_name="qbtagg_with_quote")
-    source = models.CharField(max_length=50, choices=QBTAGG_SOURCE, default='cryptocompare')
+    source = models.CharField(max_length=50, choices=QBTAGG_SOURCE, blank=True, null=True)
 
     class Meta:
         db_table = 'qbtagg_xref'
-        unique_together = (("base_coin", "quote_coin", "source"),)
+        unique_together = (("base_coin", "quote_coin"),)
 
     def __str__(self):
         return '{} - {} - {}'.format(self.base_coin.symbol, self.quote_coin.symbol, self.source)
