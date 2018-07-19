@@ -8,6 +8,7 @@ from lxml import etree
 import os
 from os import sys, path
 import django
+import pdb
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qobit_cms.settings")
@@ -68,7 +69,7 @@ def main():
                     response = urllib2.urlopen(ii['source'])
                     htmlparser = etree.HTMLParser()
                     tree = etree.parse(response, htmlparser)
-                    xpath = "/html/body/main/div[@class='main showcase-page']/section[@id='event-detail']/div[@class='container'][4]/div[@class='row'][1]/div[@class='col-xs-12 col-sm-6 col-md-8 col-lg-9']/div[@class='mt-10']/a[@class='btn btn-border-b btn-circle btn-sm padding-h-30 source']/@href"
+                    xpath = '//*[@id="event-detail"]/div[4]/div[1]/div[1]/div[3]/a[2]/@href'
                     ii['source'] = tree.xpath(xpath)[0]
                 ce = CoinEvent.objects.create(**ii)
                 # add categories

@@ -392,6 +392,25 @@ class TempPair(models.Model):
         return '{} - {}'.format(self.exchange, self.pair)
 
 
+QBTAGG_SOURCE = (
+    ('cryptocompare', 'Cryptocompare'),
+    ('gecko', 'Coingecko'),
+    ('in-house', 'In House')
+)
+
+class QBTAGGXref(models.Model):
+    base_coin = models.ForeignKey(MasterCoin, related_name="qbtagg_with_base")
+    quote_coin = models.ForeignKey(MasterCoin, related_name="qbtagg_with_quote")
+    source = models.CharField(max_length=50, choices=QBTAGG_SOURCE, default='cryptocompare')
+
+    class Meta:
+        db_table = 'qbtagg_xref'
+        unique_together = (("base_coin", "quote_coin", "source"),)
+
+    def __str__(self):
+        return '{} - {} - {}'.format(self.base_coin.symbol, self.quote_coin.symbol, self.source)
+
+
 class CoinHourlyInfo(models.Model):
     coin = models.ForeignKey(MasterCoin)
     date_of_entry = models.DateTimeField()
