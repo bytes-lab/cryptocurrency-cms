@@ -68,6 +68,11 @@ def exchanges(request):
 
 
 @login_required(login_url='/login')
+def qbtagg_quotes(request):
+    return render(request, 'qbtagg_quotes.html')
+
+
+@login_required(login_url='/login')
 def supported_exchanges(request):
     return render(request, 'supported_exchanges.html', {})
 
@@ -98,10 +103,12 @@ def event_detail(request, id):
     categories = CoinEventCategory.objects.all()
     return render(request, 'event_detail.html', locals())
 
+
 @csrf_exempt
 def desc_translate(request):
     desc = request.POST.get('desc').encode('ascii', 'ignore')
     return HttpResponse(translate(desc))
+
 
 @login_required(login_url='/login')
 def locale_event_add(request, eid, lid):
@@ -140,6 +147,7 @@ def locale_event_add(request, eid, lid):
     categories = CoinEventCategory.objects.all()    
     return render(request, 'event_detail.html', locals())
 
+
 @login_required(login_url='/login')
 def locale_coin(request, cid, lid):
     coin = MasterCoin.objects.get(id=cid)
@@ -156,6 +164,7 @@ def locale_coin(request, cid, lid):
     locales = Culture.objects.all()
     return render(request, 'coin_locale.html', locals())
 
+
 @login_required(login_url='/login')
 def exchange_support(request, id):
     exchange = Exchange.objects.get(id=id)
@@ -163,6 +172,7 @@ def exchange_support(request, id):
     exchange.supported_at = datetime.datetime.now()
     exchange.save()
     return HttpResponseRedirect(reverse('exchange_detail', kwargs={ 'id': id }))
+
 
 @login_required(login_url='/login')
 def add_pair(request, exchange, pair):
@@ -312,6 +322,7 @@ def add_coin(request, coin, exchange):
 
     return render(request, 'add_coin.html', locals())
 
+
 @login_required(login_url='/login')
 def attach_coin(request, coin):
     coin = MasterCoin.objects.get(id=coin)
@@ -364,6 +375,7 @@ def attach_coin(request, coin):
 
     return render(request, 'add_coin.html', locals())
 
+
 @login_required(login_url='/login')
 def bulk_pair_coin(request):
     page = int(request.GET.get('page', 1))
@@ -413,6 +425,7 @@ def supported_coins_(request):
 def get_support_title(cid):
     return 'YES' if cid > 0 else 'NO' if cid == 0 else 'Not Specified'
 
+
 def _coins(request, q):
     limit = int(request.POST.get('rowCount'))
     page = int(request.POST.get('current'))
@@ -421,10 +434,6 @@ def _coins(request, q):
     qs = MasterCoin.objects.filter(q & Q(symbol__icontains=keyword)).order_by('symbol')
     total = qs.count()
     coins = []
-
-    cc_coins = [ii.symbol for ii in CryptocompareCoin.objects.all()]
-    cmc_coins = [ii.symbol for ii in CoinmarketcapCoin.objects.all()]
-    cp_coins = [ii.symbol for ii in CoinapiCoin.objects.all()]
 
     lstart = (page - 1) * limit
     lend = lstart + limit
@@ -451,6 +460,7 @@ def _coins(request, q):
         "rows": coins,
         "total": total
         }, safe=False)
+
 
 @csrf_exempt
 def events_(request):
@@ -481,6 +491,36 @@ def events_(request):
         "rows": result,
         "total": total
     }, safe=False)
+
+
+@csrf_exempt
+def qbtagg_quotes_(request):
+    limit = int(request.POST.get('rowCount'))
+    page = int(request.POST.get('current'))
+
+    qs = MasterCoin.objects.filter(type_is_crypto=False).order_by('symbol')
+    total = qs.count()
+    coins = []
+
+    for coin in qs:
+        coin_ = {
+            'id': coin.id,
+            'symbol': coin.symbol,
+            'cryptocompare': get_support_title(coin.cryptocompare),
+            'coinapi': get_support_title(coin.coinapi),
+            'cmc': get_support_title(coin.coinmarketcap),
+            'gecko': get_support_title(coin.coingecko),
+            'cml': get_support_title(coin.coinmarketcal)
+        }
+        coins.append(coin_)
+
+    return JsonResponse({
+        "current": page,
+        "rowCount": limit,
+        "rows": coins,
+        "total": total
+        }, safe=False)
+
 
 @csrf_exempt
 def exchanges_(request):
@@ -659,6 +699,7 @@ def exchange_detail_(request, id):
         "total": len(result)
     }, safe=False)
 
+
 def download_icon(request, id):
     coin = MasterCoin.objects.get(id=id)
     if coin.cryptocompare:
@@ -679,6 +720,7 @@ def download_icon(request, id):
             coin.save()
         return HttpResponse('success')
     return HttpResponse('Icon is not available.')
+
 
 def get_csv(request):
     try:
@@ -731,6 +773,7 @@ def get_csv(request):
     except Exception as e:
         print e
         return HttpResponse('Please provide valid parameters')
+
 
 def get_pairs_info(request):
     ex = request.GET.get('ex', '')  # binance or bitfinex
