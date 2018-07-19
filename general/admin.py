@@ -185,12 +185,18 @@ class CoinEventCategoryAdmin(admin.ModelAdmin):
     inlines = [CoinEventCategoryLocaleTabularInline]
 
 
+class QBTAGGXrefAdmin(admin.ModelAdmin):
+    list_display = ['base_coin', 'quote_coin', 'source']
+    search_fields = ['base_coin', 'quote_coin', 'source']
+    list_filter = ['source']
+
+
 admin.site.register(MasterCoin, MasterCoinAdmin)
 admin.site.register(Exchange, ExchangeAdmin)
 admin.site.register(ExchangePair, ExchangePairAdmin)
 admin.site.register(DataProvider)
 admin.site.register(Culture)
-admin.site.register(QBTAGGXref)
+admin.site.register(QBTAGGXref, QBTAGGXrefAdmin)
 admin.site.register(CoinEventCategory, CoinEventCategoryAdmin)
 admin.site.register(CoinmarketcalCategory)
 admin.site.register(CoinmarketcalEvent, CoinmarketcalEventAdmin)
