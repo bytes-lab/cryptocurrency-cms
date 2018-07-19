@@ -26,6 +26,7 @@ urlpatterns = [
     url(r"^exchanges_$", exchanges_, name="exchanges_"),
     url(r"^qbtagg_quotes$", qbtagg_quotes, name="qbtagg_quotes"),
     url(r"^qbtagg_quotes_$", qbtagg_quotes_, name="qbtagg_quotes_"),
+    url(r"^add_qbtagg_quote$", add_qbtagg_quote, name="add_qbtagg_quote"),
     url(r"^supported_exchanges$", supported_exchanges, name="supported_exchanges"),
     url(r"^supported_exchanges_$", supported_exchanges_, name="supported_exchanges_"),
     url(r"^exchanges/(?P<id>\d+)", exchange_detail, name="exchange_detail"),

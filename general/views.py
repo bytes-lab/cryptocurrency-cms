@@ -69,7 +69,9 @@ def exchanges(request):
 
 @login_required(login_url='/login')
 def qbtagg_quotes(request):
-    return render(request, 'qbtagg_quotes.html')
+    ids = QBTAGGXref.objects.values_list('quote_coin', flat=True).distinct()
+    coins = MasterCoin.objects.filter(type_is_crypto=False).exclude(id__in=ids).order_by('symbol')    
+    return render(request, 'qbtagg_quotes.html', locals())
 
 
 @login_required(login_url='/login')
@@ -498,7 +500,9 @@ def qbtagg_quotes_(request):
     limit = int(request.POST.get('rowCount'))
     page = int(request.POST.get('current'))
 
-    qs = MasterCoin.objects.filter(type_is_crypto=False).order_by('symbol')
+    ids = QBTAGGXref.objects.values_list('quote_coin', flat=True).distinct()
+    qs = MasterCoin.objects.filter(id__in=ids)
+
     total = qs.count()
     coins = []
 
@@ -785,3 +789,9 @@ def get_pairs_info(request):
     else:
         result = 'Please provide a valid exchange.'
     return HttpResponse(result)
+
+@login_required(login_url='/login')
+def add_qbtagg_quote(request):
+    quote_coin = request.POST.get('qbtagg_quote')
+    print (quote_coin, '########')
+    return HttpResponseRedirect(reverse('qbtagg_quotes'))

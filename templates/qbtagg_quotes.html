@@ -14,20 +14,40 @@
             </div>
             
             <div class="card-body card-padding">
-                <div class="table-responsive">
-                    <table id="data-table-qbtagg-coins" class="table table-striped" data-ajax="true" data-url="/qbtagg_quotes_">
-                        <thead>
-                            <tr>
-                                <th data-column-id="symbol">Symbol</th>
-                                <th data-column-id="cryptocompare">Cryptocompare</th>
-                                <th data-column-id="coinapi">CoinAPI</th>
-                                <th data-column-id="cmc">CoinMarketCap</th>
-                                <th data-column-id="gecko">CoinGecko</th>
-                                <th data-column-id="cml">CoinMarketCal</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>            
+                <div class="row m-b-25">
+                    <form method="POST" action="/add_qbtagg_quote">
+                        {% csrf_token %}
+                        <div class="col-sm-1">
+                            <label class="p-t-10 f-15">Candidates: </label>
+                        </div>
+                        <div class="col-sm-2">
+                            <select class="selectpicker p-r-15" data-live-search="true" name="qbtagg_quote" data-size="10">
+                                {% for ii in coins %}
+                                    <option value="{{ ii.id }}">{{ ii.symbol }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-info waves-effect">Add Quote Coin</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="row p-t-20">
+                    <div class="table-responsive">
+                        <table id="data-table-qbtagg-coins" class="table table-striped" data-ajax="true" data-url="/qbtagg_quotes_">
+                            <thead>
+                                <tr>
+                                    <th data-column-id="symbol">Symbol</th>
+                                    <th data-column-id="cryptocompare">Cryptocompare</th>
+                                    <th data-column-id="coinapi">CoinAPI</th>
+                                    <th data-column-id="cmc">CoinMarketCap</th>
+                                    <th data-column-id="gecko">CoinGecko</th>
+                                    <th data-column-id="cml">CoinMarketCal</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
         
