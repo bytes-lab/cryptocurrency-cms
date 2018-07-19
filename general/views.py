@@ -793,5 +793,6 @@ def get_pairs_info(request):
 @login_required(login_url='/login')
 def add_qbtagg_quote(request):
     quote_coin = request.POST.get('qbtagg_quote')
-    print (quote_coin, '########')
+    for ii in MasterCoin.objects.filter(type_is_crypto=True, alias__isnull=True, cryptocompare__gt=0):
+        QBTAGGXref.objects.create(base_coin=ii, quote_coin_id=quote_coin)
     return HttpResponseRedirect(reverse('qbtagg_quotes'))
