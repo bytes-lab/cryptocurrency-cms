@@ -60,7 +60,7 @@ def main():
                 ii.pop('categories')
                 ii['date_event_start'] = ii.pop('date_event')
                 ii['cml_coins'] = ii.pop('coins')
-                ii['description'] = ii.get('description', '').strip('"')
+                ii['description'] = (ii['description'] or '').strip('"')
 
                 ii['cml_id'] = item.id
                 ii['culture_id'] = 1
