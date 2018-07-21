@@ -240,6 +240,7 @@ class CoinmarketcalCategory(models.Model):
 
 class CoinEventCategory(models.Model):
     name = models.CharField(max_length=255)
+    zh_name = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'Coin Event Categories'

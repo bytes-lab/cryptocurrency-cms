@@ -313,10 +313,16 @@ def add_coin(request, coin, exchange):
             'is_trading': True
         }
 
-        coin, _ = MasterCoin.objects.update_or_create(symbol=new_symbol,
+        coin, is_new = MasterCoin.objects.update_or_create(symbol=new_symbol,
                                                       original_symbol=coin,
                                                       alias_id=alias,
                                                       defaults=defaults)
+
+        if is_new:
+            ids = QBTAGGXref.objects.values_list('quote_coin', flat=True).distinct()
+            source = 'cryptocompare' if coin.cryptocompare else 'in-house'
+            for ii in MasterCoin.objects.filter(id__in=ids):
+                QBTAGGXref.objects.create(base_coin=coin, quote_coin=ii, source=source)
 
         coin = MasterCoin.objects.get(id=coin.id) # weird
         culture = Culture.objects.filter(name='en_US').first()
