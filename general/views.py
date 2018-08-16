@@ -735,29 +735,33 @@ def download_icon(request, id):
 def get_csv(request):
     try:
         ex = request.GET.get('ex', 'binance')  # binance or bitfinex
-        vol = 'volume' if ex == 'binance' else 'base_volume'
+        pair = request.GET.get('pair')
         timeframe = request.GET.get('timeframe', '1min')    # 1min or 1day
         resolution = '1' if timeframe == '1min' else '1440'
         start = request.GET.get('start')
         end = request.GET.get('end')
         tz = request.GET.get('tz', 0)    # -13 to 13
 
+        base_coin = MasterCoin.objects.filter(symbol=pair.split('-')[0].upper()).first()
+        quote_coin = MasterCoin.objects.filter(symbol=pair.split('-')[1].upper()).first()
+
+        if not base_coin or not quote_coin:
+            return HttpResponse('The pair is not supported in the exchange.')
+
         path = "/tmp/.{}-{}.csv".format(ex, start)
 
         query = """
-            SELECT time_bucket('{} minutes', open_time) AS last_traded, base_currency_id, quote_currency_id, first(open, open_time) AS open, MAX(high) AS high, MIN(low) AS low, last(close, open_time) AS close, SUM({}) AS volume 
+            SELECT time_bucket('{} minutes', open_time) AS last_traded, first(open, open_time) AS open, MAX(high) AS high, MIN(low) AS low, last(close, open_time) AS close, SUM(base_volume) AS volume 
             FROM {}_rates 
-            WHERE open_time >= '{}' and open_time <= '{}' 
-            GROUP BY base_currency_id, quote_currency_id, last_traded
+            WHERE open_time >= '{}' and open_time <= '{}' and base_currency_id = {} and quote_currency_id = {} 
+            GROUP BY last_traded
         """
 
-        query = query.format(resolution, vol, ex, 
+        query = query.format(resolution, ex, 
                              datetime.datetime.fromtimestamp(int(start)).replace(tzinfo=timezone('UTC')),
-                             datetime.datetime.fromtimestamp(int(end)).replace(tzinfo=timezone('UTC')))
-
-        coins_dict = {}
-        for ii in MasterCoin.objects.all():
-            coins_dict[ii.id] = ii.symbol
+                             datetime.datetime.fromtimestamp(int(end)).replace(tzinfo=timezone('UTC')),
+                             base_coin.id,
+                             quote_coin.id)
 
         with connection.cursor() as cursor:
             cursor.execute(query, [])
@@ -765,12 +769,13 @@ def get_csv(request):
             result = []
             
             with open(path, 'w') as f:
-                f.write('last_traded, base_currency, quote_currency, open, high, low, close, volume\n')
+                f.write('date, time, open, high, low, close, volume, currency\n')
 
                 for row in cursor.fetchall():
                     row_ = list(row)
-                    row_[1] = coins_dict[row[1]]
-                    row_[2] = coins_dict[row[2]]
+                    row_.insert(1, row_[0].strftime('%H:%M'))
+                    row_[0] = row_[0].strftime('%Y.%m.%d')
+                    row_.append(pair.replace('-', '').upper())
                     f.write(','.join([str(ii) for ii in row_])+'\n')
         
         wrapper = FileWrapper( open( path, "r" ) )
