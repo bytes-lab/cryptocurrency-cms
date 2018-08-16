@@ -796,7 +796,7 @@ def get_pairs_info(request):
     result = ''
     if exchange:
         for pair in  exchange.pairs.all().order_by('base_coin__symbol', 'quote_coin__symbol'):
-            result += '{}-{}<br>'.format(pair.base_coin.symbol, pair.quote_coin.symbol)
+            result += '{}-{}\n'.format(pair.base_coin.symbol, pair.quote_coin.symbol)
     else:
         result = 'Please provide a valid exchange.'
     return HttpResponse(result)
