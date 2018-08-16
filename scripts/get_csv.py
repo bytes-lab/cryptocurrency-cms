@@ -3,7 +3,8 @@ import requests
 
 
 if __name__ == "__main__":
-    url = 'http://cms.qobit.co/get_csv?ex={}&pair={}timeframe={}&start={}&end={}'
+    url = 'http://cms.qobit.co/get_csv?ex={}&pair={}&timeframe={}&start={}&end={}'
+
     if len(sys.argv) < 6:
         print ('Please provide valid parameraters.\ne.g)$python get_csv.py binance BTC-USDT 1min 1534380284 1534405484')
         exit(0)
