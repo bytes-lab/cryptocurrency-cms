@@ -776,22 +776,24 @@ def get_csv(request):
         """
 
         query = query.format(resolution, vol, 'old_binance' if ex == 'binance' else ex, 
-                             datetime.datetime.fromtimestamp(int(start)).replace(tzinfo=timezone('UTC')),
-                             datetime.datetime.fromtimestamp(int(end)).replace(tzinfo=timezone('UTC')),
+                             start+':00+00:00',
+                             end+':00+00:00',
                              base_coin.id,
                              quote_coin.id)
 
+        print query
         with connection.cursor() as cursor:
             cursor.execute(query, [])
 
             result = []
             
             with open(path, 'w') as f:
-                f.write('open_time, open, high, low, close, volume, currency\n')
+                f.write('date, time, open, high, low, close, volume, currency\n')
 
                 for row in cursor.fetchall():
                     row_ = list(row)
-                    row_[0] = row_[0].strftime('%Y-%m-%d %H:%M')
+                    row_.insert(1, row_[0].strftime('%H:%M'))
+                    row_[0] = row_[0].strftime('%Y.%m.%d')
                     row_.append(pair.replace('-', '').upper())
                     f.write(','.join([str(ii) for ii in row_])+'\n')
         
