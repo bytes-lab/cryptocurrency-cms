@@ -732,32 +732,50 @@ def download_icon(request, id):
     return HttpResponse('Icon is not available.')
 
 
+def get_resolution(timeframe):
+    try:
+        mul = { 'M': 1, 'H': 60, 'D': 1440 }
+        resolution = int(timeframe[:-1]) * mul[timeframe[-1]]
+    except Exception as e:
+        resolution = 0
+    return resolution
+
 def get_csv(request):
     try:
         ex = request.GET.get('ex', 'binance')  # binance or bitfinex
+        if ex not in ['binance', 'bitfinex']:
+            return HttpResponse('The exchange is not supported. Type binance or bitfinex')
+
+        vol = 'volume' if ex == 'binance' else 'base_volume'
         pair = request.GET.get('pair')
-        timeframe = request.GET.get('timeframe', '1min')    # 1min or 1day
-        resolution = '1' if timeframe == '1min' else '1440'
+        timeframe = request.GET.get('timeframe', '1M')    # 1min or 1day
+        resolution = get_resolution(timeframe)
+        if not resolution:
+            return HttpResponse('The timeframe is not supported. Type 1M/5M/15M/30M/1H/4H/1D')
+
         start = request.GET.get('start')
         end = request.GET.get('end')
         tz = request.GET.get('tz', 0)    # -13 to 13
 
         base_coin = MasterCoin.objects.filter(symbol=pair.split('-')[0].upper()).first()
-        quote_coin = MasterCoin.objects.filter(symbol=pair.split('-')[1].upper()).first()
+        quote_coin = MasterCoin.objects.filter(symbol=pair.split('-')[-1].upper()).first()
 
         if not base_coin or not quote_coin:
             return HttpResponse('The pair is not supported in the exchange.')
 
-        path = "/tmp/.{}-{}.csv".format(ex, start)
+        path = "/tmp/.{}-{}-{}.csv".format(ex, pair, start)
 
         query = """
-            SELECT time_bucket('{} minutes', open_time) AS last_traded, first(open, open_time) AS open, MAX(high) AS high, MIN(low) AS low, last(close, open_time) AS close, SUM(base_volume) AS volume 
+            SELECT time_bucket('{} minutes', open_time) AS trade_time, 
+                   first(open, open_time) AS open, MAX(high) AS high, MIN(low) AS low, 
+                   last(close, open_time) AS close, SUM({}) AS volume 
             FROM {}_rates 
-            WHERE open_time >= '{}' and open_time <= '{}' and base_currency_id = {} and quote_currency_id = {} 
-            GROUP BY last_traded
+            WHERE open_time >= '{}' and open_time <= '{}' and 
+                  base_currency_id = {} and quote_currency_id = {} 
+            GROUP BY trade_time
         """
 
-        query = query.format(resolution, ex, 
+        query = query.format(resolution, vol, 'old_binance' if ex == 'binance' else ex, 
                              datetime.datetime.fromtimestamp(int(start)).replace(tzinfo=timezone('UTC')),
                              datetime.datetime.fromtimestamp(int(end)).replace(tzinfo=timezone('UTC')),
                              base_coin.id,
@@ -769,12 +787,11 @@ def get_csv(request):
             result = []
             
             with open(path, 'w') as f:
-                f.write('date, time, open, high, low, close, volume, currency\n')
+                f.write('open_time, open, high, low, close, volume, currency\n')
 
                 for row in cursor.fetchall():
                     row_ = list(row)
-                    row_.insert(1, row_[0].strftime('%H:%M'))
-                    row_[0] = row_[0].strftime('%Y.%m.%d')
+                    row_[0] = row_[0].strftime('%Y-%m-%d %H:%M')
                     row_.append(pair.replace('-', '').upper())
                     f.write(','.join([str(ii) for ii in row_])+'\n')
         
