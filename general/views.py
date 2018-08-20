@@ -812,10 +812,10 @@ def get_csv(request):
 def get_pairs_info(request):
     ex = request.GET.get('ex', '')  # binance or bitfinex
     exchange = Exchange.objects.filter(name=ex.upper()).first()
-    result = ''
+    result = 'pair, start time\n'
     if exchange:
         for pair in  exchange.pairs.all().order_by('base_coin__symbol', 'quote_coin__symbol'):
-            result += '{}-{}\n'.format(pair.base_coin.symbol, pair.quote_coin.symbol)
+            result += '{}-{},{}\n'.format(pair.base_coin.symbol, pair.quote_coin.symbol, str(pair.data_start))
     else:
         result = 'Please provide a valid exchange.'
     return HttpResponse(result)

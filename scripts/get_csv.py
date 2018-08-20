@@ -11,9 +11,10 @@ if __name__ == "__main__":
         exit(0)
 
     url = url.format(sys.argv[1], sys.argv[2], sys.argv[3], 
-                     sys.argv[4].replace('T', ' '), 
-                     sys.argv[5].replace('T', ' '))
+                     sys.argv[4], 
+                     sys.argv[5])
 
+    print url
     info = requests.get(url)
     file_path = '{}-{}-{}.csv'.format(sys.argv[1], sys.argv[2], sys.argv[4])
 

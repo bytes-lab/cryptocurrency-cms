@@ -487,7 +487,10 @@ def support_pair_(instance):
     # delete a record in temp pair table
     TempPair.objects.filter(exchange=instance.exchange.name, pair=pair_).delete()
     table_name = 'tmp_{}_rates'.format(instance.exchange.name.lower())
-    query = "SELECT * FROM {} WHERE base_currency = %s and quote_currency = %s".format(table_name)
+    if instance.exchange.name.lower() in ['bittrex', 'kucoin']:
+        query = "SELECT * FROM {} WHERE base_currency = %s and quote_currency = %s".format(table_name)
+    else:
+        query = "SELECT * FROM {} WHERE base_currency_symbol = %s and quote_currency_symbol = %s".format(table_name)
 
     with connection.cursor() as cursor:
         cursor.execute(query, [instance.base_coin.original_symbol, instance.quote_coin.original_symbol])
