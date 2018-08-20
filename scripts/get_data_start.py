@@ -24,7 +24,9 @@ def main():
         with connection.cursor() as cursor:
             cursor.execute(query, [ii.base_coin_id, ii.quote_coin_id])
             # to avoid post save
-            ExchangePair.objects.filter(id=ii.id).update(data_start=cursor.fetchone()[0])
+            data_start = cursor.fetchone()
+            if data_start:
+                ExchangePair.objects.filter(id=ii.id).update(data_start=data_start[0])
 
 if __name__ == "__main__":
     main()
