@@ -48,7 +48,7 @@ def main():
             'name': cl.name if cl else ''
         }
 
-        print (coin.id, coin.symbol, '----------------')
+        # print (coin.id, coin.symbol, '----------------')
         if coin.cryptocompare:
             cc_coin = CryptocompareCoin.objects.get(id=coin.cryptocompare)
             url_ = 'https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id={}'.format(cc_coin.uid)
@@ -143,15 +143,21 @@ def main():
                 response = urllib2.urlopen(url_)
                 htmlparser = etree.HTMLParser()
                 tree = etree.parse(response, htmlparser)
-                total_supply = tree.xpath("/html/body/div[@class='container main-section']/div[@class='row']/div[@class='col-lg-10']/div[@class='row bottom-margin-2x']/div[@class='col-sm-8 col-sm-push-4']/div[@class='coin-summary-item col-xs-6 col-md-3'][4]/div[@class='coin-summary-item-detail details-text-medium']/span/text()")
-                hour_info['total_supply'] = clean_text(total_supply[0]) if total_supply else None
-                circulating_supply = tree.xpath("/html/body/div[@class='container main-section']/div[@class='row']/div[@class='col-lg-10']/div[@class='row bottom-margin-2x']/div[@class='col-sm-8 col-sm-push-4']/div[@class='coin-summary-item col-xs-6 col-md-3'][3]/div[@class='coin-summary-item-detail details-text-medium']/span/text()")
-                hour_info['circulating_supply'] = clean_text(circulating_supply[0]) if circulating_supply else None
+                values = tree.xpath("//div[@class='coin-summary-item-detail details-text-medium']/span/text()")
+                values = [clean_text(ii) for ii in values]
+                titles = tree.xpath("//h5[@class='coin-summary-item-header']/text()")
+                titles = [ii.strip().replace(' ', '_').lower() for ii in titles[2:]]
+
+                for idx in range(len(titles)):
+                    if values[idx]:
+                        hour_info[titles[idx]] = values[idx]
+
+                print cmc_coin.token, dict(zip(titles, values)) 
             except Exception as e:
                 print str(e)
 
         if hour_info:
-            print (hour_info)
+            # print (hour_info)
             hour_info['coin_id'] = coin.id
             hour_info['date_of_entry'] = current_time
             CoinHourlyInfo.objects.create(**hour_info)

@@ -417,6 +417,7 @@ class CoinHourlyInfo(models.Model):
     coin = models.ForeignKey(MasterCoin)
     date_of_entry = models.DateTimeField()
     total_supply = models.FloatField(null=True)
+    max_supply = models.FloatField(null=True)
     circulating_supply = models.FloatField(null=True)
     net_hashes_per_second = models.FloatField(null=True)
     block_time = models.IntegerField(null=True)
