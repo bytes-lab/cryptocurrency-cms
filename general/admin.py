@@ -8,7 +8,8 @@ from general.models import *
 class CoinLocaleTabularInline(admin.TabularInline):
     model = CoinLocale
     extra = 0
-    fields = ['name', 'culture', 'short_description', 'description', 'feature', 'technology', 'edited']
+    fields = ['name', 'culture', 'short_description', 'description', 'feature', 
+              'technology', 'edited']
 
 
 class CoinEventCategoryLocaleTabularInline(admin.TabularInline):
@@ -28,12 +29,16 @@ class CryptocompareSupportFilter(SimpleListFilter):
     parameter_name = 'cryptocompare'
 
     def lookups(self, request, model_admin):
-        return (('True', _('Yes')), ('False', _('No')))
+        return (('Found', 'Found'), 
+                ('Not Linked Yet', 'Not Linked Yet'), 
+                ('Not Found', 'Not Found'))
 
     def queryset(self, request, queryset):
-        if self.value() == 'True':
-            return queryset.exclude(cryptocompare__isnull=True)
-        if self.value() == 'False':
+        if self.value() == 'Found':
+            return queryset.filter(cryptocompare__gt=0)
+        if self.value() == 'Not Found':
+            return queryset.filter(cryptocompare=0)
+        if self.value() == 'Not Linked Yet':
             return queryset.filter(cryptocompare__isnull=True)
 
 
@@ -42,12 +47,16 @@ class CoinapiSupportFilter(SimpleListFilter):
     parameter_name = 'coinapi'
 
     def lookups(self, request, model_admin):
-        return (('True', _('Yes')), ('False', _('No')))
+        return (('Found', 'Found'), 
+                ('Not Linked Yet', 'Not Linked Yet'), 
+                ('Not Found', 'Not Found'))
 
     def queryset(self, request, queryset):
-        if self.value() == 'True':
-            return queryset.exclude(coinapi__isnull=True)
-        if self.value() == 'False':
+        if self.value() == 'Found':
+            return queryset.filter(coinapi__gt=0)
+        if self.value() == 'Not Found':
+            return queryset.filter(coinapi=0)
+        if self.value() == 'Not Linked Yet':
             return queryset.filter(coinapi__isnull=True)
 
 
@@ -56,12 +65,16 @@ class CoinmarketcapSupportFilter(SimpleListFilter):
     parameter_name = 'coinmarketcap'
 
     def lookups(self, request, model_admin):
-        return (('True', _('Yes')), ('False', _('No')))
+        return (('Found', 'Found'), 
+                ('Not Linked Yet', 'Not Linked Yet'), 
+                ('Not Found', 'Not Found'))
 
     def queryset(self, request, queryset):
-        if self.value() == 'True':
-            return queryset.exclude(coinmarketcap__isnull=True)
-        if self.value() == 'False':
+        if self.value() == 'Found':
+            return queryset.filter(coinmarketcap__gt=0)
+        if self.value() == 'Not Found':
+            return queryset.filter(coinmarketcap=0)
+        if self.value() == 'Not Linked Yet':
             return queryset.filter(coinmarketcap__isnull=True)
 
 
@@ -70,12 +83,16 @@ class CoinmarketcalSupportFilter(SimpleListFilter):
     parameter_name = 'coinmarketcal'
 
     def lookups(self, request, model_admin):
-        return (('True', _('Yes')), ('False', _('No')))
+        return (('Found', 'Found'), 
+                ('Not Linked Yet', 'Not Linked Yet'), 
+                ('Not Found', 'Not Found'))
 
     def queryset(self, request, queryset):
-        if self.value() == 'True':
-            return queryset.exclude(coinmarketcal__isnull=True)
-        if self.value() == 'False':
+        if self.value() == 'Found':
+            return queryset.filter(coinmarketcal__gt=0)
+        if self.value() == 'Not Found':
+            return queryset.filter(coinmarketcal=0)
+        if self.value() == 'Not Linked Yet':
             return queryset.filter(coinmarketcal__isnull=True)
 
 
@@ -84,44 +101,71 @@ class CoingeckoSupportFilter(SimpleListFilter):
     parameter_name = 'coingecko'
 
     def lookups(self, request, model_admin):
-        return (('True', _('Yes')), ('False', _('No')))
+        return (('Found', 'Found'), 
+                ('Not Linked Yet', 'Not Linked Yet'), 
+                ('Not Found', 'Not Found'))
 
     def queryset(self, request, queryset):
-        if self.value() == 'True':
-            return queryset.exclude(coingecko__isnull=True)
-        if self.value() == 'False':
+        if self.value() == 'Found':
+            return queryset.filter(coingecko__gt=0)
+        if self.value() == 'Not Found':
+            return queryset.filter(coingecko=0)
+        if self.value() == 'Not Linked Yet':
             return queryset.filter(coingecko__isnull=True)
 
 
 class MasterCoinAdmin(admin.ModelAdmin):
     inlines = [CoinLocaleTabularInline]
-    list_display = ['symbol', 'alias', 'cryptocompare_support', 'coinapi_support', 'coinmarketcap_support', 'coingecko_support', 'coinmarketcal_support']
+    list_display = ['symbol', 'alias', 'cryptocompare_support', 'coinapi_support', 
+                    'coinmarketcap_support', 'coingecko_support', 'coinmarketcal_support']
     search_fields = ['symbol']
-    list_filter = [CoinmarketcalSupportFilter, CoingeckoSupportFilter, CoinmarketcapSupportFilter, CoinapiSupportFilter, CryptocompareSupportFilter, 'supported', 'is_master']
+    list_filter = [CoinmarketcalSupportFilter, CoingeckoSupportFilter, 
+                   CoinmarketcapSupportFilter, CoinapiSupportFilter, 
+                   CryptocompareSupportFilter, 'supported', 'is_master']
 
     def cryptocompare_support(self, obj):
-        return obj.cryptocompare != None
-    cryptocompare_support.boolean = True
+        if obj.cryptocompare > 0:
+            return 'Found'
+        elif obj.cryptocompare == 0:
+            return 'Not Found'
+        else:
+            return 'Not Linked Yet'
     cryptocompare_support.short_description = 'Cryptocompare'
 
     def coingecko_support(self, obj):
-        return obj.coingecko != None
-    coingecko_support.boolean = True
+        if obj.coingecko > 0:
+            return 'Found'
+        elif obj.coingecko == 0:
+            return 'Not Found'
+        else:
+            return 'Not Linked Yet'
     coingecko_support.short_description = 'Coingecko'
 
     def coinmarketcal_support(self, obj):
-        return obj.coinmarketcal != None
-    coinmarketcal_support.boolean = True
+        if obj.coinmarketcal > 0:
+            return 'Found'
+        elif obj.coinmarketcal == 0:
+            return 'Not Found'
+        else:
+            return 'Not Linked Yet'
     coinmarketcal_support.short_description = 'Coinmarketcal'
 
     def coinapi_support(self, obj):
-        return obj.coinapi != None
-    coinapi_support.boolean = True
+        if obj.coinapi > 0:
+            return 'Found'
+        elif obj.coinapi == 0:
+            return 'Not Found'
+        else:
+            return 'Not Linked Yet'
     coinapi_support.short_description = 'Coinapi'
 
     def coinmarketcap_support(self, obj):
-        return obj.coinmarketcap != None
-    coinmarketcap_support.boolean = True
+        if obj.coinmarketcap > 0:
+            return 'Found'
+        elif obj.coinmarketcap == 0:
+            return 'Not Found'
+        else:
+            return 'Not Linked Yet'
     coinmarketcap_support.short_description = 'Coinmarketcap'
 
 
