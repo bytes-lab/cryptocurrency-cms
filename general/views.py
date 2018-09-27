@@ -333,6 +333,7 @@ def add_coin(request, coin, exchange):
 
 @login_required(login_url='/login')
 def attach_coin(request, coin):
+    edit_button = True
     coin = MasterCoin.objects.get(id=coin)
   
     coins = MasterCoin.objects.all().order_by('symbol')

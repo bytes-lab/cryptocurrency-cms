@@ -206,7 +206,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 p-l-25 p-t-25 m-t-10">
-                                    <button class="btn btn-info waves-effect m-l-10">Add Coin</button>
+                                    <button class="btn btn-info waves-effect m-l-10">{% if edit_button %} Save Coin {% else %} Add Coin {% endif %}</button>
                                     {% if exchange %}
                                         <a class="btn btn-default waves-effect m-l-10" href="/exchanges/{{ exchange.id }}">Back</a>
                                     {% else %}
