@@ -4,7 +4,7 @@
 env/
 nohup.out
 migrations
-static/media
 settings.py
-static/icons
 migrations_qa
+.idea/
+static/
