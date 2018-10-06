@@ -385,16 +385,40 @@ def attach_coin(request, coin):
     return render(request, 'add_coin.html', locals())
 
 
+def build_query(ds, opt):
+    if opt == '1':
+        return { ds+'__isnull': True }
+    elif opt == '2':
+        return { ds+'__gt': 0 }
+    elif opt == '3':
+        return { ds: 0 }
+
+
 @login_required(login_url='/login')
 def bulk_pair_coin(request):
+    mode = request.GET.get('mode', 'default')
     page = int(request.GET.get('page', 1))
     prev_page = page - 1 if page > 1 else 1
     page_size = 10
-    coins = MasterCoin.objects.all().exclude(cryptocompare__isnull=False, 
-                                             coinmarketcap__isnull=False,
-                                             coinapi__isnull=False,
-                                             coingecko__isnull=False,
-                                             coinmarketcal__isnull=False).order_by('symbol')
+
+    if mode == 'default':
+        coins = MasterCoin.objects.filter(alias__isnull=True) \
+                                  .exclude(cryptocompare__isnull=False, 
+                                           coinmarketcap__isnull=False,
+                                           coinapi__isnull=False,
+                                           coingecko__isnull=False,
+                                           coinmarketcal__isnull=False) \
+                                  .order_by('symbol')
+    else:
+        q = request.GET.get('q', '')
+        q = Q(symbol__icontains=q) & Q(alias__isnull=True)
+        fts = ['cryptocompare', 'coinapi', 'coinmarketcap', 'coingecko', 'coinmarketcal']
+        for fi in fts:
+            q_ = build_query(fi, request.POST.get(fi))
+            if q_:
+                q &= Q(**q_)
+        coins = MasterCoin.objects.filter(q)
+
     total_number = coins.count()
     max_page = int((total_number+page_size-1) / page_size)
     next_page = page + 1 if max_page > page else max_page

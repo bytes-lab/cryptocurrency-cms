@@ -9,10 +9,68 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h2 class="c-purple f-500 f-20">Bulk Pair Coins</h2>
+                <span class="c-purple f-500 f-20">Bulk Pair Coins</span>
+                {% if mode == 'default' %}
+                    <a href="/bulk_pair_coin?mode=filter" class="pull-right m-r-25">Go to Filter Mode</a>
+                {% else %}
+                    <a href="/bulk_pair_coin?mode=default" class="pull-right m-r-25">Go to Default Mode</a>
+                {% endif %}
             </div>
             
             <div class="card-body card-padding">
+                {% if mode == 'filter' %}
+                <form action="" method="GET" class="filter-form">
+                    <div class="row m-b-15">
+                        <div class="col-md-2 p-l-30">
+                            <input type="text" name="q" placeholder="Keyword here ..." class="form-control m-t-5">
+                            <input type="hidden" name="mode" value="filter">
+                        </div>
+                        <div class="col-md-10">
+                            <div class="col-sm-2 col-20 m-b-15">
+                                <select class="selectpicker m-t-10 p-r-15" name="cryptocompare" onchange="filter()">
+                                    <option value="">Choose Cryptocompare</option>
+                                    <option value="1">Not Connected</option>
+                                    <option value="2">Connected</option>
+                                    <option value="3">Not Found</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 col-20 m-b-15">
+                                <select class="selectpicker m-t-10 p-r-15" name="coinmarketcap" onchange="filter()">
+                                    <option value="">Choose Coinmarketcap</option>
+                                    <option value="1">Not Connected</option>
+                                    <option value="2">Connected</option>
+                                    <option value="3">Not Found</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 col-20 m-b-15">
+                                <select class="selectpicker m-t-10 p-r-15" name="coinapi" onchange="filter()">
+                                    <option value="">Choose Coinapi</option>
+                                    <option value="1">Not Connected</option>
+                                    <option value="2">Connected</option>
+                                    <option value="3">Not Found</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 col-20 m-b-15">
+                                <select class="selectpicker m-t-10 p-r-15" name="coingecko" onchange="filter()">
+                                    <option value="">Choose Coingecko</option>
+                                    <option value="1">Not Connected</option>
+                                    <option value="2">Connected</option>
+                                    <option value="3">Not Found</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 col-20 m-b-15">
+                                <select class="selectpicker m-t-10 p-r-15" name="coinmarketcal" onchange="filter()">
+                                    <option value="">Choose Coinmarketcal</option>
+                                    <option value="1">Not Connected</option>
+                                    <option value="2">Connected</option>
+                                    <option value="3">Not Found</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                {% endif %}
+
                 <form action="" method="POST">
                     {% csrf_token %}
                     <div class="row">
