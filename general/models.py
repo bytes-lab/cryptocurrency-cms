@@ -476,8 +476,8 @@ def dictfetchall(cursor, base, quote):
     
     for row in cursor.fetchall():
         ii = dict(zip(columns, row))
-        ii.pop('base_currency')
-        ii.pop('quote_currency')
+        ii.pop('base_currency_symbol')
+        ii.pop('quote_currency_symbol')
         ii['base_currency_id'] = base
         ii['quote_currency_id'] = quote
         result.append(ii)
@@ -488,15 +488,11 @@ def support_pair_(instance):
     # delete a record in temp pair table
     TempPair.objects.filter(exchange=instance.exchange.name, pair=pair_).delete()
     table_name = 'tmp_{}_rates'.format(instance.exchange.name.lower())
-    if instance.exchange.name.lower() in ['bittrex', 'kucoin']:
-        query = "SELECT * FROM {} WHERE base_currency = %s and quote_currency = %s".format(table_name)
-    else:
-        query = "SELECT * FROM {} WHERE base_currency_symbol = %s and quote_currency_symbol = %s".format(table_name)
+    query = "SELECT * FROM {} WHERE base_currency_symbol = %s and quote_currency_symbol = %s".format(table_name)
 
     with connection.cursor() as cursor:
         cursor.execute(query, [instance.base_coin.original_symbol, instance.quote_coin.original_symbol])
         res = dictfetchall(cursor, instance.base_coin.id, instance.quote_coin.id)
-
         if res:
             values = []
             placeholders = ', '.join(['%s'] * len(res[0]))
@@ -509,7 +505,7 @@ def support_pair_(instance):
             cursor.executemany(sql, values)
 
             # delete records in temp table
-            query = "DELETE FROM {} WHERE base_currency = %s and quote_currency = %s".format(table_name)
+            query = "DELETE FROM {} WHERE base_currency_symbol = %s and quote_currency_symbol = %s".format(table_name)
             cursor.execute(query, [instance.base_coin.original_symbol, instance.quote_coin.original_symbol])
 
 def support_pair(sender, instance, **kwargs):
