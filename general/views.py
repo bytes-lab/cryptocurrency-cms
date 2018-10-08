@@ -410,13 +410,16 @@ def bulk_pair_coin(request):
                                            coinmarketcal__isnull=False) \
                                   .order_by('symbol')
     else:
-        q = request.GET.get('q', '')
-        q = Q(symbol__icontains=q) & Q(alias__isnull=True)
-        fts = ['cryptocompare', 'coinapi', 'coinmarketcap', 'coingecko', 'coinmarketcal']
-        for fi in fts:
-            q_ = build_query(fi, request.POST.get(fi))
-            if q_:
-                q &= Q(**q_)
+        if request.GET.get('initial'):
+            q = Q(symbol=-1)
+        else:
+            q__ = request.GET.get('q', '')
+            q = Q(symbol__icontains=q__) & Q(alias__isnull=True)
+            fts = ['cryptocompare', 'coinapi', 'coinmarketcap', 'coingecko', 'coinmarketcal']
+            for fi in fts:
+                q_ = build_query(fi, request.GET.get(fi))
+                if q_:
+                    q &= Q(**q_)
         coins = MasterCoin.objects.filter(q)
 
     total_number = coins.count()

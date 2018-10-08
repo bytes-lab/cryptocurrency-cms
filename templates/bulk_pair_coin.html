@@ -11,7 +11,7 @@
             <div class="card-header">
                 <span class="c-purple f-500 f-20">Bulk Pair Coins</span>
                 {% if mode == 'default' %}
-                    <a href="/bulk_pair_coin?mode=filter" class="pull-right m-r-25">Go to Filter Mode</a>
+                    <a href="/bulk_pair_coin?mode=filter&initial=1" class="pull-right m-r-25">Go to Filter Mode</a>
                 {% else %}
                     <a href="/bulk_pair_coin?mode=default" class="pull-right m-r-25">Go to Default Mode</a>
                 {% endif %}
@@ -21,49 +21,54 @@
                 {% if mode == 'filter' %}
                 <form action="" method="GET" class="filter-form">
                     <div class="row m-b-15">
-                        <div class="col-md-2 p-l-30">
-                            <input type="text" name="q" placeholder="Keyword here ..." class="form-control m-t-5">
+                        <div class="col-md-offset-2 col-md-10 m-b-10">
+                            <div class="col-md-3">
+                                <input type="text" name="q" placeholder="Keyword here ..." class="form-control m-t-5" value="{{ q__ }}">
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-primary m-t-5">Search</button>
+                            </div>
                             <input type="hidden" name="mode" value="filter">
                         </div>
-                        <div class="col-md-10">
+                        <div class="col-md-offset-2 col-md-10">
                             <div class="col-sm-2 col-20 m-b-15">
-                                <select class="selectpicker m-t-10 p-r-15" name="cryptocompare" onchange="filter()">
+                                <select class="selectpicker m-t-10 p-r-15" name="cryptocompare">
                                     <option value="">Choose Cryptocompare</option>
-                                    <option value="1">Not Connected</option>
-                                    <option value="2">Connected</option>
-                                    <option value="3">Not Found</option>
+                                    <option value="1" {% if request.GET.cryptocompare == '1' %} selected {% endif %}>Not Connected</option>
+                                    <option value="2" {% if request.GET.cryptocompare == '2' %} selected {% endif %}>Connected</option>
+                                    <option value="3" {% if request.GET.cryptocompare == '3' %} selected {% endif %}>Not Found</option>
                                 </select>
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
-                                <select class="selectpicker m-t-10 p-r-15" name="coinmarketcap" onchange="filter()">
+                                <select class="selectpicker m-t-10 p-r-15" name="coinmarketcap">
                                     <option value="">Choose Coinmarketcap</option>
-                                    <option value="1">Not Connected</option>
-                                    <option value="2">Connected</option>
-                                    <option value="3">Not Found</option>
+                                    <option value="1" {% if request.GET.coinmarketcap == '1' %} selected {% endif %}>Not Connected</option>
+                                    <option value="2" {% if request.GET.coinmarketcap == '2' %} selected {% endif %}>Connected</option>
+                                    <option value="3" {% if request.GET.coinmarketcap == '3' %} selected {% endif %}>Not Found</option>
                                 </select>
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
-                                <select class="selectpicker m-t-10 p-r-15" name="coinapi" onchange="filter()">
+                                <select class="selectpicker m-t-10 p-r-15" name="coinapi">
                                     <option value="">Choose Coinapi</option>
-                                    <option value="1">Not Connected</option>
-                                    <option value="2">Connected</option>
-                                    <option value="3">Not Found</option>
+                                    <option value="1" {% if request.GET.coinapi == '1' %} selected {% endif %}>Not Connected</option>
+                                    <option value="2" {% if request.GET.coinapi == '2' %} selected {% endif %}>Connected</option>
+                                    <option value="3" {% if request.GET.coinapi == '3' %} selected {% endif %}>Not Found</option>
                                 </select>
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
-                                <select class="selectpicker m-t-10 p-r-15" name="coingecko" onchange="filter()">
+                                <select class="selectpicker m-t-10 p-r-15" name="coingecko">
                                     <option value="">Choose Coingecko</option>
-                                    <option value="1">Not Connected</option>
-                                    <option value="2">Connected</option>
-                                    <option value="3">Not Found</option>
+                                    <option value="1" {% if request.GET.coingecko == '1' %} selected {% endif %}>Not Connected</option>
+                                    <option value="2" {% if request.GET.coingecko == '2' %} selected {% endif %}>Connected</option>
+                                    <option value="3" {% if request.GET.coingecko == '3' %} selected {% endif %}>Not Found</option>
                                 </select>
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
-                                <select class="selectpicker m-t-10 p-r-15" name="coinmarketcal" onchange="filter()">
+                                <select class="selectpicker m-t-10 p-r-15" name="coinmarketcal">
                                     <option value="">Choose Coinmarketcal</option>
-                                    <option value="1">Not Connected</option>
-                                    <option value="2">Connected</option>
-                                    <option value="3">Not Found</option>
+                                    <option value="1" {% if request.GET.coinmarketcal == '1' %} selected {% endif %}>Not Connected</option>
+                                    <option value="2" {% if request.GET.coinmarketcal == '2' %} selected {% endif %}>Connected</option>
+                                    <option value="3" {% if request.GET.coinmarketcal == '3' %} selected {% endif %}>Not Found</option>
                                 </select>
                             </div>
                         </div>
