@@ -69,7 +69,7 @@ def exchanges(request):
 
 @login_required(login_url='/login')
 def qbtagg_quotes(request):
-    ids = QBTAGGXref.objects.values_list('quote_coin', flat=True).distinct()
+    ids = [ii.coin.id for ii in QBTAGGQuote.objects.filter(is_deleted=False)]
     coins = MasterCoin.objects.filter(type_is_crypto=False).exclude(id__in=ids).order_by('symbol')    
     return render(request, 'qbtagg_quotes.html', locals())
 
@@ -317,13 +317,6 @@ def add_coin(request, coin, exchange):
                                                       original_symbol=coin,
                                                       alias_id=alias,
                                                       defaults=defaults)
-
-        if is_new:
-            ids = QBTAGGXref.objects.values_list('quote_coin', flat=True).distinct()
-            source = 'cryptocompare' if coin.cryptocompare else 'in-house'
-            for ii in MasterCoin.objects.filter(id__in=ids):
-                QBTAGGXref.objects.create(base_coin=coin, quote_coin=ii, source=source)
-
         coin = MasterCoin.objects.get(id=coin.id) # weird
         culture = Culture.objects.filter(name='en_US').first()
         CoinLocale.objects.update_or_create(coin=coin, culture=culture, defaults={ 'name': full_name })
@@ -534,21 +527,20 @@ def qbtagg_quotes_(request):
     limit = int(request.POST.get('rowCount'))
     page = int(request.POST.get('current'))
 
-    ids = QBTAGGXref.objects.values_list('quote_coin', flat=True).distinct()
-    qs = MasterCoin.objects.filter(id__in=ids)
+    qs = QBTAGGQuote.objects.filter(is_deleted=False)
 
     total = qs.count()
     coins = []
 
-    for coin in qs:
+    for ii in qs:
         coin_ = {
-            'id': coin.id,
-            'symbol': coin.symbol,
-            'cryptocompare': get_support_title(coin.cryptocompare),
-            'coinapi': get_support_title(coin.coinapi),
-            'cmc': get_support_title(coin.coinmarketcap),
-            'gecko': get_support_title(coin.coingecko),
-            'cml': get_support_title(coin.coinmarketcal)
+            'id': ii.coin.id,
+            'symbol': ii.coin.symbol,
+            'cryptocompare': get_support_title(ii.coin.cryptocompare),
+            'coinapi': get_support_title(ii.coin.coinapi),
+            'cmc': get_support_title(ii.coin.coinmarketcap),
+            'gecko': get_support_title(ii.coin.coingecko),
+            'cml': get_support_title(ii.coin.coinmarketcal)
         }
         coins.append(coin_)
 
@@ -852,9 +844,5 @@ def get_pairs_info(request):
 @login_required(login_url='/login')
 def add_qbtagg_quote(request):
     quote_coin = request.POST.get('qbtagg_quote')
-    for ii in MasterCoin.objects.filter(type_is_crypto=True, alias__isnull=True):
-        if ii.cryptocompare > 0:
-            QBTAGGXref.objects.create(base_coin=ii, quote_coin_id=quote_coin, source='cryptocompare')
-        else:
-            QBTAGGXref.objects.create(base_coin=ii, quote_coin_id=quote_coin)            
+    QBTAGGQuote.objects.create(coin_id=quote_coin)
     return HttpResponseRedirect(reverse('qbtagg_quotes'))
