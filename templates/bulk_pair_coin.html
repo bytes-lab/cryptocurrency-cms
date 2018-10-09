@@ -34,40 +34,40 @@
                             <div class="col-sm-2 col-20 m-b-15">
                                 <select class="selectpicker m-t-10 p-r-15" name="cryptocompare">
                                     <option value="">Choose Cryptocompare</option>
-                                    <option value="1" {% if request.GET.cryptocompare == '1' %} selected {% endif %}>Not Connected</option>
-                                    <option value="2" {% if request.GET.cryptocompare == '2' %} selected {% endif %}>Connected</option>
+                                    <option value="1" {% if request.GET.cryptocompare == '1' %} selected {% endif %}>Not Linked Yet</option>
+                                    <option value="2" {% if request.GET.cryptocompare == '2' %} selected {% endif %}>Found</option>
                                     <option value="3" {% if request.GET.cryptocompare == '3' %} selected {% endif %}>Not Found</option>
                                 </select>
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
                                 <select class="selectpicker m-t-10 p-r-15" name="coinmarketcap">
                                     <option value="">Choose Coinmarketcap</option>
-                                    <option value="1" {% if request.GET.coinmarketcap == '1' %} selected {% endif %}>Not Connected</option>
-                                    <option value="2" {% if request.GET.coinmarketcap == '2' %} selected {% endif %}>Connected</option>
+                                    <option value="1" {% if request.GET.coinmarketcap == '1' %} selected {% endif %}>Not Linked Yet</option>
+                                    <option value="2" {% if request.GET.coinmarketcap == '2' %} selected {% endif %}>Found</option>
                                     <option value="3" {% if request.GET.coinmarketcap == '3' %} selected {% endif %}>Not Found</option>
                                 </select>
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
                                 <select class="selectpicker m-t-10 p-r-15" name="coinapi">
                                     <option value="">Choose Coinapi</option>
-                                    <option value="1" {% if request.GET.coinapi == '1' %} selected {% endif %}>Not Connected</option>
-                                    <option value="2" {% if request.GET.coinapi == '2' %} selected {% endif %}>Connected</option>
+                                    <option value="1" {% if request.GET.coinapi == '1' %} selected {% endif %}>Not Linked Yet</option>
+                                    <option value="2" {% if request.GET.coinapi == '2' %} selected {% endif %}>Found</option>
                                     <option value="3" {% if request.GET.coinapi == '3' %} selected {% endif %}>Not Found</option>
                                 </select>
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
                                 <select class="selectpicker m-t-10 p-r-15" name="coingecko">
                                     <option value="">Choose Coingecko</option>
-                                    <option value="1" {% if request.GET.coingecko == '1' %} selected {% endif %}>Not Connected</option>
-                                    <option value="2" {% if request.GET.coingecko == '2' %} selected {% endif %}>Connected</option>
+                                    <option value="1" {% if request.GET.coingecko == '1' %} selected {% endif %}>Not Linked Yet</option>
+                                    <option value="2" {% if request.GET.coingecko == '2' %} selected {% endif %}>Found</option>
                                     <option value="3" {% if request.GET.coingecko == '3' %} selected {% endif %}>Not Found</option>
                                 </select>
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
                                 <select class="selectpicker m-t-10 p-r-15" name="coinmarketcal">
                                     <option value="">Choose Coinmarketcal</option>
-                                    <option value="1" {% if request.GET.coinmarketcal == '1' %} selected {% endif %}>Not Connected</option>
-                                    <option value="2" {% if request.GET.coinmarketcal == '2' %} selected {% endif %}>Connected</option>
+                                    <option value="1" {% if request.GET.coinmarketcal == '1' %} selected {% endif %}>Not Linked Yet</option>
+                                    <option value="2" {% if request.GET.coinmarketcal == '2' %} selected {% endif %}>Found</option>
                                     <option value="3" {% if request.GET.coinmarketcal == '3' %} selected {% endif %}>Not Found</option>
                                 </select>
                             </div>
@@ -125,7 +125,7 @@
                                 <option value="0" {% if coin.cryptocompare == 0%} selected {% endif %} >---</option>
                                 <option value="">NULL</option>
                                 {% for ii in cc_coins %}
-                                    {% if coin.cryptocompare > -1 %}
+                                    {% if coin.cryptocompare > 0 %}
                                         {% if coin.cryptocompare == ii.id %}
                                             <option selected value="{{ ii.id }}">
                                                 {{ ii.coinname }} ( {{ ii.symbol }} )
@@ -152,7 +152,7 @@
                                 <option value="0" {% if coin.coinmarketcap == 0%} selected {% endif %} >---</option>
                                 <option value="">NULL</option>
                                 {% for ii in cmc_coins %}
-                                    {% if coin.coinmarketcap > -1 %}
+                                    {% if coin.coinmarketcap > 0 %}
                                         {% if coin.coinmarketcap == ii.id %}
                                             <option selected value="{{ ii.id }}">
                                                 {{ ii.token }} ( {{ ii.symbol }} )
@@ -179,7 +179,7 @@
                                 <option value="0" {% if coin.coinapi == 0%} selected {% endif %} >---</option>
                                 <option value="">NULL</option>
                                 {% for ii in cp_coins %}
-                                    {% if coin.coinapi > -1 %}
+                                    {% if coin.coinapi > 0 %}
                                         {% if coin.coinapi == ii.id %}
                                             <option selected value="{{ ii.id }}">
                                                 {{ ii.name }} ( {{ ii.symbol }} )
@@ -206,7 +206,7 @@
                                 <option value="0" {% if coin.coingecko == 0%} selected {% endif %} >---</option>
                                 <option value="">NULL</option>
                                 {% for ii in cg_coins %}
-                                    {% if coin.coingecko > -1 %}
+                                    {% if coin.coingecko > 0 %}
                                         {% if coin.coingecko == ii.id %}
                                             <option selected value="{{ ii.id }}">
                                                 {{ ii.name }} ( {{ ii.symbol }} )
@@ -233,7 +233,7 @@
                                 <option value="0" {% if coin.coinmarketcal == 0%} selected {% endif %} >---</option>
                                 <option value="">NULL</option>
                                 {% for ii in cml_coins %}
-                                    {% if coin.coinmarketcal > -1 %}
+                                    {% if coin.coinmarketcal > 0 %}
                                         {% if coin.coinmarketcal == ii.id %}
                                             <option selected value="{{ ii.id }}">
                                                 {{ ii.name }} ( {{ ii.symbol }} )
