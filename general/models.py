@@ -115,7 +115,7 @@ class ExchangePair(models.Model):
     quote_coin = models.ForeignKey(MasterCoin, related_name="quote_coins")
     cryptocompare_availability = models.BooleanField(default=False)
     coinapi_availability = models.BooleanField(default=False)
-    # coinigy_availability = models.BooleanField(default=False)
+    coinigy_availability = models.BooleanField(default=False)
     data_start = models.DateField(null=True, blank=True)
     data_end = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=255, null=True, blank=True)
