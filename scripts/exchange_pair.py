@@ -35,7 +35,7 @@ def main():
             cp_support = CoinapiPair.objects.filter(Q(exchange__iexact=exchange.coinapi) &
                                                      (Q(base_coin=ii['baseCurrency']) |
                                                       Q(quote_coin=ii['quoteCurrency']))).exists()
-            cg_support = CoinigyPair.objects.filter(Q(exchange__iexact=exchange.name) &
+            cg_support = CoinigyPair.objects.filter(Q(exchange__iexact=exchange.coingy) &
                                                     (Q(base_coin=ii['baseCurrency']) |
                                                      Q(quote_coin=ii['quoteCurrency']))).exists()
 
