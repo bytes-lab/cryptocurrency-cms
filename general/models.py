@@ -86,6 +86,7 @@ class Exchange(models.Model):
     name = models.CharField(max_length=255)                                     # normalized name
     cryptocompare = models.CharField(max_length=255, null=True, blank=True)     # name on cryptocompare
     coinapi = models.CharField(max_length=255, null=True, blank=True)
+    coinigy = models.CharField(max_length=255, null=True, blank=True)
     coinmarketcap = models.CharField(max_length=255, null=True, blank=True)
     description = models.CharField(max_length=255, null=True, blank=True)
     fees_description = models.CharField(max_length=255, null=True, blank=True)
@@ -114,6 +115,7 @@ class ExchangePair(models.Model):
     quote_coin = models.ForeignKey(MasterCoin, related_name="quote_coins")
     cryptocompare_availability = models.BooleanField(default=False)
     coinapi_availability = models.BooleanField(default=False)
+    # coinigy_availability = models.BooleanField(default=False)
     data_start = models.DateField(null=True, blank=True)
     data_end = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=255, null=True, blank=True)
@@ -138,6 +140,7 @@ class ExchangePairXref(models.Model):
     qobit_availability = models.BooleanField(default=False)
     cryptocompare_availability = models.BooleanField(default=False)
     coinapi_availability = models.BooleanField(default=False)
+    coinigy_availability = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'exchange_pair_xref'
@@ -195,6 +198,17 @@ class CoinapiCoin(models.Model):
 
     class Meta:
         db_table = 'coinapi_coin_xref'
+
+    def __str__(self):
+        return self.symbol
+
+class CoinigyCoin(models.Model):
+    symbol = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'coinigy_coin_xref'
 
     def __str__(self):
         return self.symbol
@@ -375,6 +389,18 @@ class CoinapiPair(models.Model):
 
     class Meta:
         db_table = 'coinapi_pair_xref'
+
+    def __str__(self):
+        return '{} - {}'.format(self.base_coin, self.quote_coin)
+
+class CoinigyPair(models.Model):
+    exchange = models.CharField(max_length=255)
+    base_coin = models.CharField(max_length=255)
+    quote_coin = models.CharField(max_length=255)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'coinigy_pair_xref'
 
     def __str__(self):
         return '{} - {}'.format(self.base_coin, self.quote_coin)
