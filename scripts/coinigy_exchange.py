@@ -29,8 +29,19 @@ def main():
                     "coinigy": exchange['exchCode'],
                     # "website_url": exchange.get('exchUrl')
                 }
-                exchange, is_new = Exchange.objects.filter(Q(name=exchange['exchCode'].upper()) | Q(name=exchange['exchName'].upper())).update_or_create(defaults=defaults)
-                print(exchange, is_new)
+                # exchange, is_new = Exchange.objects.filter(Q(name=exchange['exchCode'].upper()) | Q(name=exchange['exchName'].upper())).update_or_create(defaults=defaults)
+                # print(exchange, is_new)
+
+                try:
+                    obj = Exchange.objects.filter(Q(name=exchange['exchCode'].upper()) | Q(name=exchange['exchName'].upper())).get()
+                    for key, value in defaults.items():
+                        setattr(obj, key, value)
+                    obj.save()
+                except Exchange.DoesNotExist:
+                    new_values = Q(name=exchange['exchCode'].upper()) | Q(name=exchange['exchName'].upper())
+                    new_values.update(defaults)
+                    obj = Exchange(**new_values)
+                    obj.save()
                 # consider more about possible minor differences over same exchanges
 
 if __name__ == "__main__":
