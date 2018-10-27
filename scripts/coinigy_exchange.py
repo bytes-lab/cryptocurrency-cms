@@ -29,8 +29,7 @@ def main():
                     "coinigy": exchange['exchCode'],
                     # "website_url": exchange.get('exchUrl')
                 }
-                exchange, is_new = Exchange.objects.update_or_create(Q(name=exchange['exchCode']) |
-                                                  Q(name=exchange['exchName']), defaults=defaults)
+                exchange, is_new = Exchange.objects.filter(Q(name=exchange['exchCode'].upper()) | Q(name=exchange['exchName'].upper())).update_or_create(defaults=defaults)
                 print(exchange, is_new)
                 # consider more about possible minor differences over same exchanges
 
