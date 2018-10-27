@@ -30,6 +30,7 @@ def main():
                     # "website_url": exchange.get('exchUrl')
                 }
                 exchange, is_new = Exchange.objects.filter(Q(name=exchange['exchCode']) | Q(name=exchange['exchName'])).update_or_create(defaults=defaults)
+                print(exchange, is_new)
                 # consider more about possible minor differences over same exchanges
 
 if __name__ == "__main__":
