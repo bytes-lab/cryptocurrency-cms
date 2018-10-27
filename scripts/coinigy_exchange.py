@@ -10,6 +10,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qobit_cms.settings")
 django.setup()
 
 from general.models import *
+from django.db.models import Q
 from django.conf import settings
 
 def main():
@@ -28,7 +29,7 @@ def main():
                     "coinigy": exchange['exchCode'],
                     # "website_url": exchange.get('exchUrl')
                 }
-                exchange, is_new = Exchange.objects.update_or_create(name=exchange['exchCode'], defaults=defaults)
+                exchange, is_new = Exchange.objects.filter(Q(name=exchange['exchCode']) | Q(name=exchange['exchName'])).update_or_create(defaults=defaults)
                 # consider more about possible minor differences over same exchanges
 
 if __name__ == "__main__":

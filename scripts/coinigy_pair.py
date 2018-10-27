@@ -44,7 +44,7 @@ def main():
         if content['success']:
             info = content['result']
             coins = [ii.symbol for ii in CoinigyCoin.objects.all()]
-            exchanges = [ii.name for ii in Exchange.objects.all()]
+            exchanges = [ii.coinigy for ii in Exchange.objects.all()]
             all_pairs = {}
             for pair in CoinigyPair.objects.all():
                 pair_ = '{}-{}-{}'.format(pair.exchange, pair.base_coin, pair.quote_coin)
@@ -79,7 +79,7 @@ def main():
             false_ids = []
 
             for ii in ExchangePair.objects.all():
-                cp_support = CoinigyPair.objects.filter(Q(exchange__iexact=ii.exchange.name) &
+                cp_support = CoinigyPair.objects.filter(Q(exchange__iexact=ii.exchange.coinigy) &
                                                         (Q(base_coin=ii.base_coin.original_symbol) |
                                                          Q(quote_coin=ii.quote_coin.original_symbol))).exists()
 
