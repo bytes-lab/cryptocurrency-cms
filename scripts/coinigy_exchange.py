@@ -33,9 +33,7 @@ def main():
                 # print(exchange, is_new)
                 obj = Exchange.objects.filter(
                     Q(name=exchange['exchCode'].upper()) | Q(name=exchange['exchName'].upper())).first()
-                if not obj:
-                    Exchange.objects.create(coinigy=exchange['exchCode'])
-                else:
+                if obj:
                     Exchange.objects.filter(id=obj.id).update(coinigy=exchange['exchCode'])
                 # consider more about possible minor differences over same exchanges
 

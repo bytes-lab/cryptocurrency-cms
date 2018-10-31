@@ -87,6 +87,7 @@ class Exchange(models.Model):
     cryptocompare = models.CharField(max_length=255, null=True, blank=True)     # name on cryptocompare
     coinapi = models.CharField(max_length=255, null=True, blank=True)
     coinigy = models.CharField(max_length=255, null=True, blank=True)
+    coingecko = models.CharField(max_length=255, null=True, blank=True)
     coinmarketcap = models.CharField(max_length=255, null=True, blank=True)
     description = models.CharField(max_length=255, null=True, blank=True)
     fees_description = models.CharField(max_length=255, null=True, blank=True)
@@ -180,7 +181,8 @@ class CryptocompareCoin(models.Model):
 
 
 class CoinmarketcapCoin(models.Model):
-    token = models.CharField(max_length=255)      # id from api
+    token = models.CharField(max_length=255)
+    cid = models.IntegerField(null=True, blank=True) # id from api
     symbol = models.CharField(max_length=255)
     is_deleted = models.BooleanField(default=False)
 

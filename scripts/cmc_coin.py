@@ -15,23 +15,22 @@ from general.models import *
 from utils import send_email
 
 def main():
-    url = 'https://api.coinmarketcap.com/v1/ticker/?limit=0'
-    info = requests.get(url).json()
+    url = 'https://api.coinmarketcap.com/v2/listings/'
+    info = requests.get(url).json()['data']
 
     all_coins = {}
     for coin in CoinmarketcapCoin.objects.filter(is_deleted=False):
         all_coins[coin.token] = coin.id
-
     for coin in info:
-        if coin['id'] in all_coins:
-            all_coins.pop(coin['id'])
+        if coin['website_slug'] in all_coins:
+            all_coins.pop(coin['website_slug'])
 
         defaults = {
+            "cid": coin['id'],
             "symbol": coin['symbol'],
             "is_deleted": False
         }
-
-        coin, is_new = CoinmarketcapCoin.objects.update_or_create(token=coin['id'], defaults=defaults)
+        coin, is_new = CoinmarketcapCoin.objects.update_or_create(token=coin['website_slug'], defaults=defaults)
         # if is_new:
         #     send_email(coin['symbol'], True, 'Coinmarketcap')
 
