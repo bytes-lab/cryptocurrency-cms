@@ -116,89 +116,93 @@
                                 <p class="f-400 m-b-15 c-black f-15">
                                     {% if coin.cryptocompare > 0 %}
                                         <span class="text-success">Connected ({{coin.cryptocompare}})</span>
+                                        <div class="p-t-15 f-400 f-14">{{ coin.cryptocompare_name }} ( {{ coin.symbol }} )</div>
                                     {% elif coin.cryptocompare == 0 %}
-                                        <span class="text-warning">Connected ({{coin.cryptocompare}})</span>
+                                        <span class="text-warning">Connected (0)</span>
+                                        <select class="selectpicker m-t-25 p-r-15" name="cml_coin{{forloop.counter}}" data-size="10">
+                                        <option value="0">---</option>
+                                        {% for ii in cml_coins %}
+                                            {% if ii.symbol == coin.symbol %}
+                                                <option selected value="{{ ii.id }}">
+                                                    {{ ii.name }} ( {{ ii.symbol }} )
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </select>
                                     {% else %}
                                         <span class="text-danger">Not Connected</span>
+                                        <div class="p-t-15 f-400 f-14">N/A</div>
                                     {% endif %}
                                 </p>
-                                
-                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cc_coin{{forloop.counter}}" data-size="10">
-                                <option value="0" {% if coin.cryptocompare == 0%} selected {% endif %} >---</option>
-                                {% for ii in cc_coins %}
-                                    {% if coin.cryptocompare > 0 and coin.cryptocompare == ii.id or coin.cryptocompare == 0 and ii.symbol == coin.symbol %}
-                                        <option selected value="{{ ii.id }}">
-                                            {{ ii.name }} ( {{ ii.symbol }} )
-                                        </option>
-                                    {% endif %}
-                                {% endfor %}
-                                </select>
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
                                 <p class="f-400 m-b-15 c-black f-15">
                                     {% if coin.coinmarketcap > 0 %}
                                         <span class="text-success">Connected ({{coin.coinmarketcap}})</span>
+                                        <div class="p-t-15 f-400 f-14">{{ coin.cryptocompare_name }} ( {{ coin.symbol }} )</div>
                                     {% elif coin.coinmarketcap == 0 %}
-                                        <span class="text-warning">Connected ({{coin.coinmarketcap}})</span>
+                                        <span class="text-warning">Connected (0)</span>
+                                        <select class="selectpicker m-t-25 p-r-15" name="cml_coin{{forloop.counter}}" data-size="10">
+                                        <option value="0">---</option>
+                                        {% for ii in cml_coins %}
+                                            {% if ii.symbol == coin.symbol %}
+                                                <option selected value="{{ ii.id }}">
+                                                    {{ ii.name }} ( {{ ii.symbol }} )
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </select>
                                     {% else %}
                                         <span class="text-danger">Not Connected</span>
+                                        <div class="p-t-15 f-400 f-14">N/A</div>
                                     {% endif %}
                                 </p>
-                                
-                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cmc_coin{{forloop.counter}}" data-size="10">
-                                <option value="0" {% if coin.coinmarketcap == 0%} selected {% endif %} >---</option>
-                                {% for ii in cmc_coins %}
-                                    {% if coin.coinmarketcap > 0 and coin.coinmarketcap == ii.id or coin.coinmarketcap == 0 and ii.symbol == coin.symbol %}
-                                        <option selected value="{{ ii.id }}">
-                                            {{ ii.name }} ( {{ ii.symbol }} )
-                                        </option>
-                                    {% endif %}
-                                {% endfor %}
-                                </select>
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
                                 <p class="f-400 m-b-15 c-black f-15">
                                     {% if coin.coinapi > 0 %}
                                         <span class="text-success">Connected ({{coin.coinapi}})</span>
+                                        <div class="p-t-15 f-400 f-14">{{ coin.cryptocompare_name }} ( {{ coin.symbol }} )</div>
                                     {% elif coin.coinapi == 0 %}
-                                        <span class="text-warning">Connected ({{coin.coinapi}})</span>
+                                        <span class="text-warning">Connected (0)</span>
+                                        <select class="selectpicker m-t-25 p-r-15" name="cml_coin{{forloop.counter}}" data-size="10">
+                                        <option value="0">---</option>
+                                        {% for ii in cml_coins %}
+                                            {% if ii.symbol == coin.symbol %}
+                                                <option selected value="{{ ii.id }}">
+                                                    {{ ii.name }} ( {{ ii.symbol }} )
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </select>
                                     {% else %}
                                         <span class="text-danger">Not Connected</span>
+                                        <div class="p-t-15 f-400 f-14">N/A</div>
                                     {% endif %}
                                 </p>
-                                
-                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cp_coin{{forloop.counter}}" data-size="10">
-                                <option value="0" {% if coin.coinapi == 0%} selected {% endif %} >---</option>
-                                {% for ii in cp_coins %}
-                                    {% if coin.coinapi > 0 and coin.coinapi == ii.id or coin.coinapi == 0 and ii.symbol == coin.symbol %}
-                                        <option selected value="{{ ii.id }}">
-                                            {{ ii.name }} ( {{ ii.symbol }} )
-                                        </option>
-                                    {% endif %}
-                                {% endfor %}
-                                </select>
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
                                 <p class="f-400 m-b-15 c-black f-15">
                                     {% if coin.coingecko > 0 %}
                                         <span class="text-success">Connected ({{coin.coingecko}})</span>
+                                        <div class="p-t-15 f-400 f-14">{{ coin.cryptocompare_name }} ( {{ coin.symbol }} )</div>
                                     {% elif coin.coingecko == 0 %}
-                                        <span class="text-warning">Connected ({{coin.coingecko}})</span>
+                                        <span class="text-warning">Connected (0)</span>
+                                        <select class="selectpicker m-t-25 p-r-15" name="cml_coin{{forloop.counter}}" data-size="10">
+                                        <option value="0">---</option>
+                                        {% for ii in cml_coins %}
+                                            {% if ii.symbol == coin.symbol %}
+                                                <option selected value="{{ ii.id }}">
+                                                    {{ ii.name }} ( {{ ii.symbol }} )
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </select>
                                     {% else %}
                                         <span class="text-danger">Not Connected</span>
+                                        <div class="p-t-15 f-400 f-14">N/A</div>
                                     {% endif %}
                                 </p>
-                                
-                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cg_coin{{forloop.counter}}" data-size="10">
-                                <option value="0" {% if coin.coingecko == 0%} selected {% endif %} >---</option>
-                                {% for ii in cg_coins %}
-                                    {% if coin.coingecko > 0 and coin.coingecko == ii.id or coin.coingecko == 0 and ii.symbol == coin.symbol %}
-                                        <option selected value="{{ ii.id }}">
-                                            {{ ii.name }} ( {{ ii.symbol }} )
-                                        </option>
-                                    {% endif %}
-                                {% endfor %}
-                                </select>
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
                                 <p class="f-400 m-b-15 c-black f-15">
@@ -206,9 +210,9 @@
                                         <span class="text-success">Connected ({{coin.coinmarketcal}})</span>
                                         <div class="p-t-15 f-400 f-14">{{ coin.cryptocompare_name }} ( {{ coin.symbol }} )</div>
                                     {% elif coin.coinmarketcal == 0 %}
-                                        <span class="text-warning">Connected ({{coin.coinmarketcal}})</span>
-                                        <select class="selectpicker m-t-10 p-r-15" name="cml_coin{{forloop.counter}}" data-size="10">
-                                        <option value="0" {% if coin.coinmarketcal == 0%} selected {% endif %} >---</option>
+                                        <span class="text-warning">Connected (0)</span>
+                                        <select class="selectpicker m-t-25 p-r-15" name="cml_coin{{forloop.counter}}" data-size="10">
+                                        <option value="0">---</option>
                                         {% for ii in cml_coins %}
                                             {% if ii.symbol == coin.symbol %}
                                                 <option selected value="{{ ii.id }}">
