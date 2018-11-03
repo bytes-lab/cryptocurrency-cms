@@ -114,8 +114,10 @@
                         <div class="col-md-10 p-t-10">
                             <div class="col-sm-2 col-20 m-b-15">
                                 <p class="f-400 m-b-15 c-black f-15">
-                                    {% if coin.cryptocompare != None %}
+                                    {% if coin.cryptocompare > 0 %}
                                         <span class="text-success">Connected ({{coin.cryptocompare}})</span>
+                                    {% elif coin.cryptocompare == 0 %}
+                                        <span class="text-warning">Connected ({{coin.cryptocompare}})</span>
                                     {% else %}
                                         <span class="text-danger">Not Connected</span>
                                     {% endif %}
@@ -125,15 +127,9 @@
                                 <option value="0" {% if coin.cryptocompare == 0%} selected {% endif %} >---</option>
                                 <option value="">NULL</option>
                                 {% for ii in cc_coins %}
-                                    {% if coin.cryptocompare > 0 %}
-                                        {% if coin.cryptocompare == ii.id %}
-                                            <option selected value="{{ ii.id }}">
-                                                {{ ii.coinname }} ( {{ ii.symbol }} )
-                                            </option>
-                                        {% endif %}
-                                    {% else %}
-                                        <option {% if ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
-                                            {{ ii.coinname }} ( {{ ii.symbol }} )
+                                    {% if coin.cryptocompare > 0 and coin.cryptocompare == ii.id or coin.cryptocompare == 0 and ii.symbol == coin.symbol %}
+                                        <option selected value="{{ ii.id }}">
+                                            {{ ii.name }} ( {{ ii.symbol }} )
                                         </option>
                                     {% endif %}
                                 {% endfor %}
@@ -141,10 +137,12 @@
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
                                 <p class="f-400 m-b-15 c-black f-15">
-                                    {% if coin.coinmarketcap != None %}
+                                    {% if coin.coinmarketcap > 0 %}
                                         <span class="text-success">Connected ({{coin.coinmarketcap}})</span>
+                                    {% elif coin.coinmarketcap == 0 %}
+                                        <span class="text-warning">Connected ({{coin.coinmarketcap}})</span>
                                     {% else %}
-                                        <span class="text-warning">Not Connected</span>
+                                        <span class="text-danger">Not Connected</span>
                                     {% endif %}
                                 </p>
                                 
@@ -152,15 +150,9 @@
                                 <option value="0" {% if coin.coinmarketcap == 0%} selected {% endif %} >---</option>
                                 <option value="">NULL</option>
                                 {% for ii in cmc_coins %}
-                                    {% if coin.coinmarketcap > 0 %}
-                                        {% if coin.coinmarketcap == ii.id %}
-                                            <option selected value="{{ ii.id }}">
-                                                {{ ii.token }} ( {{ ii.symbol }} )
-                                            </option>
-                                        {% endif %}
-                                    {% else %}
-                                        <option {% if ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
-                                            {{ ii.token }} ( {{ ii.symbol }} )
+                                    {% if coin.coinmarketcap > 0 and coin.coinmarketcap == ii.id or coin.coinmarketcap == 0 and ii.symbol == coin.symbol %}
+                                        <option selected value="{{ ii.id }}">
+                                            {{ ii.name }} ( {{ ii.symbol }} )
                                         </option>
                                     {% endif %}
                                 {% endfor %}
@@ -168,10 +160,12 @@
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
                                 <p class="f-400 m-b-15 c-black f-15">
-                                    {% if coin.coinapi != None %}
+                                    {% if coin.coinapi > 0 %}
                                         <span class="text-success">Connected ({{coin.coinapi}})</span>
+                                    {% elif coin.coinapi == 0 %}
+                                        <span class="text-warning">Connected ({{coin.coinapi}})</span>
                                     {% else %}
-                                        <span class="text-warning">Not Connected</span>
+                                        <span class="text-danger">Not Connected</span>
                                     {% endif %}
                                 </p>
                                 
@@ -179,14 +173,8 @@
                                 <option value="0" {% if coin.coinapi == 0%} selected {% endif %} >---</option>
                                 <option value="">NULL</option>
                                 {% for ii in cp_coins %}
-                                    {% if coin.coinapi > 0 %}
-                                        {% if coin.coinapi == ii.id %}
-                                            <option selected value="{{ ii.id }}">
-                                                {{ ii.name }} ( {{ ii.symbol }} )
-                                            </option>
-                                        {% endif %}
-                                    {% else %}
-                                        <option {% if ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
+                                    {% if coin.coinapi > 0 and coin.coinapi == ii.id or coin.coinapi == 0 and ii.symbol == coin.symbol %}
+                                        <option selected value="{{ ii.id }}">
                                             {{ ii.name }} ( {{ ii.symbol }} )
                                         </option>
                                     {% endif %}
