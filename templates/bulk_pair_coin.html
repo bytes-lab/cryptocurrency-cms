@@ -233,7 +233,6 @@
                                 
                                 <select class="selectpicker m-t-10 p-r-15" name="cml_coin{{forloop.counter}}" data-size="10">
                                 <option value="0" {% if coin.coinmarketcal == 0%} selected {% endif %} >---</option>
-                                <option value="">NULL</option>
                                 {% for ii in cml_coins %}
                                     {% if coin.coinmarketcal > 0 and coin.coinmarketcal == ii.id or coin.coinmarketcal == 0 and ii.symbol == coin.symbol %}
                                         <option selected value="{{ ii.id }}">
