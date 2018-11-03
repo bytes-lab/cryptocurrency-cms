@@ -23,7 +23,7 @@ def main():
             pairs = requests.get(exchange.api_link).json()['data'] or []
         except Exception as e:
             pairs = []
-
+        print(pairs)
         for ii in pairs:
             pair_ = '{}-{}'.format(ii['baseCurrency'], ii['quoteCurrency'])
             if pair_ in all_pairs:
@@ -35,6 +35,9 @@ def main():
             cp_support = CoinapiPair.objects.filter(Q(exchange__iexact=exchange.coinapi) &
                                                      (Q(base_coin=ii['baseCurrency']) |
                                                       Q(quote_coin=ii['quoteCurrency']))).exists()
+            cg_support = CoinigyPair.objects.filter(Q(exchange__iexact=exchange.coinigy) &
+                                                    (Q(base_coin=ii['baseCurrency']) |
+                                                     Q(quote_coin=ii['quoteCurrency']))).exists()
 
             ExchangePairXref.objects.update_or_create(exchange=exchange.name, 
                                                       base_coin=ii['baseCurrency'], 
@@ -42,7 +45,8 @@ def main():
                                                       defaults={ 
                                                         'is_deleted': False,
                                                         'cryptocompare_availability': cc_support,
-                                                        'coinapi_availability': cp_support 
+                                                        'coinapi_availability': cp_support,
+                                                        'coinigy_availability': cg_support
                                                       })
         if all_pairs:
             ExchangePairXref.objects.filter(id__in=all_pairs.values()).update(is_deleted=True)
