@@ -204,7 +204,7 @@
                                 <p class="f-400 m-b-15 c-black f-15">
                                     {% if coin.coinmarketcal > 0 %}
                                         <span class="text-success">Connected ({{coin.coinmarketcal}})</span>
-                                        <div>{{ coin.cryptocompare_name }} ( {{ coin.symbol }} )</div>
+                                        <div class="p-t-15 f-400 f-14">{{ coin.cryptocompare_name }} ( {{ coin.symbol }} )</div>
                                     {% elif coin.coinmarketcal == 0 %}
                                         <span class="text-warning">Connected ({{coin.coinmarketcal}})</span>
                                         <select class="selectpicker m-t-10 p-r-15" name="cml_coin{{forloop.counter}}" data-size="10">
@@ -219,7 +219,7 @@
                                         </select>
                                     {% else %}
                                         <span class="text-danger">Not Connected</span>
-                                        <div>N/A</div>
+                                        <div class="p-t-15 f-400 f-14">N/A</div>
                                     {% endif %}
                                 </p>
                             </div>
