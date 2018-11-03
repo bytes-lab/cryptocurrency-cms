@@ -117,7 +117,7 @@
                                     {% if coin.cryptocompare != None %}
                                         <span class="text-success">Connected ({{coin.cryptocompare}})</span>
                                     {% else %}
-                                        <span class="text-warning">Not Connected</span>
+                                        <span class="text-danger">Not Connected</span>
                                     {% endif %}
                                 </p>
                                 
@@ -222,25 +222,21 @@
                             </div>
                             <div class="col-sm-2 col-20 m-b-15">
                                 <p class="f-400 m-b-15 c-black f-15">
-                                    {% if coin.coinmarketcal != None %}
+                                    {% if coin.coinmarketcal > 0 %}
                                         <span class="text-success">Connected ({{coin.coinmarketcal}})</span>
+                                    {% if coin.coinmarketcal == 0 %}
+                                        <span class="text-warning">Connected ({{coin.coinmarketcal}})</span>
                                     {% else %}
-                                        <span class="text-warning">Not Connected</span>
+                                        <span class="text-danger">Not Connected</span>
                                     {% endif %}
                                 </p>
                                 
-                                <select class="selectpicker m-t-10 p-r-15" data-live-search="true" name="cml_coin{{forloop.counter}}" data-size="10">
+                                <select class="selectpicker m-t-10 p-r-15" name="cml_coin{{forloop.counter}}" data-size="10">
                                 <option value="0" {% if coin.coinmarketcal == 0%} selected {% endif %} >---</option>
                                 <option value="">NULL</option>
                                 {% for ii in cml_coins %}
-                                    {% if coin.coinmarketcal > 0 %}
-                                        {% if coin.coinmarketcal == ii.id %}
-                                            <option selected value="{{ ii.id }}">
-                                                {{ ii.name }} ( {{ ii.symbol }} )
-                                            </option>
-                                        {% endif %}
-                                    {% else %}
-                                        <option {% if ii.symbol == coin.symbol %} selected {% endif %} value="{{ ii.id }}">
+                                    {% if coin.coinmarketcal > 0 and coin.coinmarketcal == ii.id or coin.coinmarketcal == 0 and ii.symbol == coin.symbol %}
+                                        <option selected value="{{ ii.id }}">
                                             {{ ii.name }} ( {{ ii.symbol }} )
                                         </option>
                                     {% endif %}
