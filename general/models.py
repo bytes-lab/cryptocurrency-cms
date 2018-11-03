@@ -356,18 +356,6 @@ class CoinEventLocale(models.Model):
         db_table = 'coin_event_locale'
 
 
-# class CoinapiCoin(models.Model):
-#     symbol = models.CharField(max_length=255)
-#     name = models.CharField(max_length=255)
-#     is_deleted = models.BooleanField(default=False)
-#
-#     class Meta:
-#         db_table = 'coinapi_coin_xref'
-#
-#     def __str__(self):
-#         return self.symbol
-
-
 class CryptocomparePair(models.Model):
     exchange = models.CharField(max_length=255)
     base_coin = models.CharField(max_length=255)
@@ -428,10 +416,23 @@ QBTAGG_SOURCE = (
     ('in-house', 'In House')
 )
 
+
+class QBTAGGQuote(models.Model):
+    coin = models.ForeignKey(MasterCoin)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'qbtagg_quote_coin'
+
+    def __str__(self):
+        return self.coin.symbol
+
+
 class QBTAGGXref(models.Model):
     base_coin = models.ForeignKey(MasterCoin, related_name="qbtagg_with_base")
     quote_coin = models.ForeignKey(MasterCoin, related_name="qbtagg_with_quote")
     source = models.CharField(max_length=50, choices=QBTAGG_SOURCE, blank=True, null=True)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'qbtagg_xref'

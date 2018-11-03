@@ -8,3 +8,7 @@ function refresh_content() {
     get_filters();
     $("#data-table-employer").bootgrid('reload');
 }
+
+function filter() {
+	$('.filter-form').submit();
+}
