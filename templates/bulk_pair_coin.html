@@ -224,7 +224,7 @@
                                 <p class="f-400 m-b-15 c-black f-15">
                                     {% if coin.coinmarketcal > 0 %}
                                         <span class="text-success">Connected ({{coin.coinmarketcal}})</span>
-                                    {% if coin.coinmarketcal == 0 %}
+                                    {% elif coin.coinmarketcal == 0 %}
                                         <span class="text-warning">Connected ({{coin.coinmarketcal}})</span>
                                     {% else %}
                                         <span class="text-danger">Not Connected</span>
